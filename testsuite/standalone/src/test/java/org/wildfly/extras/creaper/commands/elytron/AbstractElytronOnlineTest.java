@@ -46,6 +46,7 @@ public abstract class AbstractElytronOnlineTest {
             if (removeSubsystemAtTheEnd && ops.exists(SUBSYSTEM_ADDRESS)) {
                 RemoveExtensionAndSubsystem removeExtensionAndSubsystem = new RemoveExtensionAndSubsystem();
                 client.apply(removeExtensionAndSubsystem);
+                //TODO This is a workaround for JBEAP-5955; Remove this line once the issue is fixed
                 administration.reload();
                 assertFalse("The Elytron subsystem should not be present anymore.",
                         ops.exists(SUBSYSTEM_ADDRESS));
