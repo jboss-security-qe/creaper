@@ -9,8 +9,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.wildfly.extras.creaper.commands.elytron.realm.AddExtensionAndSubsystem;
-import org.wildfly.extras.creaper.commands.elytron.realm.RemoveExtensionAndSubsystem;
 import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineOptions;

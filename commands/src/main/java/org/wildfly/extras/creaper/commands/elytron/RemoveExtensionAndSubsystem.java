@@ -1,4 +1,4 @@
-package org.wildfly.extras.creaper.commands.elytron.realm;
+package org.wildfly.extras.creaper.commands.elytron;
 
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -6,13 +6,13 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-public final class AddExtensionAndSubsystem implements OnlineCommand {
+public final class RemoveExtensionAndSubsystem implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        ops.add(Address.extension("org.wildfly.extension.elytron"));
-        ops.add(Address.subsystem("elytron"));
+        ops.remove(Address.subsystem("elytron"));
+        ops.remove(Address.extension("org.wildfly.extension.elytron"));
         new Administration(ctx.client).reloadIfRequired();
     }
 
