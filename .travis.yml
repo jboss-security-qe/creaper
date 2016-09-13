@@ -7,4 +7,7 @@ jdk:
 
 install: echo LOL
 
-script: mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true
+script:
+    - wget https://ci.jboss.org/hudson/job/WildFly-latest-master/lastBuild/artifact/dist/target/wildfly-10.x.zip
+    - mvn install:install-file -DgroupId=org.wildfly -DartifactId=wildfly-dist -Dversion=11.0.0.elytron-SNAPSHOT -Dfile=wildfly-10.x.zip -DgeneratePom=true -Dpackaging=zip
+    - mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true -Dtest=**.elytron.**.* -Dversion.wildfly10=11.0.0.elytron-SNAPSHOT
