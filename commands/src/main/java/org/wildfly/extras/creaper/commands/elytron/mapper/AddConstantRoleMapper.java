@@ -1,7 +1,9 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -50,13 +52,11 @@ public final class AddConstantRoleMapper implements OnlineCommand {
             this.name = name;
         }
 
-        public Builder addRole(String role) {
-            this.roles.add(role);
-            return this;
-        }
-
-        public Builder addRoles(List<String> roles) {
-            this.roles.addAll(roles);
+        public Builder addRoles(String... roles) {
+            if (roles == null) {
+                throw new IllegalArgumentException("Roles added to constant-role-mapper must not be null");
+            }
+            Collections.addAll(this.roles, roles);
             return this;
         }
 
