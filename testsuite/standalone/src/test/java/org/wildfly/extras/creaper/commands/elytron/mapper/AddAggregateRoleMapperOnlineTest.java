@@ -14,10 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 @RunWith(Arquillian.class)
 public class AddAggregateRoleMapperOnlineTest extends AbstractElytronOnlineTest {
@@ -200,17 +198,5 @@ public class AddAggregateRoleMapperOnlineTest extends AbstractElytronOnlineTest 
 
     private void removeAllAddSuffixRoleMappers() throws IOException, OperationException {
         removeAllElytronChildrenType(ADD_SUFFIX_ROLE_MAPPER_TYPE);
-    }
-
-    private void removeAllElytronChildrenType(final String childrenType) throws IOException, OperationException {
-        Operations ops = new Operations(client);
-        ModelNodeResult result = ops.readChildrenNames(SUBSYSTEM_ADDRESS, childrenType);
-        List<String> roleMapperNames = result.stringListValue();
-
-        for (String roleMapperName : roleMapperNames) {
-            final Address roleMapperAddress = SUBSYSTEM_ADDRESS.and(childrenType, roleMapperName);
-
-            ops.removeIfExists(roleMapperAddress);
-        }
     }
 }
