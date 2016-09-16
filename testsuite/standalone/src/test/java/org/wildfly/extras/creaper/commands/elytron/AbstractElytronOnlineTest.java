@@ -1,18 +1,22 @@
 package org.wildfly.extras.creaper.commands.elytron;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.core.ManagementClient;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineOptions;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
@@ -68,5 +72,24 @@ public abstract class AbstractElytronOnlineTest {
 
     protected static OnlineManagementClient createManagementClient() throws IOException {
         return ManagementClient.online(OnlineOptions.standalone().localDefault().build());
+    }
+
+    protected void removeAllElytronChildrenType(final String childrenType) throws IOException, OperationException {
+        Operations ops = new Operations(client);
+        ModelNodeResult result = ops.readChildrenNames(SUBSYSTEM_ADDRESS, childrenType);
+        List<String> realmNames = result.stringListValue();
+
+        for (String realmName : realmNames) {
+            final Address realmAddress = SUBSYSTEM_ADDRESS.and(childrenType, realmName);
+
+            ops.removeIfExists(realmAddress);
+        }
+    }
+
+    protected void checkAttribute(Address address, String attribute, String expectedValue) throws IOException {
+        ModelNodeResult readAttribute = ops.readAttribute(address, attribute);
+        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
+        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
+                readAttribute.stringValue());
     }
 }
