@@ -1,6 +1,5 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -57,13 +56,13 @@ public class AddAddPrefixRoleMapperOnlineTest extends AbstractElytronOnlineTest 
         assertTrue("Add prefix role mapper should be created", ops.exists(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS));
         assertTrue("Second add prefix role mapper should be created", ops.exists(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS2));
 
-        assertPrefix(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS, "somePrefix1");
-        assertPrefix(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS2, "somePrefix2");
+        checkAttribute(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS, "prefix", "somePrefix1");
+        checkAttribute(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS2, "prefix", "somePrefix2");
 
         administration.reload();
 
-        assertPrefix(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS, "somePrefix1");
-        assertPrefix(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS2, "somePrefix2");
+        checkAttribute(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS, "prefix", "somePrefix1");
+        checkAttribute(TEST_ADD_PREFIX_ROLE_MAPPER_ADDRESS2, "prefix", "somePrefix2");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -102,10 +101,4 @@ public class AddAddPrefixRoleMapperOnlineTest extends AbstractElytronOnlineTest 
         new AddAddPrefixRoleMapper.Builder(TEST_ADD_PREFIX_ROLE_MAPPER_NAME).prefix("").build();
         fail("Creating command with empty prefix should throw exception");
     }
-
-    private void assertPrefix(Address address, String expectedPrefix) throws Exception {
-        String actualPrefix = ops.readAttribute(address, "prefix").stringValue();
-        assertEquals("Unexpected prefix attribute value in " + address, expectedPrefix, actualPrefix);
-    }
-
 }
