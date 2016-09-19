@@ -7,10 +7,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -135,9 +133,6 @@ public class AddConstantPrincipalDecoderOnlineTest extends AbstractElytronOnline
     }
 
     private void checkConstantPrincipalDecoderConstant(String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS, "constant");
-        readAttribute.assertSuccess("Read operation for onstant failed");
-        assertEquals("Read operation for onstant return unexpected value", expectedValue,
-                readAttribute.stringValue());
+        checkAttribute(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS, "constant", expectedValue);
     }
 }
