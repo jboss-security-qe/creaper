@@ -1,6 +1,5 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -57,13 +56,13 @@ public class AddAddSuffixRoleMapperOnlineTest extends AbstractElytronOnlineTest 
         assertTrue("Add suffix role mapper should be created", ops.exists(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS));
         assertTrue("Second add suffix role mapper should be created", ops.exists(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS2));
 
-        assertSuffix(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS, "someSuffix1");
-        assertSuffix(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS2, "someSuffix2");
+        checkAttribute(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS, "suffix", "someSuffix1");
+        checkAttribute(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS2, "suffix", "someSuffix2");
 
         administration.reload();
 
-        assertSuffix(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS, "someSuffix1");
-        assertSuffix(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS2, "someSuffix2");
+        checkAttribute(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS, "suffix", "someSuffix1");
+        checkAttribute(TEST_ADD_SUFFIX_ROLE_MAPPER_ADDRESS2, "suffix", "someSuffix2");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -102,10 +101,4 @@ public class AddAddSuffixRoleMapperOnlineTest extends AbstractElytronOnlineTest 
         new AddAddSuffixRoleMapper.Builder(TEST_ADD_SUFFIX_ROLE_MAPPER_NAME).suffix("").build();
         fail("Creating command with empty suffix should throw exception");
     }
-
-    private void assertSuffix(Address address, String expectedSuffix) throws Exception {
-        String actualSuffix = ops.readAttribute(address, "suffix").stringValue();
-        assertEquals("Unexpected suffix attribute value in " + address, expectedSuffix, actualSuffix);
-    }
-
 }
