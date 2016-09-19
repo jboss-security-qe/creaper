@@ -7,7 +7,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-public class AddFilesystemRealm implements OnlineCommand {
+public final class AddFilesystemRealm implements OnlineCommand {
 
     private final String name;
     private final Integer levels;
