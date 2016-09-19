@@ -7,10 +7,8 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -161,10 +159,7 @@ public class AddAggregatePrincipalDecoderOnlineTest extends AbstractAddPrincipal
     }
 
     private void checkAggregatePrincipalDecoderAttribute(String attr, List<String> expected) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_AGGREGATE_PRINCIPAL_DECODER_ADDRESS, attr);
-        readAttribute.assertSuccess("Read operation for " + attr + " failed");
-        assertEquals("Read operation for " + attr + " return unexpected value", expected,
-                readAttribute.stringListValue());
+        checkAttribute(TEST_AGGREGATE_PRINCIPAL_DECODER_ADDRESS, attr, expected);
     }
 
 }
