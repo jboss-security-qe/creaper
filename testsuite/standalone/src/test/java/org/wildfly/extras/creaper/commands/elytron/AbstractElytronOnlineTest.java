@@ -4,9 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.exporter.ZipExporter;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -98,5 +102,20 @@ public abstract class AbstractElytronOnlineTest {
         readAttribute.assertSuccess("Read operation for " + attribute + " failed");
         assertEquals("Read operation for " + attribute + " return unexpected value", expectedValue,
                 readAttribute.stringListValue());
+    }
+
+    /**
+     *
+     * @param namePrefix - prefix of JAR name
+     * @param classes - classes which will be added to JAR
+     * @return - JAR file
+     * @throws IOException - exception
+     */
+    protected static File createJar(String namePrefix, Class<?>... classes) throws IOException {
+        File testJar = File.createTempFile(namePrefix, ".jar");
+        JavaArchive jar = ShrinkWrap.create(JavaArchive.class)
+            .addClasses(classes);
+        jar.as(ZipExporter.class).exportTo(testJar, true);
+        return testJar;
     }
 }
