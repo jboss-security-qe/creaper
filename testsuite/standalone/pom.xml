@@ -12,6 +12,11 @@
 
     <name>Creaper: Test Suite: Standalone &amp; Offline</name>
     <description>Creaper: Test Suite: Standalone &amp; Offline</description>
+    
+    <properties>
+        <version.wildfly-elytron>1.1.0.Beta8</version.wildfly-elytron>
+        <version.org.wildfly.security.elytron-subsystem>1.0.0.Alpha9</version.org.wildfly.security.elytron-subsystem>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -36,6 +41,16 @@
                     <artifactId>wildfly-patching</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>wildfly-elytron</artifactId>
+            <version>${version.wildfly-elytron}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.security</groupId>
+            <artifactId>elytron-subsystem</artifactId>
+            <version>${version.org.wildfly.security.elytron-subsystem}</version>
         </dependency>
     </dependencies>
 
