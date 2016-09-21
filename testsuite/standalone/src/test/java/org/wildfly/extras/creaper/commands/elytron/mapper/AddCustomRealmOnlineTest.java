@@ -25,19 +25,19 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 @RunWith(Arquillian.class)
 public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
-    private static final String TEST_ADD_CUSTOM_REALM_MAPPER_NAME = "CreaperTestAddCustomRealm";
-    private static final Address TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS = SUBSYSTEM_ADDRESS.and("custom-realm",
-        TEST_ADD_CUSTOM_REALM_MAPPER_NAME);
-    private static final String TEST_ADD_CUSTOM_REALM_MAPPER_NAME2 = "CreaperTestAddCustomRealm2";
-    private static final Address TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("custom-realm",
-        TEST_ADD_CUSTOM_REALM_MAPPER_NAME2);
-    private static final String CUSTOM_REALM_MAPPER_MODULE_NAME = "org.jboss.customrealmimpl";
+    private static final String TEST_ADD_CUSTOM_REALM_NAME = "CreaperTestAddCustomRealm";
+    private static final Address TEST_ADD_CUSTOM_REALM_ADDRESS = SUBSYSTEM_ADDRESS.and("custom-realm",
+        TEST_ADD_CUSTOM_REALM_NAME);
+    private static final String TEST_ADD_CUSTOM_REALM_NAME2 = "CreaperTestAddCustomRealm2";
+    private static final Address TEST_ADD_CUSTOM_REALM_ADDRESS2 = SUBSYSTEM_ADDRESS.and("custom-realm",
+        TEST_ADD_CUSTOM_REALM_NAME2);
+    private static final String CUSTOM_REALM_MODULE_NAME = "org.jboss.customrealmimpl";
 
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException, InterruptedException, TimeoutException {
         try (OnlineManagementClient client = createManagementClient()) {
             File testJar1 = createJar("testJar", AddCustomRealmImpl.class);
-            AddModule addModule = new AddModule.Builder(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            AddModule addModule = new AddModule.Builder(CUSTOM_REALM_MODULE_NAME)
                     .resource(testJar1)
                     .resourceDelimiter(":")
                 .dependency("org.wildfly.security.elytron")
@@ -50,70 +50,70 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
     @AfterClass
     public static void afterClass() throws IOException, CommandFailedException, InterruptedException, TimeoutException {
         try (OnlineManagementClient client = createManagementClient()) {
-            RemoveModule removeModule = new RemoveModule(CUSTOM_REALM_MAPPER_MODULE_NAME);
+            RemoveModule removeModule = new RemoveModule(CUSTOM_REALM_MODULE_NAME);
             client.apply(removeModule);
         }
     }
 
     @After
     public void cleanup() throws Exception {
-        ops.removeIfExists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS);
-        ops.removeIfExists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS2);
+        ops.removeIfExists(TEST_ADD_CUSTOM_REALM_ADDRESS);
+        ops.removeIfExists(TEST_ADD_CUSTOM_REALM_ADDRESS2);
         administration.reloadIfRequired();
     }
 
     @Test
     public void addCustomRealm() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
             .className(AddCustomRealmImpl.class.getName())
-            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .module(CUSTOM_REALM_MODULE_NAME)
             .addConfiguration("param", "parameterValue")
             .build();
 
         client.apply(addAddCustomRealm);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
     }
 
     @Test
     public void addCustomRealms() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
             .className(AddCustomRealmImpl.class.getName())
-            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .module(CUSTOM_REALM_MODULE_NAME)
             .build();
 
-        AddCustomRealm addAddCustomRealm2 = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME2)
+        AddCustomRealm addAddCustomRealm2 = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME2)
             .className(AddCustomRealmImpl.class.getName())
-            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .module(CUSTOM_REALM_MODULE_NAME)
             .build();
 
         client.apply(addAddCustomRealm);
         client.apply(addAddCustomRealm2);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
         assertTrue("Second add custom realm should be created",
-            ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS2));
+            ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS2));
 
-        checkAttribute(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS, "class-name", AddCustomRealmImpl.class.getName());
-        checkAttribute(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS2, "class-name", AddCustomRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_REALM_ADDRESS, "class-name", AddCustomRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_REALM_ADDRESS2, "class-name", AddCustomRealmImpl.class.getName());
 
         administration.reload();
 
-        checkAttribute(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS, "class-name", AddCustomRealmImpl.class.getName());
-        checkAttribute(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS2, "class-name", AddCustomRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_REALM_ADDRESS, "class-name", AddCustomRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_REALM_ADDRESS2, "class-name", AddCustomRealmImpl.class.getName());
     }
 
     @Test(expected = CommandFailedException.class)
     public void addDuplicateCustomRealmNotAllowed() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
             .className(AddCustomRealmImpl.class.getName())
-            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .module(CUSTOM_REALM_MODULE_NAME)
             .build();
 
         client.apply(addAddCustomRealm);
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
         client.apply(addAddCustomRealm);
-        fail("Add custom realm " + TEST_ADD_CUSTOM_REALM_MAPPER_NAME
+        fail("Add custom realm " + TEST_ADD_CUSTOM_REALM_NAME
             + " already exists in configuration, exception should be thrown");
     }
 
@@ -131,43 +131,44 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = CommandFailedException.class)
     public void addCustomRealm_noModule() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
             .className(AddCustomRealmImpl.class.getName())
             .build();
 
         client.apply(addAddCustomRealm);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealm_noClassName() throws Exception {
-        new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME).build();
+        new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME).build();
         fail("Creating command with no custom should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealm_emptyClassName() throws Exception {
-        new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME).className("").build();
+        new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME).className("").build();
         fail("Creating command with empty classname should throw exception");
     }
 
     @Test(expected = CommandFailedException.class)
     public void addCustomRealm_wrongModule() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
             .className(AddCustomRealmImpl.class.getName())
             .module("wrongModule")
             .build();
 
         client.apply(addAddCustomRealm);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
     }
 
     @Test(expected = CommandFailedException.class)
     public void addCustomRealm_configurationWithException() throws Exception {
-        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
-            .className(AddCustomRealmImpl.class.getName()).module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
+            .className(AddCustomRealmImpl.class.getName())
+            .module(CUSTOM_REALM_MODULE_NAME)
             .addConfiguration("throwException", "parameterValue")
             .build();
 
