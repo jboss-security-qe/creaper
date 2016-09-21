@@ -173,7 +173,8 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
     public void addCustomRealmMapper_configurationWithException() throws Exception {
         AddCustomRealmMapper addAddCustomRealmMapper =
             new AddCustomRealmMapper.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
-            .className(AddCustomRealmMapperImpl.class.getName()).module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .className(AddCustomRealmMapperImpl.class.getName())
+            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
             .addConfiguration("throwException", "parameterValue")
             .build();
 
