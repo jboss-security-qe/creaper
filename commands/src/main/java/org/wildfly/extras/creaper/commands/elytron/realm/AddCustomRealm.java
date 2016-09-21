@@ -20,19 +20,19 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.wildfly.extras.creaper.commands.elytron.mapper;
+package org.wildfly.extras.creaper.commands.elytron.realm;
 
 import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
 
-public final class AddCustomRealmMapper extends AbstractAddCustom {
+public final class AddCustomRealm extends AbstractAddCustom {
 
-    protected AddCustomRealmMapper(Builder builder) {
+    protected AddCustomRealm(Builder builder) {
         super(builder);
     }
 
     @Override
     protected String getCustomTypeName() {
-        return "custom-realm-mapper";
+        return "custom-realm";
     }
 
     public static final class Builder extends AbstractAddCustom.Builder<Builder> {
@@ -40,11 +40,11 @@ public final class AddCustomRealmMapper extends AbstractAddCustom {
             super(name);
         }
 
-        public AddCustomRealmMapper build() {
+        public AddCustomRealm build() {
             if (className == null || className.isEmpty()) {
                 throw new IllegalArgumentException("className must not be null or empty string");
             }
-            return new AddCustomRealmMapper(this);
+            return new AddCustomRealm(this);
         }
     }
 }
