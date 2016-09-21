@@ -147,7 +147,7 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRoleMapper_emptyClassName() throws Exception {
         new AddCustomRoleMapper.Builder(TEST_ADD_CUSTOM_ROLE_MAPPER_NAME).className("").build();
-        fail("Creating command with empty custom should throw exception");
+        fail("Creating command with empty classname should throw exception");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -172,6 +172,6 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRoleMapper);
 
-        fail("Creating command with empty custom should throw exception");
+        fail("Creating command with test configuration should throw exception");
     }
 }

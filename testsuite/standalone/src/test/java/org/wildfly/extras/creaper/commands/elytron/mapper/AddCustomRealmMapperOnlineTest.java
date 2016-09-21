@@ -147,13 +147,13 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealmMapper_noClassName() throws Exception {
         new AddCustomRealmMapper.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME).build();
-        fail("Creating command with no custom should throw exception");
+        fail("Creating command with no classname should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealmMapper_emptyClassName() throws Exception {
         new AddCustomRealmMapper.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME).className("").build();
-        fail("Creating command with empty custom should throw exception");
+        fail("Creating command with empty classname should throw exception");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -179,6 +179,6 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealmMapper);
 
-        fail("Creating command with empty custom should throw exception");
+        fail("Creating command with test configuration should throw exception");
     }
 }

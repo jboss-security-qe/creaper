@@ -1,4 +1,4 @@
-package org.wildfly.extras.creaper.commands.elytron.mapper;
+package org.wildfly.extras.creaper.commands.elytron;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +10,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-abstract class AbstractAddCustom implements OnlineCommand {
+public abstract class AbstractAddCustom implements OnlineCommand {
 
     private final String name;
     private final String className;
@@ -27,7 +27,7 @@ abstract class AbstractAddCustom implements OnlineCommand {
     }
 
     @Override
-    public void apply(OnlineCommandContext ctx) throws Exception {
+    public final void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
         Address securityRealmAddress = Address.subsystem("elytron").and(getCustomTypeName(), name);
         if (replaceExisting) {
@@ -43,7 +43,7 @@ abstract class AbstractAddCustom implements OnlineCommand {
 
     protected abstract String getCustomTypeName();
 
-    abstract static class Builder<T extends Builder> {
+    protected abstract static class Builder<T extends Builder> {
 
         private final String name;
         protected String className;
@@ -62,27 +62,27 @@ abstract class AbstractAddCustom implements OnlineCommand {
             this.name = name;
         }
 
-        public T className(String className) {
+        public final T className(String className) {
             this.className = className;
             return (T) this;
         }
 
-        public T module(String module) {
+        public final T module(String module) {
             this.module = module;
             return (T) this;
         }
 
-        public T addConfiguration(String name, String value) {
+        public final T addConfiguration(String name, String value) {
             configuration.put(name, value);
             return (T) this;
         }
 
-        public T addConfiguration(String name, boolean value) {
+        public final T addConfiguration(String name, boolean value) {
             configuration.put(name, Boolean.toString(value));
             return (T) this;
         }
 
-        public T replaceExisting() {
+        public final T replaceExisting() {
             this.replaceExisting = true;
             return (T) this;
         }
