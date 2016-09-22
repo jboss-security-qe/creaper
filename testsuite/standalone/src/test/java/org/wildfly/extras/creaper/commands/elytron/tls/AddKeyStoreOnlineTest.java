@@ -56,8 +56,6 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
         assertTrue("Key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS2));
     }
 
-
-
     @Test(expected = CommandFailedException.class)
     public void addExistKeyStoreNotAllowed() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
