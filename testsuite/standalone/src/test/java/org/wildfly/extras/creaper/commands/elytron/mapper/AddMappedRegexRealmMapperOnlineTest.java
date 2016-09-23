@@ -1,17 +1,14 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -85,10 +82,11 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
 
         assertTrue("Mapped regex realm mapper should be created", ops.exists(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS));
 
-        checkMappedRegexRealmMapperAttribute("pattern", "somePattern");
-        checkMappedRegexRealmMapperAttribute("delegate-realm-mapper", TEST_MAPPED_REGEX_REALM_MAPPER_NAME2);
-        checkMappedRegexRealmMapperAttribute("realm-map.someFrom1", "someTo1");
-        checkMappedRegexRealmMapperAttribute("realm-map.someFrom2", "someTo2");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "delegate-realm-mapper",
+                TEST_MAPPED_REGEX_REALM_MAPPER_NAME2);
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "realm-map.someFrom1", "someTo1");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "realm-map.someFrom2", "someTo2");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -130,7 +128,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         client.apply(addMappedRegexRealmMapper2);
         assertTrue("Mapped regex realm mapper should be created", ops.exists(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkMappedRegexRealmMapperAttribute("pattern", "somePattern2");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern2");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -213,10 +211,4 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         fail("Creating command with null realm mapping 'to' should throw exception");
     }
 
-    private void checkMappedRegexRealmMapperAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
-    }
 }

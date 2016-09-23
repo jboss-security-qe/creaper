@@ -1,12 +1,10 @@
 package org.wildfly.extras.creaper.commands.elytron.realm;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,7 +15,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -101,12 +98,12 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Properties realm should be created", ops.exists(TEST_PROPERTIES_REALM_ADDRESS));
 
-        checkPropertiesRealmAttribute("users-properties.path", "mgmt-users.properties");
-        checkPropertiesRealmAttribute("users-properties.relative-to", "jboss.server.config.dir");
-        checkPropertiesRealmAttribute("groups-properties.path", "mgmt-groups.properties");
-        checkPropertiesRealmAttribute("groups-properties.relative-to", "jboss.server.config.dir");
-        checkPropertiesRealmAttribute("groups-attribute", "myGroup");
-        checkPropertiesRealmAttribute("plain-text", "true");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.path", "mgmt-users.properties");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.relative-to", "jboss.server.config.dir");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-properties.path", "mgmt-groups.properties");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-properties.relative-to", "jboss.server.config.dir");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-attribute", "myGroup");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "plain-text", "true");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -144,7 +141,7 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addPropertiesRealm2);
         assertTrue("Properties realm should be created", ops.exists(TEST_PROPERTIES_REALM_ADDRESS));
         // check whether it was really rewritten
-        checkPropertiesRealmAttribute("users-properties.path", "mgmt-users.properties");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.path", "mgmt-users.properties");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -187,10 +184,4 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
         fail("Creating command with defined groups properties relative-to and without groups properties path should throw exception");
     }
 
-    private void checkPropertiesRealmAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_PROPERTIES_REALM_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
-    }
 }

@@ -1,17 +1,14 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -81,8 +78,9 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
 
         assertTrue("Simple regex realm mapper should be created", ops.exists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS));
 
-        checkSimpleRegexRealmMapperAttribute("pattern", "somePattern");
-        checkSimpleRegexRealmMapperAttribute("delegate-realm-mapper", TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
+        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern");
+        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "delegate-realm-mapper",
+                TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
     }
 
     @Test(expected = CommandFailedException.class)
@@ -120,7 +118,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         client.apply(addSimpleRegexRealmMapper2);
         assertTrue("Simple regex realm mapper should be created", ops.exists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkSimpleRegexRealmMapperAttribute("pattern", "somePattern2");
+        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern2");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -155,10 +153,4 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         fail("Creating command with empty pattern should throw exception");
     }
 
-    private void checkSimpleRegexRealmMapperAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
-    }
 }

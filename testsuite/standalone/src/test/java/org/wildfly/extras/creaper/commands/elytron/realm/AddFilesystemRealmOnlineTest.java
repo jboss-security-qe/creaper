@@ -1,10 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.realm;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Ignore;
@@ -12,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -72,9 +69,9 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Filesystem realm should be created", ops.exists(TEST_FILESYSTEM_REALM_ADDRESS));
 
-        checkFilesystemRealmAttribute("path", "filesystem");
-        checkFilesystemRealmAttribute("relative-to", "jboss.server.config.dir");
-        checkFilesystemRealmAttribute("levels", "5");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "path", "filesystem");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "relative-to", "jboss.server.config.dir");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "levels", "5");
     }
 
     /**
@@ -95,10 +92,10 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Filesystem realm should be created", ops.exists(TEST_FILESYSTEM_REALM_ADDRESS));
 
-        checkFilesystemRealmAttribute("path", "filesystem");
-        checkFilesystemRealmAttribute("relative-to", "jboss.server.config.dir");
-        checkFilesystemRealmAttribute("levels", "5");
-        checkFilesystemRealmAttribute("name-rewriter", "name-rewriter");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "path", "filesystem");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "relative-to", "jboss.server.config.dir");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "levels", "5");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "name-rewriter", "name-rewriter");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -134,7 +131,7 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addFilesystemRealm2);
         assertTrue("Filesystem realm should be created", ops.exists(TEST_FILESYSTEM_REALM_ADDRESS));
         // check whether it was really rewritten
-        checkFilesystemRealmAttribute("path", "/path/to/second/filesystem");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "path", "/path/to/second/filesystem");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -167,13 +164,6 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
                 .path("")
                 .build();
         fail("Creating command with empty name should throw exception");
-    }
-
-    private void checkFilesystemRealmAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_FILESYSTEM_REALM_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
     }
 
 }

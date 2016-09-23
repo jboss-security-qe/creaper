@@ -1,17 +1,14 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -59,9 +56,9 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
 
         assertTrue("Logical permission mapper should be created", ops.exists(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS));
 
-        checkLogicalPermissionMapperAttribute("logical-operation", "UNLESS");
-        checkLogicalPermissionMapperAttribute("left", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
-        checkLogicalPermissionMapperAttribute("right", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "UNLESS");
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "left", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "right", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
     }
 
     @Test
@@ -137,7 +134,7 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
         client.apply(addLogicalPermissionMapper2);
         assertTrue("Logical permission mapper should be created", ops.exists(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkLogicalPermissionMapperAttribute("logical-operation", "AND");
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "AND");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -190,10 +187,4 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
         fail("Creating command with null right should throw exception");
     }
 
-    private void checkLogicalPermissionMapperAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
-    }
 }

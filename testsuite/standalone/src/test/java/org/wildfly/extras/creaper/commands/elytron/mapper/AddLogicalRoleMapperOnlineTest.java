@@ -1,17 +1,14 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -80,9 +77,9 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
 
-        checkLogicalRoleMapperAttribute("logical-operation", "OR");
-        checkLogicalRoleMapperAttribute("left", "creaper-contant-role-mapper-1");
-        checkLogicalRoleMapperAttribute("right", "creaper-contant-role-mapper-2");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "OR");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "left", "creaper-contant-role-mapper-1");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "right", "creaper-contant-role-mapper-2");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -117,7 +114,7 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addLogicalRoleMapper2);
         assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkLogicalRoleMapperAttribute("logical-operation", "AND");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "AND");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -142,13 +139,6 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
                 .logicalOperation(null)
                 .build();
         fail("Creating command with null logical operation should throw exception");
-    }
-
-    private void checkLogicalRoleMapperAttribute(String attribute, String expectedValue) throws IOException {
-        ModelNodeResult readAttribute = ops.readAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, attribute);
-        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
-        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
-                readAttribute.stringValue());
     }
 
 }
