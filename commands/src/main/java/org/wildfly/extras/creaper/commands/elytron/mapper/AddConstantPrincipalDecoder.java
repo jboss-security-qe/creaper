@@ -13,7 +13,7 @@ public final class AddConstantPrincipalDecoder implements OnlineCommand {
     private final String constant;
     private final boolean replaceExisting;
 
-    public AddConstantPrincipalDecoder(Builder builder) {
+    private AddConstantPrincipalDecoder(Builder builder) {
         this.name = builder.name;
         this.constant = builder.constant;
         this.replaceExisting = builder.replaceExisting;

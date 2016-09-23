@@ -13,7 +13,7 @@ public final class AddSimpleRoleDecoder implements OnlineCommand {
     private final String attribute;
     private final boolean replaceExisting;
 
-    public AddSimpleRoleDecoder(Builder builder) {
+    private AddSimpleRoleDecoder(Builder builder) {
         this.name = builder.name;
         this.replaceExisting = builder.replaceExisting;
         this.attribute = builder.attribute;

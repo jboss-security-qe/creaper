@@ -8,7 +8,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 public final class AddAggregatePrincipalDecoder extends AbstractAddPrincipalDecoder {
 
-    public AddAggregatePrincipalDecoder(Builder builder) {
+    private AddAggregatePrincipalDecoder(Builder builder) {
         super(builder);
     }
 

@@ -12,7 +12,7 @@ public final class AddEmptyRoleDecoder implements OnlineCommand {
     private final String name;
     private final boolean replaceExisting;
 
-    public AddEmptyRoleDecoder(Builder builder) {
+    private AddEmptyRoleDecoder(Builder builder) {
         this.name = builder.name;
         this.replaceExisting = builder.replaceExisting;
     }

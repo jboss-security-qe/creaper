@@ -21,7 +21,7 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
     private final List<String> requiredOids;
     private final boolean replaceExisting;
 
-    public AddX500AttributePrincipalDecoder(Builder builder) {
+    private AddX500AttributePrincipalDecoder(Builder builder) {
         this.name = builder.name;
         this.oid = builder.oid;
         this.joiner = builder.joiner;

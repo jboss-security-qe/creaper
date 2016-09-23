@@ -10,7 +10,7 @@ public final class AddConcatenatingPrincipalDecoder extends AbstractAddPrincipal
 
     private final String joiner;
 
-    public AddConcatenatingPrincipalDecoder(Builder builder) {
+    private AddConcatenatingPrincipalDecoder(Builder builder) {
         super(builder);
         this.joiner = builder.joiner;
     }
