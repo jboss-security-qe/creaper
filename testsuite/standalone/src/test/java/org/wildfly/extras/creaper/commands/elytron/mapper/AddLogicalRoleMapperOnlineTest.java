@@ -1,12 +1,17 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.core.CommandFailedException;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -52,6 +57,98 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
         assertTrue("Second logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS2));
+    }
+
+    @Test
+    public void addFullLogicalRoleMapper() throws Exception {
+        AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder("creaper-contant-role-mapper-1")
+                .addRoles("AnyRole1")
+                .build();
+        AddConstantRoleMapper addConstantRoleMapper2 = new AddConstantRoleMapper.Builder("creaper-contant-role-mapper-2")
+                .addRoles("AnyRole2")
+                .build();
+        client.apply(addConstantRoleMapper);
+        client.apply(addConstantRoleMapper2);
+
+        AddLogicalRoleMapper addLogicalRoleMapper = new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.OR)
+                .left("creaper-contant-role-mapper-1")
+                .right("creaper-contant-role-mapper-2")
+                .build();
+
+        client.apply(addLogicalRoleMapper);
+
+        assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
+
+        checkLogicalRoleMapperAttribute("logical-operation", "OR");
+        checkLogicalRoleMapperAttribute("left", "creaper-contant-role-mapper-1");
+        checkLogicalRoleMapperAttribute("right", "creaper-contant-role-mapper-2");
+    }
+
+    @Test(expected = CommandFailedException.class)
+    public void addLogicalRoleMapperNotAllowed() throws Exception {
+        AddLogicalRoleMapper addLogicalRoleMapper = new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.OR)
+                .build();
+
+        AddLogicalRoleMapper addLogicalRoleMapper2 = new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.AND)
+                .build();
+
+        client.apply(addLogicalRoleMapper);
+        assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
+        client.apply(addLogicalRoleMapper2);
+        fail("Logical role mapper CreaperTestLogicalRoleMapper already exists in configuration, exception should be thrown");
+    }
+
+    @Test
+    public void addLogicalRoleMapperAllowed() throws Exception {
+        AddLogicalRoleMapper addLogicalRoleMapper = new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.OR)
+                .build();
+
+        AddLogicalRoleMapper addLogicalRoleMapper2 = new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.AND)
+                .replaceExisting()
+                .build();
+
+        client.apply(addLogicalRoleMapper);
+        assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
+        client.apply(addLogicalRoleMapper2);
+        assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
+        // check whether it was really rewritten
+        checkLogicalRoleMapperAttribute("logical-operation", "AND");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLogicalRoleMapper_nullName() throws Exception {
+        new AddLogicalRoleMapper.Builder(null)
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.OR)
+                .build();
+        fail("Creating command with null name should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLogicalRoleMapper_emptyName() throws Exception {
+        new AddLogicalRoleMapper.Builder("")
+                .logicalOperation(AddLogicalRoleMapper.LogicalOperation.OR)
+                .build();
+        fail("Creating command with empty name should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLogicalRoleMapper_nullLogicalOperation() throws Exception {
+        new AddLogicalRoleMapper.Builder(TEST_LOGICAL_ROLE_MAPPER_NAME)
+                .logicalOperation(null)
+                .build();
+        fail("Creating command with null logical operation should throw exception");
+    }
+
+    private void checkLogicalRoleMapperAttribute(String attribute, String expectedValue) throws IOException {
+        ModelNodeResult readAttribute = ops.readAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, attribute);
+        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
+        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
+                readAttribute.stringValue());
     }
 
 }

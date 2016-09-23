@@ -1,6 +1,7 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -101,13 +102,11 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
             return this;
         }
 
-        public Builder addPermissionMapping(PermissionMapping permissionMapping) {
-            this.permissionMappings.add(permissionMapping);
-            return this;
-        }
-
-        public Builder addPermissionMappings(List<PermissionMapping> permissionMappings) {
-            this.permissionMappings.addAll(permissionMappings);
+        public Builder addPermissionMappings(PermissionMapping... permissionMappings) {
+            if (permissionMappings == null) {
+                throw new IllegalArgumentException("PermissionMapping added to simple-permission-mapper must not be null");
+            }
+            Collections.addAll(this.permissionMappings, permissionMappings);
             return this;
         }
 
@@ -157,33 +156,27 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
         private List<String> principals = new ArrayList<String>();
         private List<Permission> permissions = new ArrayList<Permission>();
 
-        public PermissionMappingBuilder addRole(String role) {
-            this.roles.add(role);
+        public PermissionMappingBuilder addRoles(String... roles) {
+            if (roles == null) {
+                throw new IllegalArgumentException("Roles added to permission-mapping of simple-permission-mapper must not be null");
+            }
+            Collections.addAll(this.roles, roles);
             return this;
         }
 
-        public PermissionMappingBuilder addRoles(List<String> roles) {
-            this.roles.addAll(roles);
+        public PermissionMappingBuilder addPrincipals(String... principals) {
+            if (principals == null) {
+                throw new IllegalArgumentException("Principals added to permission-mapping of simple-permission-mapper must not be null");
+            }
+            Collections.addAll(this.principals, principals);
             return this;
         }
 
-        public PermissionMappingBuilder addPrincipal(String principal) {
-            this.principals.add(principal);
-            return this;
-        }
-
-        public PermissionMappingBuilder addPrincipals(List<String> principals) {
-            this.principals.addAll(principals);
-            return this;
-        }
-
-        public PermissionMappingBuilder addPermission(Permission permission) {
-            this.permissions.add(permission);
-            return this;
-        }
-
-        public PermissionMappingBuilder addPermissions(List<Permission> permissions) {
-            this.permissions.addAll(permissions);
+        public PermissionMappingBuilder addPermissions(Permission... permissions) {
+            if (permissions == null) {
+                throw new IllegalArgumentException("Permissions added to permission-mapping of simple-permission-mapper must not be null");
+            }
+            Collections.addAll(this.permissions, permissions);
             return this;
         }
 

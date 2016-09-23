@@ -82,6 +82,24 @@ public class AddConstantRoleMapperOnlineTest extends AbstractElytronOnlineTest {
                 + " already exists in configuration, exception should be thrown");
     }
 
+    public void addDuplicateConstantRoleMapperAllowed() throws Exception {
+        AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
+                .addRoles("AnyRole")
+                .build();
+
+        AddConstantRoleMapper addConstantRoleMapper2 = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
+                .addRoles("AnyRole2")
+                .replaceExisting()
+                .build();
+
+        client.apply(addConstantRoleMapper);
+        assertTrue("Constant role mapper should be created", ops.exists(TEST_CONSTANT_ROLE_MAPPER_ADDRESS));
+        client.apply(addConstantRoleMapper2);
+        assertTrue("Constant role mapper should be created", ops.exists(TEST_CONSTANT_ROLE_MAPPER_ADDRESS));
+        // check whether it was really rewritten
+        assertRoles(TEST_CONSTANT_ROLE_MAPPER_ADDRESS, "AnyRole2");
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addConstantRoleMapper_nullName() throws Exception {
         new AddConstantRoleMapper.Builder(null);

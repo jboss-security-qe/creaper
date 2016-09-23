@@ -7,10 +7,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-/**
- *
- * @author olukas
- */
 public final class AddPropertiesRealm implements OnlineCommand {
 
     private static final String REALM_TYPE = "properties-realm";
