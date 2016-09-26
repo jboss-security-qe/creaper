@@ -13,7 +13,7 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
     private final Boolean wantClientAuth;
     private final String securityDomain;
 
-    public AddServerSSLContext(Builder builder) {
+    private AddServerSSLContext(Builder builder) {
         super(builder);
         this.authenticationOptional = builder.authenticationOptional;
         this.needClientAuth = builder.needClientAuth;

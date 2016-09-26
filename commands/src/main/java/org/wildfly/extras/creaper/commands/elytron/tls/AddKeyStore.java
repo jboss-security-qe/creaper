@@ -20,7 +20,7 @@ public final class AddKeyStore implements OnlineCommand {
     private final Boolean required;
     private final boolean replaceExisting;
 
-    public AddKeyStore(Builder builder) {
+    private AddKeyStore(Builder builder) {
         this.name = builder.name;
         this.type = builder.type;
         this.provider = builder.provider;

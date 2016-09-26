@@ -8,7 +8,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 public final class AddClientSSLContext extends AbstractAddSSLContext {
 
-    public AddClientSSLContext(Builder builder) {
+    private AddClientSSLContext(Builder builder) {
         super(builder);
     }
 

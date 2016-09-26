@@ -16,7 +16,7 @@ public final class AddTrustManager implements OnlineCommand {
     private final String providerLoader;
     private final boolean replaceExisting;
 
-    public AddTrustManager(Builder builder) {
+    private AddTrustManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;

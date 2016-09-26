@@ -17,7 +17,7 @@ public final class AddKeyManager implements OnlineCommand {
     private final String providerLoader;
     private final boolean replaceExisting;
 
-    public AddKeyManager(Builder builder) {
+    private AddKeyManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;
