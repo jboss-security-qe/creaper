@@ -30,12 +30,14 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
             FILTERING_KEY_STORE_NAME);
     private static final Address FILTERING_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("filtering-key-store",
             FILTERING_KEY_STORE_NAME2);
-    private static final String FILTER_ALIAS = "alias";
+    private static final String ALIAS_FILTER = "alias";
+    private static final String ALIAS_FILTER2 = "alias2";
 
     @BeforeClass
     public static void addKeyStores() throws Exception {
         try (OnlineManagementClient client = createManagementClient()) {
-            AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME, KEY_STORE_TYPE)
+            AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME)
+                    .type(KEY_STORE_TYPE)
                     .build();
             client.apply(addKeyStore);
         }
@@ -60,8 +62,9 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addSimpleFilteringKeyStore() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
         assertFalse("The filtering key store should not exist", ops.exists(FILTERING_KEY_STORE_ADDRESS));
         client.apply(addFilteringKeyStore);
@@ -70,11 +73,13 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addTwoSimpleFilteringKeyStores() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
-        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME2,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME2)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
 
         assertFalse("The filtering key store should not exist", ops.exists(FILTERING_KEY_STORE_ADDRESS));
@@ -89,11 +94,13 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = CommandFailedException.class)
     public void addDuplicatefilteringKeyStoreNotAllowed() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
-        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
 
         client.apply(addFilteringKeyStore);
@@ -105,65 +112,73 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addDuplicateFilteringKeyStoreAllowed() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
-        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore2 = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER2)
                 .replaceExisting()
                 .build();
-
         client.apply(addFilteringKeyStore);
         assertTrue("The filtering key store should be created", ops.exists(FILTERING_KEY_STORE_ADDRESS));
 
         client.apply(addFilteringKeyStore2);
         assertTrue("The filtering key store should be created", ops.exists(FILTERING_KEY_STORE_ADDRESS));
+        checkAttribute(FILTERING_KEY_STORE_ADDRESS, "alias-filter", ALIAS_FILTER2);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFilteringKeyStore_nullName() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(null, KEY_STORE_NAME,
-                FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(null)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
         fail("Creating command with null filtering keystore name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_emptyName() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder("", KEY_STORE_NAME,
-                FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder("")
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
         fail("Creating command with empty filtering keystore name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFilteringKeyStore_nullKeyStore() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME, null,
-                FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(null)
+                .aliasFilter(ALIAS_FILTER)
                 .build();
         fail("Creating command with null filtering keystore keystore should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_emptyKeyStore() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME, "",
-                FILTER_ALIAS)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore("")
+                .aliasFilter(ALIAS_FILTER)
                 .build();
         fail("Creating command with empty filtering keystore keystore should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addFilteringKeyStore_nullFilterAlias() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, null)
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter(null)
                 .build();
         fail("Creating command with null filtering keystore filter alias should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_emptyFilterAlias() throws Exception {
-        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME,
-                KEY_STORE_NAME, "")
+        AddFilteringKeyStore addFilteringKeyStore = new AddFilteringKeyStore.Builder(FILTERING_KEY_STORE_NAME)
+                .keyStore(KEY_STORE_NAME)
+                .aliasFilter("")
                 .build();
         fail("Creating command with empty filtering keystore filter alias should throw exception");
     }

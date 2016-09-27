@@ -14,7 +14,7 @@ public final class AddFilteringKeyStore implements OnlineCommand {
     private final String aliasFilter;
     private final boolean replaceExisting;
 
-    public AddFilteringKeyStore(Builder builder) {
+    private AddFilteringKeyStore(Builder builder) {
         this.name = builder.name;
         this.keyStore = builder.keyStore;
         this.aliasFilter = builder.aliasFilter;
@@ -38,24 +38,26 @@ public final class AddFilteringKeyStore implements OnlineCommand {
 
     public static final class Builder {
 
-        private String name;
+        private final String name;
         private String aliasFilter;
         private String keyStore;
         private boolean replaceExisting;
 
-        public Builder(String name, String keyStore, String aliasFilter) {
+        public Builder(String name) {
             if (name == null || name.isEmpty()) {
                 throw new IllegalArgumentException("Name of the filtering-key-store must be specified as non empty value");
             }
-            if (keyStore == null || keyStore.isEmpty()) {
-                throw new IllegalArgumentException("Key store of the filtering-key-store must be specified as non empty value");
-            }
-            if (aliasFilter == null || aliasFilter.isEmpty()) {
-                throw new IllegalArgumentException("Alias filter of the filtering-key-store must be specified as non empty value");
-            }
             this.name = name;
-            this.aliasFilter = aliasFilter;
+        }
+
+        public Builder keyStore(String keyStore) {
             this.keyStore = keyStore;
+            return this;
+        }
+
+        public Builder aliasFilter(String aliasFilter) {
+            this.aliasFilter = aliasFilter;
+            return this;
         }
 
         public Builder replaceExisting() {
@@ -64,6 +66,14 @@ public final class AddFilteringKeyStore implements OnlineCommand {
         }
 
         public AddFilteringKeyStore build() {
+
+            if (keyStore == null || keyStore.isEmpty()) {
+                throw new IllegalArgumentException("Key store of the filtering-key-store must be specified as non empty value");
+            }
+            if (aliasFilter == null || aliasFilter.isEmpty()) {
+                throw new IllegalArgumentException("Alias filter of the filtering-key-store must be specified as non empty value");
+            }
+
             return new AddFilteringKeyStore(this);
         }
     }

@@ -58,7 +58,7 @@ public final class AddKeyStore implements OnlineCommand {
 
     public static final class Builder {
 
-        private String name;
+        private final String name;
         private String type;
         private String provider;
         private String providerLoader;
@@ -69,15 +69,16 @@ public final class AddKeyStore implements OnlineCommand {
         private Boolean required;
         private boolean replaceExisting;
 
-        public Builder(String name, String type) {
+        public Builder(String name) {
             if (name == null || name.isEmpty()) {
                 throw new IllegalArgumentException("Name of the key-store must be specified as non empty value");
             }
-            if (type == null || type.isEmpty()) {
-                throw new IllegalArgumentException("Type of the key-store must be specified as non empty value");
-            }
             this.name = name;
+        }
+
+        public Builder type(String type) {
             this.type = type;
+            return this;
         }
 
         public Builder provider(String provider) {
@@ -121,6 +122,9 @@ public final class AddKeyStore implements OnlineCommand {
         }
 
         public AddKeyStore build() {
+            if (type == null || type.isEmpty()) {
+                throw new IllegalArgumentException("Type of the key-store must be specified as non empty value");
+            }
             return new AddKeyStore(this);
         }
     }

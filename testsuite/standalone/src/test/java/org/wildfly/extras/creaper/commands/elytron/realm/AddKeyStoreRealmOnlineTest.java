@@ -119,7 +119,9 @@ public class AddKeyStoreRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     private void addKeyStore(String keyStoreName) throws CommandFailedException {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(keyStoreName, TEST_KEY_STORE_TYPE).build();
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(keyStoreName)
+                .type(TEST_KEY_STORE_TYPE)
+                .build();
         client.apply(addKeyStore);
     }
 }
