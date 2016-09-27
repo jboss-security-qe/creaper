@@ -35,22 +35,28 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
     @BeforeClass
     public static void addDependentResources() throws Exception {
         try (OnlineManagementClient client = createManagementClient()) {
-            AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+            AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                    .type(TEST_KEY_STORE_TYPE)
                     .build();
-            AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2, TEST_KEY_STORE_TYPE)
+            AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
+                    .type(TEST_KEY_STORE_TYPE)
                     .build();
 
-            AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+            AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                    .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME)
                     .build();
-            AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2, TEST_KEY_MANAGER_ALGORITHM)
+            AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
+                    .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME2)
                     .build();
 
-            AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME, TRUST_MANAGER_ALGORITHM)
+            AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
+                    .algorithm(TRUST_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME)
                     .build();
-            AddTrustManager addTrustManager2 = new AddTrustManager.Builder(TRUST_MNGR_NAME2, TRUST_MANAGER_ALGORITHM)
+            AddTrustManager addTrustManager2 = new AddTrustManager.Builder(TRUST_MNGR_NAME2)
+                    .algorithm(TRUST_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME2)
                     .build();
 

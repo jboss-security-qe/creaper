@@ -32,7 +32,8 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addSimpleKeyStore() throws Exception {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
                 .build();
         assertFalse("The key store should not exist", ops.exists(TEST_KEY_STORE_ADDRESS));
         client.apply(addKeyStore);
@@ -41,9 +42,11 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addTwoSimpleKeyStores() throws Exception {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
                 .build();
-        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
+                .type(TEST_KEY_STORE_TYPE)
                 .build();
 
         assertFalse("The key store should not exist", ops.exists(TEST_KEY_STORE_ADDRESS));
@@ -58,9 +61,11 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = CommandFailedException.class)
     public void addExistKeyStoreNotAllowed() throws Exception {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
                 .build();
-        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
                 .build();
 
         client.apply(addKeyStore);
@@ -72,9 +77,12 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addExistKeyStoreAllowed() throws Exception {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+             .type(TEST_KEY_STORE_TYPE)
             .build();
-        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+            .type(TEST_KEY_STORE_TYPE)
+            .aliasFilter("alias")
             .replaceExisting()
             .build();
 
@@ -83,11 +91,14 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addKeyStore2);
         assertTrue("The key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS));
+        // check whether it was really rewritten
+        checkAttribute(TEST_KEY_STORE_ADDRESS, "alias-filter", "alias");
     }
 
     @Test
     public void addFullKeyStore() throws Exception {
-        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+            .type(TEST_KEY_STORE_TYPE)
             .aliasFilter("server-alias")
             .password("password")
             .build();
@@ -101,28 +112,32 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_nullName() throws Exception {
-        new AddKeyStore.Builder(null, TEST_KEY_STORE_TYPE)
+        new AddKeyStore.Builder(null)
+            .type(TEST_KEY_STORE_TYPE)
             .build();
         fail("Creating command with null keystore name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_emptyName() throws Exception {
-        new AddKeyStore.Builder("", TEST_KEY_STORE_TYPE)
+        new AddKeyStore.Builder("")
+            .type(TEST_KEY_STORE_TYPE)
             .build();
         fail("Creating command with empty keystore name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_nullType() throws Exception {
-        new AddKeyStore.Builder(TEST_KEY_STORE_NAME, null)
+        new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+            .type(null)
             .build();
         fail("Creating command with null keystore type should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyStore_emptyType() throws Exception {
-        new AddKeyStore.Builder(TEST_KEY_STORE_NAME, "")
+        new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+            .type("")
             .build();
         fail("Creating command with empty keystore type should throw exception");
     }
