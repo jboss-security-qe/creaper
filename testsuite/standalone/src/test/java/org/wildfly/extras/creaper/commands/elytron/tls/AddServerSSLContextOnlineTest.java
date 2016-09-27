@@ -78,6 +78,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
                 .build();
         AddServerSSLContext addServerSSLContext2 = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
+                .sessionTimeout(5)
                 .replaceExisting()
                 .build();
 
@@ -86,6 +87,8 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
 
         client.apply(addServerSSLContext2);
         assertTrue("The server ssl context should be created", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
+        // check whether it was really rewritten
+        checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "session-timeout", "5");
     }
 
     @Test

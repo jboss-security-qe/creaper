@@ -36,7 +36,8 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     @BeforeClass
     public static void addKeyStores() throws Exception {
         try (OnlineManagementClient client = createManagementClient()) {
-            AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME, KEY_STORE_TYPE)
+            AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME)
+                    .type(KEY_STORE_TYPE)
                     .build();
             client.apply(addKeyStore);
         }

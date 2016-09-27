@@ -78,6 +78,7 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         AddClientSSLContext addClientSSLContext = new AddClientSSLContext.Builder(CLIENT_SSL_CONTEXT_NAME)
                 .build();
         AddClientSSLContext addClientSSLContext2 = new AddClientSSLContext.Builder(CLIENT_SSL_CONTEXT_NAME)
+                .sessionTimeout(5)
                 .replaceExisting()
                 .build();
 
@@ -86,6 +87,8 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
 
         client.apply(addClientSSLContext2);
         assertTrue("The cleint ssl context should be created", ops.exists(CLIENT_SSL_CONTEXT_ADDRESS));
+        // check whether it was really rewritten
+        checkAttribute(CLIENT_SSL_CONTEXT_ADDRESS, "session-timeout", "5");
     }
 
     @Test

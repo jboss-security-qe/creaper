@@ -44,22 +44,23 @@ public final class AddTrustManager implements OnlineCommand {
 
     public static final class Builder {
 
-        private String name;
+        private final String name;
         private String algorithm;
         private String keyStore;
         private String provider;
         private String providerLoader;
         private boolean replaceExisting;
 
-        public Builder(String name, String algorithm) {
+        public Builder(String name) {
             if (name == null || name.isEmpty()) {
                 throw new IllegalArgumentException("Name of the trust-manager must be specified as non empty value");
             }
-            if (algorithm == null || algorithm.isEmpty()) {
-                throw new IllegalArgumentException("Algorithm of the trust-manager must be specified as non empty value");
-            }
             this.name = name;
+        }
+
+        public Builder algorithm(String algorithm) {
             this.algorithm = algorithm;
+            return this;
         }
 
         public Builder keyStore(String keyStore) {
@@ -83,6 +84,9 @@ public final class AddTrustManager implements OnlineCommand {
         }
 
         public AddTrustManager build() {
+            if (algorithm == null || algorithm.isEmpty()) {
+                throw new IllegalArgumentException("Algorithm of the trust-manager must be specified as non empty value");
+            }
             return new AddTrustManager(this);
         }
     }

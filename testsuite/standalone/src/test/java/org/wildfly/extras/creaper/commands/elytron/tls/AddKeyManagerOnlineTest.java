@@ -39,9 +39,11 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @BeforeClass
     public static void addKeyStores() throws Exception {
         try (OnlineManagementClient client = createManagementClient()) {
-            AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME, TEST_KEY_STORE_TYPE)
+            AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                    .type(TEST_KEY_STORE_TYPE)
                     .build();
-            AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2, TEST_KEY_STORE_TYPE)
+            AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
+                    .type(TEST_KEY_STORE_TYPE)
                     .build();
 
             client.apply(addKeyStore);
@@ -69,7 +71,8 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addSimpleKeyManager() throws Exception {
-        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         assertFalse("The key manager should not exist", ops.exists(TEST_KEY_MNGR_ADDRESS));
@@ -79,10 +82,12 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addTwoSimpleKeyManagers() throws Exception {
-        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
-        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME2)
                 .build();
 
@@ -98,10 +103,12 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = CommandFailedException.class)
     public void addDuplicateKeyManagersNotAllowed() throws Exception {
-        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
-        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
 
@@ -114,11 +121,14 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addDuplicateKeyManagerAllowed() throws Exception {
-        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
-        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
+                .password("password")
                 .replaceExisting()
                 .build();
 
@@ -127,11 +137,15 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addKeyManager2);
         assertTrue("The key manager should be created", ops.exists(TEST_KEY_MNGR_ADDRESS));
+        // check whether it was really rewritten
+        checkAttribute(TEST_KEY_MNGR_ADDRESS, "password", "password");
+
     }
 
     @Test
     public void addFullKeyManager() throws Exception {
-        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, TEST_KEY_MANAGER_ALGORITHM)
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .password("password")
                 .build();
@@ -145,28 +159,32 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullName() throws Exception {
-        new AddKeyManager.Builder(null, TEST_KEY_MANAGER_ALGORITHM)
+        new AddKeyManager.Builder(null)
+            .algorithm(TEST_KEY_MANAGER_ALGORITHM)
             .build();
         fail("Creating command with null key manager name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_emptyName() throws Exception {
-        new AddKeyManager.Builder("", TEST_KEY_MANAGER_ALGORITHM)
+        new AddKeyManager.Builder("")
+            .algorithm(TEST_KEY_MANAGER_ALGORITHM)
             .build();
         fail("Creating command with empty key manager name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullAlgorithm() throws Exception {
-        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, null)
+        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+            .algorithm(null)
             .build();
         fail("Creating command with null key manager algorithm should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_emptyAlgorithm() throws Exception {
-        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME, "")
+        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+            .algorithm("")
             .build();
         fail("Creating command with empty key manager algorithm should throw exception");
     }
