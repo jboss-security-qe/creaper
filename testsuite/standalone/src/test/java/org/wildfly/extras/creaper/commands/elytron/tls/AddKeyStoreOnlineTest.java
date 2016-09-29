@@ -100,13 +100,13 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
             .aliasFilter("server-alias")
-            .password("password")
+            .password("test-Password")
             .build();
         client.apply(addKeyStore);
         assertTrue("Key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS));
 
         checkAttribute("type", TEST_KEY_STORE_TYPE);
-        checkAttribute("password", "password");
+        checkAttribute("password", "test-Password");
         checkAttribute("alias-filter", "server-alias");
     }
 

@@ -128,7 +128,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .password("password")
+                .password("test-Password")
                 .replaceExisting()
                 .build();
 
@@ -138,7 +138,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addKeyManager2);
         assertTrue("The key manager should be created", ops.exists(TEST_KEY_MNGR_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_KEY_MNGR_ADDRESS, "password", "password");
+        checkAttribute(TEST_KEY_MNGR_ADDRESS, "password", "test-Password");
 
     }
 
@@ -147,14 +147,14 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .password("password")
+                .password("test-Password")
                 .build();
         client.apply(addKeyManager);
         assertTrue("Key manager should be created", ops.exists(TEST_KEY_MNGR_ADDRESS));
 
         checkAttribute("algorithm", TEST_KEY_MANAGER_ALGORITHM);
         checkAttribute("key-store", TEST_KEY_STORE_NAME);
-        checkAttribute("password", "password");
+        checkAttribute("password", "test-Password");
     }
 
     @Test(expected = IllegalArgumentException.class)

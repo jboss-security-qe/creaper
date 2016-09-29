@@ -33,16 +33,16 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addRegexNameRewriter() throws Exception {
         AddRegexNameRewriter addRegexNameRewriter
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .replaceAll(true)
                 .build();
 
         client.apply(addRegexNameRewriter);
 
         assertTrue("Regex name rewriter should be created", ops.exists(TEST_REGEX_NAME_REWRITER_ADDRESS));
-        checkRegexNameRewriterAttribute("pattern", "pattern");
-        checkRegexNameRewriterAttribute("replacement", "replacement");
+        checkRegexNameRewriterAttribute("pattern", "test-pattern");
+        checkRegexNameRewriterAttribute("replacement", "test-replacement");
         checkRegexNameRewriterAttribute("replace-all", "true");
     }
 
@@ -50,13 +50,13 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addTwoRegexNameRewriters() throws Exception {
         AddRegexNameRewriter addRegexNameRewriter
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .build();
         AddRegexNameRewriter addRegexNameRewriter2
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME2)
-                .pattern("pattern2")
-                .replacement("replacement2")
+                .pattern("test-pattern2")
+                .replacement("test-replacement2")
                 .build();
 
         client.apply(addRegexNameRewriter);
@@ -72,13 +72,13 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addExistRegexNameRewriterNotAllowed() throws Exception {
         AddRegexNameRewriter addRegexNameRewriter
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .build();
         AddRegexNameRewriter addRegexNameRewriter2
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern2")
-                .replacement("replacement2")
+                .pattern("test-pattern2")
+                .replacement("test-replacement2")
                 .build();
 
         client.apply(addRegexNameRewriter);
@@ -92,32 +92,30 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addExistRegexNameRewriterAllowed() throws Exception {
         AddRegexNameRewriter addRegexNameRewriter
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .build();
         AddRegexNameRewriter addRegexNameRewriter2
                 = new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern2")
-                .replacement("replacement2")
+                .pattern("test-pattern2")
+                .replacement("test-replacement2")
                 .replaceExisting()
                 .build();
 
         client.apply(addRegexNameRewriter);
         assertTrue("Regex name rewriter should be created", ops.exists(TEST_REGEX_NAME_REWRITER_ADDRESS));
-        checkRegexNameRewriterAttribute("pattern", "pattern");
-        checkRegexNameRewriterAttribute("replacement", "replacement");
 
         client.apply(addRegexNameRewriter2);
         assertTrue("Regex name rewriter should be created", ops.exists(TEST_REGEX_NAME_REWRITER_ADDRESS));
-        checkRegexNameRewriterAttribute("pattern", "pattern2");
-        checkRegexNameRewriterAttribute("replacement", "replacement2");
+        checkRegexNameRewriterAttribute("pattern", "test-pattern2");
+        checkRegexNameRewriterAttribute("replacement", "test-replacement2");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameRewriter_nullName() throws Exception {
         new AddRegexNameRewriter.Builder(null)
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .build();
         fail("Creating command with null name should throw exception");
     }
@@ -125,8 +123,8 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameRewriter_emptyName() throws Exception {
         new AddRegexNameRewriter.Builder("")
-                .pattern("pattern")
-                .replacement("replacement")
+                .pattern("test-pattern")
+                .replacement("test-replacement")
                 .build();
         fail("Creating command with empty name should throw exception");
     }
@@ -135,7 +133,7 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addRegexNameRewriter_nullPattern() throws Exception {
         new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
                 .pattern(null)
-                .replacement("replacement")
+                .replacement("test-replacement")
                 .build();
         fail("Creating command with null pattern should throw exception");
     }
@@ -144,7 +142,7 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     public void addRegexNameRewriter_emptyPattern() throws Exception {
         new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
                 .pattern("")
-                .replacement("replacement")
+                .replacement("test-replacement")
                 .build();
         fail("Creating command with empty pattern should throw exception");
     }
@@ -152,7 +150,7 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameRewriter_nullReplacement() throws Exception {
         new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .replacement(null)
                 .build();
         fail("Creating command with null replacement should throw exception");
@@ -161,7 +159,7 @@ public class AddRegexNameRewriterOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameRewriter_emptyReplacement() throws Exception {
         new AddRegexNameRewriter.Builder(TEST_REGEX_NAME_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .replacement("")
                 .build();
         fail("Creating command with empty replacement should throw exception");

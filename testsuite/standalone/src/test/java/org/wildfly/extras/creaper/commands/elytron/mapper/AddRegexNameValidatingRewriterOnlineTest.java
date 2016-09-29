@@ -33,7 +33,7 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     public void addRegexNameValidatingRewriter() throws Exception {
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
 
@@ -41,7 +41,7 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
 
         assertTrue("Regex name validating rewriter should be created",
                 ops.exists(TEST_REGEX_NAME_VALIDATING_REWRITER_ADDRESS));
-        checkRegexNameValidatingRewriterAttribute("pattern", "pattern");
+        checkRegexNameValidatingRewriterAttribute("pattern", "test-pattern");
         checkRegexNameValidatingRewriterAttribute("match", "true");
     }
 
@@ -49,12 +49,12 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     public void addTwoRegexNameValidatingRewriters() throws Exception {
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter2
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME2)
-                .pattern("pattern2")
+                .pattern("test-pattern2")
                 .match(false)
                 .build();
 
@@ -71,12 +71,12 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     public void addExistRegexNameValidatingRewriterNotAllowed() throws Exception {
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter2
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern2")
+                .pattern("test-pattern2")
                 .match(false)
                 .build();
 
@@ -92,12 +92,12 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     public void addExistRegexNameValidatingRewriterAllowed() throws Exception {
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
         AddRegexNameValidatingRewriter addRegexNameValidatingRewriter2
                 = new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern2")
+                .pattern("test-pattern2")
                 .match(false)
                 .replaceExisting()
                 .build();
@@ -105,20 +105,18 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
         client.apply(addRegexNameValidatingRewriter);
         assertTrue("Regex name validating rewriter should be created",
                 ops.exists(TEST_REGEX_NAME_VALIDATING_REWRITER_ADDRESS));
-        checkRegexNameValidatingRewriterAttribute("pattern", "pattern");
-        checkRegexNameValidatingRewriterAttribute("match", "true");
 
         client.apply(addRegexNameValidatingRewriter2);
         assertTrue("Regex name validating rewriter should be created",
                 ops.exists(TEST_REGEX_NAME_VALIDATING_REWRITER_ADDRESS));
-        checkRegexNameValidatingRewriterAttribute("pattern", "pattern2");
+        checkRegexNameValidatingRewriterAttribute("pattern", "test-pattern2");
         checkRegexNameValidatingRewriterAttribute("match", "false");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameValidatingRewriter_nullName() throws Exception {
         new AddRegexNameValidatingRewriter.Builder(null)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
         fail("Creating command with null name should throw exception");
@@ -127,7 +125,7 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameValidatingRewriter_emptyName() throws Exception {
         new AddRegexNameValidatingRewriter.Builder("")
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .match(true)
                 .build();
         fail("Creating command with empty name should throw exception");
@@ -154,7 +152,7 @@ public class AddRegexNameValidatingRewriterOnlineTest extends AbstractElytronOnl
     @Test(expected = IllegalArgumentException.class)
     public void addRegexNameValidatingRewriter_matchUnspecified() throws Exception {
         new AddRegexNameValidatingRewriter.Builder(TEST_REGEX_NAME_VALIDATING_REWRITER_NAME)
-                .pattern("pattern")
+                .pattern("test-pattern")
                 .build();
         fail("Creating command without defined match should throw exception");
     }
