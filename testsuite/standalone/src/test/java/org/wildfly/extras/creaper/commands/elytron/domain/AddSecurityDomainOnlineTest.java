@@ -272,6 +272,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         fail("Security domain CreaperTestSecurityDomain already exists in configuration, exception should be thrown");
     }
 
+    @Test
     public void addSecurityDomainAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addFilesystemRealm2);
