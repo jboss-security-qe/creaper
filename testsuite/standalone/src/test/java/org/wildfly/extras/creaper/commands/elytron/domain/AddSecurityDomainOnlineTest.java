@@ -305,6 +305,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .build())
                 .build();
+        fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -314,6 +315,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .build())
                 .build();
+        fail("Creating command with empty name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -323,6 +325,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .build())
                 .build();
+        fail("Creating command with null default-realm should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -332,6 +335,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .build())
                 .build();
+        fail("Creating command with empty default-realm should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -340,6 +344,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .defaultRealm(TEST_FILESYSTEM_REALM_NAME)
                 .realms(null)
                 .build();
+        fail("Creating command with null realms should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -347,6 +352,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
                 .defaultRealm(TEST_FILESYSTEM_REALM_NAME)
                 .build();
+        fail("Creating command with no realms should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -355,6 +361,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .defaultRealm(TEST_FILESYSTEM_REALM_NAME)
                 .realms()
                 .build();
+        fail("Creating command with empty realms should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -364,6 +371,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder(null)
                         .build())
                 .build();
+        fail("Creating command with null name of realm in realms should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -373,5 +381,6 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realms(new AddSecurityDomain.RealmBuilder("")
                         .build())
                 .build();
+        fail("Creating command with empty name of realm in realms should throw exception");
     }
 }

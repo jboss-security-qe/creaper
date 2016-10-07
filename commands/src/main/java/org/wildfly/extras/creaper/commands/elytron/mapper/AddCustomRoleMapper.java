@@ -29,14 +29,14 @@ public final class AddCustomRoleMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("custom-role-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("custom-role-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
-            .and("class-name", className)
+        ops.add(mapperAddress, Values.empty()
+                .and("class-name", className)
             .andOptional("module", module)
             .andObjectOptional("configuration", Values.fromMap(configuration)));
     }

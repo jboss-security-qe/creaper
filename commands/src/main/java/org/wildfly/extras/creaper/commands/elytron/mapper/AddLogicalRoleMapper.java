@@ -26,13 +26,13 @@ public final class AddLogicalRoleMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("logical-role-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("logical-role-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(mapperAddress, Values.empty()
                 .and("logical-operation", logicalOperation.name())
                 .andOptional("left", left)
                 .andOptional("right", right));

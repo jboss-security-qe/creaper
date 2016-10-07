@@ -137,6 +137,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
+        fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -145,6 +146,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
+        fail("Creating command with empty name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -153,6 +155,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url(null)
                 .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
+        fail("Creating command with null url should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -161,6 +164,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url("")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
+        fail("Creating command with empty url should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

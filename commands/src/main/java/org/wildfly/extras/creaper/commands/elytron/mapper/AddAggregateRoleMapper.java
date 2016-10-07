@@ -26,14 +26,14 @@ public final class AddAggregateRoleMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("aggregate-role-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("aggregate-role-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
-            .andList(String.class, "role-mappers", roleMapperNameList));
+        ops.add(mapperAddress, Values.empty()
+                .andList(String.class, "role-mappers", roleMapperNameList));
     }
 
     public static final class Builder {

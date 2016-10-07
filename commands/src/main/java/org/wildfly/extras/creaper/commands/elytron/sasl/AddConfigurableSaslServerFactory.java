@@ -37,10 +37,10 @@ public final class AddConfigurableSaslServerFactory implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron")
+        Address factoryAddress = Address.subsystem("elytron")
                 .and("configurable-sasl-server-factory", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(factoryAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -72,7 +72,7 @@ public final class AddConfigurableSaslServerFactory implements OnlineCommand {
             propertyNode = propertyNode.asObject();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(factoryAddress, Values.empty()
                 .and("sasl-server-factory", saslServerFactory)
                 .andOptional("protocol", protocol)
                 .andOptional("server-name", serverName)

@@ -28,9 +28,9 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("simple-permission-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("simple-permission-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -74,7 +74,7 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
 
         String mappingModeValue = mappingMode == null ? null : mappingMode.name();
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(mapperAddress, Values.empty()
                 .andOptional("mapping-mode", mappingModeValue)
                 .andList(ModelNode.class, "permission-mappings", permissionMappingsModelNodeList));
     }

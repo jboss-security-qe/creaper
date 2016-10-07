@@ -25,14 +25,14 @@ public final class AddAggregateSaslServerFactory implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron")
+        Address factoryAddress = Address.subsystem("elytron")
                 .and("aggregate-sasl-server-factory", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(factoryAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(factoryAddress, Values.empty()
                 .andList(String.class, "sasl-server-factories", saslServerFactories));
     }
 

@@ -22,14 +22,14 @@ public final class AddAddPrefixRoleMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("add-prefix-role-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("add-prefix-role-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
-            .and("prefix", prefix));
+        ops.add(mapperAddress, Values.empty()
+                .and("prefix", prefix));
     }
 
     public static final class Builder {

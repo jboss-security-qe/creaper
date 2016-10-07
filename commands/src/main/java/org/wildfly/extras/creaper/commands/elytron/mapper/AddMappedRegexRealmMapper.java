@@ -30,9 +30,9 @@ public final class AddMappedRegexRealmMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("mapped-regex-realm-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("mapped-regex-realm-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -41,7 +41,7 @@ public final class AddMappedRegexRealmMapper implements OnlineCommand {
             realmMapNode.add(realmMapping.getFrom(), realmMapping.getTo());
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(mapperAddress, Values.empty()
                 .and("pattern", pattern)
                 .andOptional("delegate-realm-mapper", delegateRealmMapper)
                 .and("realm-map", realmMapNode.asObject()));

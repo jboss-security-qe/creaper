@@ -22,14 +22,14 @@ public final class AddProviderSaslServerFactory implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron")
+        Address factoryAddress = Address.subsystem("elytron")
                 .and("provider-sasl-server-factory", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(factoryAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(factoryAddress, Values.empty()
                 .andOptional("provider-loader", providerLoader));
     }
 

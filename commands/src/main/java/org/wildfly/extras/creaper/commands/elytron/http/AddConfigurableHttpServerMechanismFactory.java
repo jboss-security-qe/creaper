@@ -30,10 +30,10 @@ public final class AddConfigurableHttpServerMechanismFactory implements OnlineCo
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron")
+        Address factoryAddress = Address.subsystem("elytron")
                 .and("configurable-http-server-mechanism-factory", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(factoryAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -60,7 +60,7 @@ public final class AddConfigurableHttpServerMechanismFactory implements OnlineCo
             propertyNode = propertyNode.asObject();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(factoryAddress, Values.empty()
                 .and("http-server-mechanism-factory", httpServerMechanismFactory)
                 .andListOptional(ModelNode.class, "filters", filterNodeList)
                 .andOptional("properties", propertyNode));

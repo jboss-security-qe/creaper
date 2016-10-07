@@ -29,14 +29,14 @@ public abstract class AbstractAddCustom implements OnlineCommand {
     @Override
     public final void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and(getCustomTypeName(), name);
+        Address address = Address.subsystem("elytron").and(getCustomTypeName(), name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(address);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
-            .and("class-name", className)
+        ops.add(address, Values.empty()
+                .and("class-name", className)
             .andOptional("module", module)
             .andObjectOptional("configuration", Values.fromMap(configuration)));
     }

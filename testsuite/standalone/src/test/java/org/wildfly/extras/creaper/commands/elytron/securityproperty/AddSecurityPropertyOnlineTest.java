@@ -95,6 +95,7 @@ public class AddSecurityPropertyOnlineTest extends AbstractElytronOnlineTest {
         new AddSecurityProperty.Builder(null)
                 .value("someSecretValue")
                 .build();
+        fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -102,6 +103,7 @@ public class AddSecurityPropertyOnlineTest extends AbstractElytronOnlineTest {
         new AddSecurityProperty.Builder("")
                 .value("someSecretValue")
                 .build();
+        fail("Creating command with empty name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -109,6 +111,7 @@ public class AddSecurityPropertyOnlineTest extends AbstractElytronOnlineTest {
         new AddSecurityProperty.Builder(TEST_SECURITY_PROPERTY_NAME)
                 .value(null)
                 .build();
+        fail("Creating command with null value should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -116,6 +119,7 @@ public class AddSecurityPropertyOnlineTest extends AbstractElytronOnlineTest {
         new AddSecurityProperty.Builder(TEST_SECURITY_PROPERTY_NAME)
                 .value("")
                 .build();
+        fail("Creating command with empty value should throw exception");
     }
 
 }

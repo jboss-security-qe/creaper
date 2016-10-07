@@ -42,9 +42,9 @@ public final class AddSecurityDomain implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("security-domain", name);
+        Address securityDomainAddress = Address.subsystem("elytron").and("security-domain", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(securityDomainAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -65,7 +65,7 @@ public final class AddSecurityDomain implements OnlineCommand {
             realmsModelNodeList.add(configNode);
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(securityDomainAddress, Values.empty()
                 .and("default-realm", defaultRealm)
                 .andList(ModelNode.class, "realms", realmsModelNodeList)
                 .andOptional("pre-realm-name-rewriter", preRealmNameRewriter)

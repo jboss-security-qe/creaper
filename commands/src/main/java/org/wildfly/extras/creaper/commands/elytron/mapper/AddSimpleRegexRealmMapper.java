@@ -24,13 +24,13 @@ public final class AddSimpleRegexRealmMapper implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron").and("simple-regex-realm-mapper", name);
+        Address mapperAddress = Address.subsystem("elytron").and("simple-regex-realm-mapper", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(mapperAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(mapperAddress, Values.empty()
                 .and("pattern", pattern)
                 .andOptional("delegate-realm-mapper", delegateRealmMapper));
     }

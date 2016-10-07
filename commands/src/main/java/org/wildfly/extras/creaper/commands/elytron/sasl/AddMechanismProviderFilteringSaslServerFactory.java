@@ -30,10 +30,10 @@ public final class AddMechanismProviderFilteringSaslServerFactory implements Onl
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address securityRealmAddress = Address.subsystem("elytron")
+        Address factoryAddress = Address.subsystem("elytron")
                 .and("mechanism-provider-filtering-sasl-server-factory", name);
         if (replaceExisting) {
-            ops.removeIfExists(securityRealmAddress);
+            ops.removeIfExists(factoryAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
@@ -55,7 +55,7 @@ public final class AddMechanismProviderFilteringSaslServerFactory implements Onl
             filtersNodeList.add(filterModelNode);
         }
 
-        ops.add(securityRealmAddress, Values.empty()
+        ops.add(factoryAddress, Values.empty()
                 .and("sasl-server-factory", saslServerFactory)
                 .andOptional("enabling", enabling)
                 .andList(ModelNode.class, "filters", filtersNodeList));
