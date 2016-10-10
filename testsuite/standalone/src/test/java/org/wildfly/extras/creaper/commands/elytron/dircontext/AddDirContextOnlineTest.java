@@ -170,18 +170,20 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addDirContext_undefinedCredential() throws Exception {
         new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
-                .url(null)
+                .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.SIMPLE)
                 .principal("test-principal")
                 .build();
+        fail("Creating command without defined credential should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addDirContext_undefinedPrincipal() throws Exception {
         new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
-                .url(null)
+                .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.SIMPLE)
                 .credential("test-credential")
                 .build();
+        fail("Creating command without defined principal should throw exception");
     }
 }
