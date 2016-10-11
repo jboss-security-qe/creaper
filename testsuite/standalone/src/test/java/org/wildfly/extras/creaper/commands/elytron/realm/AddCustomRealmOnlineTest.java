@@ -1,4 +1,4 @@
-package org.wildfly.extras.creaper.commands.elytron.mapper;
+package org.wildfly.extras.creaper.commands.elytron.realm;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
