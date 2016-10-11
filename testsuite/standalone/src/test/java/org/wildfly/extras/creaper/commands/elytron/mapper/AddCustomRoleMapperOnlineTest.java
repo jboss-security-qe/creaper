@@ -118,13 +118,15 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRoleMapper_nullName() throws Exception {
-        new AddCustomRoleMapper.Builder(null);
+        new AddCustomRoleMapper.Builder(null)
+            .className(AddCustomRoleMapperImpl.class.getName()).build();
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomRoleMapper_emptyName() throws Exception {
-        new AddCustomRoleMapper.Builder("");
+        new AddCustomRoleMapper.Builder("")
+            .className(AddCustomRoleMapperImpl.class.getName()).build();
         fail("Creating command with empty name should throw exception");
     }
 
@@ -135,7 +137,7 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRoleMapper);
 
-        assertTrue("Add custom role mapper should be created", ops.exists(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -159,7 +161,7 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRoleMapper);
 
-        assertTrue("Add custom role mapper should be created", ops.exists(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)

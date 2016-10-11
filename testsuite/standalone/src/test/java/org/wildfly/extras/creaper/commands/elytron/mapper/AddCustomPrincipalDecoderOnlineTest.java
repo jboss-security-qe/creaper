@@ -129,13 +129,15 @@ public class AddCustomPrincipalDecoderOnlineTest extends AbstractElytronOnlineTe
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomPrincipalDecoder_nullName() throws Exception {
-        new AddCustomPrincipalDecoder.Builder(null);
+        new AddCustomPrincipalDecoder.Builder(null)
+            .className(AddCustomPrincipalDecoderImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomPrincipalDecoder_emptyName() throws Exception {
-        new AddCustomPrincipalDecoder.Builder("");
+        new AddCustomPrincipalDecoder.Builder("")
+            .className(AddCustomPrincipalDecoderImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -148,8 +150,7 @@ public class AddCustomPrincipalDecoderOnlineTest extends AbstractElytronOnlineTe
 
         client.apply(addAddCustomPrincipalDecoder);
 
-        assertTrue("Add custom principal decoder should be created",
-            ops.exists(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -177,8 +178,7 @@ public class AddCustomPrincipalDecoderOnlineTest extends AbstractElytronOnlineTe
 
         client.apply(addAddCustomPrincipalDecoder);
 
-        assertTrue("Add custom principal decoder should be created",
-            ops.exists(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)

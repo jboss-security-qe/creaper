@@ -14,7 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.realm.AddCustomRealm;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -119,13 +118,15 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealm_nullName() throws Exception {
-        new AddCustomRealm.Builder(null);
+        new AddCustomRealm.Builder(null)
+            .className(AddCustomRealmImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomRealm_emptyName() throws Exception {
-        new AddCustomRealm.Builder("");
+        new AddCustomRealm.Builder("")
+            .className(AddCustomRealmImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -137,7 +138,7 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealm);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -161,7 +162,7 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealm);
 
-        assertTrue("Add custom realm should be created", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
+        fail("Command should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -174,6 +175,6 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealm);
 
-        fail("Creating command with test configuration should throw exception");
+        fail("Command with wrong module-name should throw exception.");
     }
 }

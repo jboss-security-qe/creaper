@@ -129,13 +129,15 @@ public class AddCustomRoleDecoderOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRoleDecoder_nullName() throws Exception {
-        new AddCustomRoleDecoder.Builder(null);
+        new AddCustomRoleDecoder.Builder(null)
+            .className(AddCustomRoleDecoderImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomRoleDecoder_emptyName() throws Exception {
-        new AddCustomRoleDecoder.Builder("");
+        new AddCustomRoleDecoder.Builder("")
+            .className(AddCustomRoleDecoderImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -148,8 +150,7 @@ public class AddCustomRoleDecoderOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRoleDecoder);
 
-        assertTrue("Add custom role decoder should be created",
-            ops.exists(TEST_ADD_CUSTOM_ROLE_DECODER_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -177,8 +178,7 @@ public class AddCustomRoleDecoderOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRoleDecoder);
 
-        assertTrue("Add custom role decoder should be created",
-            ops.exists(TEST_ADD_CUSTOM_ROLE_DECODER_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)

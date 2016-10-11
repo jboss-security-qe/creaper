@@ -129,13 +129,15 @@ public class AddCustomPermissionMapperOnlineTest extends AbstractElytronOnlineTe
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomPermission_nullName() throws Exception {
-        new AddCustomPermissionMapper.Builder(null);
+        new AddCustomPermissionMapper.Builder(null)
+            .className(AddCustomPermissionMapperImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomPermissionMapper_emptyName() throws Exception {
-        new AddCustomPermissionMapper.Builder("");
+        new AddCustomPermissionMapper.Builder("")
+            .className(AddCustomPermissionMapperImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -148,8 +150,7 @@ public class AddCustomPermissionMapperOnlineTest extends AbstractElytronOnlineTe
 
         client.apply(addAddCustomPermissionMapper);
 
-        assertTrue("Add custom permission mapper should be created",
-            ops.exists(TEST_ADD_CUSTOM_PERMISSION_MAPPER_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -177,8 +178,7 @@ public class AddCustomPermissionMapperOnlineTest extends AbstractElytronOnlineTe
 
         client.apply(addAddCustomPermissionMapper);
 
-        assertTrue("Add custom permission mapper should be created",
-            ops.exists(TEST_ADD_CUSTOM_PERMISSION_MAPPER_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)

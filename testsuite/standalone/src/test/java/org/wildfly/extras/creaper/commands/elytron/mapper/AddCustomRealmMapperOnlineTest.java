@@ -122,13 +122,15 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealmMapper_nullName() throws Exception {
-        new AddCustomRealmMapper.Builder(null);
+        new AddCustomRealmMapper.Builder(null)
+            .className(AddCustomRealmMapperImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomRealmMapper_emptyName() throws Exception {
-        new AddCustomRealmMapper.Builder("");
+        new AddCustomRealmMapper.Builder("")
+            .className(AddCustomRealmMapperImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -141,7 +143,7 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealmMapper);
 
-        assertTrue("Add custom realm mapper should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -166,7 +168,7 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealmMapper);
 
-        assertTrue("Add custom realm mapper should be created", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)

@@ -14,8 +14,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.mapper.AddCustomModifiableRealm;
-import org.wildfly.extras.creaper.commands.elytron.mapper.AddCustomModifiableRealm.Builder;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -27,11 +25,11 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTest {
 
     private static final String TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME = "CreaperTestAddCustomModifiableRealm";
-    private static final Address TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS = SUBSYSTEM_ADDRESS.and("custom-modifiable-realm",
-        TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME);
+    private static final Address TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS = SUBSYSTEM_ADDRESS
+        .and("custom-modifiable-realm", TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME);
     private static final String TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME2 = "CreaperTestAddCustomModifiableRealm2";
-    private static final Address TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2 = SUBSYSTEM_ADDRESS.and("custom-modifiable-realm",
-        TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME2);
+    private static final Address TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2 = SUBSYSTEM_ADDRESS
+        .and("custom-modifiable-realm", TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME2);
     private static final String CUSTOM_MODIFIABLE_REALM_MODULE_NAME = "org.jboss.custommodifiablerealmimpl";
 
     @BeforeClass
@@ -65,7 +63,8 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
 
     @Test
     public void addCustomModifiableRealm() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
             .addConfiguration("param", "parameterValue")
@@ -73,12 +72,14 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
 
         client.apply(addAddCustomModifiableRealm);
 
-        assertTrue("Add custom modifiable realm  should be created", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        assertTrue("Add custom modifiable realm  should be created",
+            ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
     }
 
     @Test
     public void addCustomModifiableRealms() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
             .build();
@@ -91,28 +92,35 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
         client.apply(addAddCustomModifiableRealm);
         client.apply(addAddCustomModifiableRealm2);
 
-        assertTrue("Add custom modifiable realm  should be created", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        assertTrue("Add custom modifiable realm  should be created",
+            ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
         assertTrue("Second add custom modifiable realm  should be created",
             ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2));
 
-        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS, "class-name", AddCustomModifiableRealmImpl.class.getName());
-        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2, "class-name", AddCustomModifiableRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS, "class-name",
+            AddCustomModifiableRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2, "class-name",
+            AddCustomModifiableRealmImpl.class.getName());
 
         administration.reload();
 
-        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS, "class-name", AddCustomModifiableRealmImpl.class.getName());
-        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2, "class-name", AddCustomModifiableRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS, "class-name",
+            AddCustomModifiableRealmImpl.class.getName());
+        checkAttribute(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2, "class-name",
+            AddCustomModifiableRealmImpl.class.getName());
     }
 
     @Test(expected = CommandFailedException.class)
     public void addDuplicateCustomModifiableRealmNotAllowed() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
             .build();
 
         client.apply(addAddCustomModifiableRealm);
-        assertTrue("Add custom modifiable realm  should be created", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        assertTrue("Add custom modifiable realm  should be created",
+            ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
         client.apply(addAddCustomModifiableRealm);
         fail("Add custom modifiable realm  " + TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME
             + " already exists in configuration, exception should be thrown");
@@ -120,25 +128,28 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomModifiableRealm_nullName() throws Exception {
-        new AddCustomModifiableRealm.Builder(null);
+        new AddCustomModifiableRealm.Builder(null)
+            .className(AddCustomModifiableRealmImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomModifiableRealm_emptyName() throws Exception {
-        new AddCustomModifiableRealm.Builder("");
+        new AddCustomModifiableRealm.Builder("")
+            .className(AddCustomModifiableRealmImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
     @Test(expected = CommandFailedException.class)
     public void addCustomModifiableRealm_noModule() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .build();
 
         client.apply(addAddCustomModifiableRealm);
 
-        assertTrue("Add custom modifiable realm  should be created", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -155,19 +166,21 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
 
     @Test(expected = CommandFailedException.class)
     public void addCustomModifiableRealm_wrongModule() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .module("wrongModule")
             .build();
 
         client.apply(addAddCustomModifiableRealm);
 
-        assertTrue("Add custom modifiable realm  should be created", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)
     public void addCustomModifiableRealm_configurationWithException() throws Exception {
-        AddCustomModifiableRealm addAddCustomModifiableRealm = new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+        AddCustomModifiableRealm addAddCustomModifiableRealm =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
             .className(AddCustomModifiableRealmImpl.class.getName())
             .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
             .addConfiguration("throwException", "parameterValue")

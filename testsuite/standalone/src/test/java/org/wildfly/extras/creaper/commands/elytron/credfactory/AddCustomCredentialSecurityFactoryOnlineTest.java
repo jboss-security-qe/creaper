@@ -14,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.realm.AddCustomModifiableRealmImpl;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -129,13 +130,15 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
 
     @Test(expected = IllegalArgumentException.class)
     public void addCustomCredentialSecurityFactory_nullName() throws Exception {
-        new AddCustomCredentialSecurityFactory.Builder(null);
+        new AddCustomCredentialSecurityFactory.Builder(null)
+            .className(AddCustomCredentialSecurityFactoryImpl.class.getName());
         fail("Creating command with null name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addAddCustomCredentialSecurityFactory_emptyName() throws Exception {
-        new AddCustomCredentialSecurityFactory.Builder("");
+        new AddCustomCredentialSecurityFactory.Builder("")
+            .className(AddCustomCredentialSecurityFactoryImpl.class.getName());
         fail("Creating command with empty name should throw exception");
     }
 
@@ -148,8 +151,7 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
 
         client.apply(addAddCustomCredentialSecurityFactory);
 
-        assertTrue("Add custom credential security factory should be created",
-            ops.exists(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS));
+        fail("Command should throw exception because Impl class is in non-global module.");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -177,8 +179,7 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
 
         client.apply(addAddCustomCredentialSecurityFactory);
 
-        assertTrue("Add custom credential security factory should be created",
-            ops.exists(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS));
+        fail("Command with wrong module-name should throw exception.");
     }
 
     @Test(expected = CommandFailedException.class)
