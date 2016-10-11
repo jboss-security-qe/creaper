@@ -39,7 +39,7 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
     }
 
     @Test
-    public void addMechanismProviderFilteringSaslServerFactory() throws Exception {
+    public void addSimpleMechanismProviderFilteringSaslServerFactory() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory
@@ -57,7 +57,7 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
     }
 
     @Test
-    public void addMechanismProviderFilteringSaslServerFactories() throws Exception {
+    public void addTwoMechanismProviderFilteringSaslServerFactories() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory
@@ -127,7 +127,7 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addMechanismProviderFilteringSaslServerFactoryNotAllowed() throws Exception {
+    public void addExistMechanismProviderFilteringSaslServerFactoryNotAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory
@@ -153,7 +153,7 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
     }
 
     @Test
-    public void addMechanismProviderFilteringSaslServerFactoryAllowed() throws Exception {
+    public void addExistMechanismProviderFilteringSaslServerFactoryAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory

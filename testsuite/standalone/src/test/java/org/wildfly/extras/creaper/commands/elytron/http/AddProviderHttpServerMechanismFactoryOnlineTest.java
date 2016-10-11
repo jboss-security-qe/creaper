@@ -35,7 +35,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     }
 
     @Test
-    public void addProviderHttpServerMechanismFactory() throws Exception {
+    public void addSimpleProviderHttpServerMechanismFactory() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .build();
@@ -47,7 +47,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     }
 
     @Test
-    public void addProviderHttpServerMechanismFactories() throws Exception {
+    public void addTwoProviderHttpServerMechanismFactories() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .build();
@@ -84,7 +84,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
 
     @Test(expected = CommandFailedException.class)
     @Ignore("missing command for adding provider-loader")
-    public void addProviderHttpServerMechanismFactoryNotAllowed() throws Exception {
+    public void addExistProviderHttpServerMechanismFactoryNotAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .providerLoader(PROVIDER_LOADER_NAME)
@@ -104,7 +104,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
 
     @Test
     @Ignore("missing command for adding provider-loader")
-    public void addProviderHttpServerMechanismFactoryAllowed() throws Exception {
+    public void addExistProviderHttpServerMechanismFactoryAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .providerLoader(PROVIDER_LOADER_NAME)

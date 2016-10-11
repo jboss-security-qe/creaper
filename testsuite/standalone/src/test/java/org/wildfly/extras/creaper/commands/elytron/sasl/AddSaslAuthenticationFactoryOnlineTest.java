@@ -140,7 +140,7 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addSaslAuthenticationFactory() throws Exception {
+    public void addSimpleSaslAuthenticationFactory() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderSaslServerFactory);
@@ -157,7 +157,7 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addSaslAuthenticationFactories() throws Exception {
+    public void addTwoSaslAuthenticationFactories() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderSaslServerFactory);
@@ -304,7 +304,7 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addSaslAuthenticationFactoryNotAllowed() throws Exception {
+    public void addExistSaslAuthenticationFactoryNotAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderSaslServerFactory);
@@ -329,7 +329,7 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addSaslAuthenticationFactoryAllowed() throws Exception {
+    public void addExistSaslAuthenticationFactoryAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderSaslServerFactory);

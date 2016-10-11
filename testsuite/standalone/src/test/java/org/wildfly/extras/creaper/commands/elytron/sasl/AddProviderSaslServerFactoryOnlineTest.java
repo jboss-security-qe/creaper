@@ -33,7 +33,7 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addProviderSaslServerFactory() throws Exception {
+    public void addSimpleProviderSaslServerFactory() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .build();
@@ -44,7 +44,7 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addProviderSaslServerFactories() throws Exception {
+    public void addTwoProviderSaslServerFactories() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .build();
@@ -78,7 +78,7 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
 
     @Test(expected = CommandFailedException.class)
     @Ignore("missing command for adding provider-loader")
-    public void addProviderSaslServerFactoryNotAllowed() throws Exception {
+    public void addExistProviderSaslServerFactoryNotAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .providerLoader(PROVIDER_LOADER_NAME)
@@ -97,7 +97,7 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
 
     @Test
     @Ignore("missing command for adding provider-loader")
-    public void addProviderSaslServerFactoryAllowed() throws Exception {
+    public void addExistProviderSaslServerFactoryAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .providerLoader(PROVIDER_LOADER_NAME)

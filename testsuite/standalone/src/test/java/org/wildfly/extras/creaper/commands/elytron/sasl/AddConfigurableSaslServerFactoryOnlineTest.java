@@ -40,7 +40,7 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
     }
 
     @Test
-    public void addConfigurableSaslServerFactory() throws Exception {
+    public void addSimpleConfigurableSaslServerFactory() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory
@@ -54,7 +54,7 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
     }
 
     @Test
-    public void addConfigurableSaslServerFactories() throws Exception {
+    public void addTwoConfigurableSaslServerFactories() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory
@@ -113,7 +113,7 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addConfigurableSaslServerFactoryNotAllowed() throws Exception {
+    public void addExistConfigurableSaslServerFactoryNotAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory
@@ -135,7 +135,7 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
     }
 
     @Test
-    public void addConfigurableSaslServerFactoryAllowed() throws Exception {
+    public void addExistConfigurableSaslServerFactoryAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory

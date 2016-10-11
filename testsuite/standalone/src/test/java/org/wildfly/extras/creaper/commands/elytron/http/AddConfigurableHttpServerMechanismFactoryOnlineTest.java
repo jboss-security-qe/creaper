@@ -40,7 +40,7 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
     }
 
     @Test
-    public void addConfigurableHttpServerMechanismFactory() throws Exception {
+    public void addSimpleConfigurableHttpServerMechanismFactory() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory
@@ -55,7 +55,7 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
     }
 
     @Test
-    public void addConfigurableHttpServerMechanismFactories() throws Exception {
+    public void addTwoConfigurableHttpServerMechanismFactories() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory
@@ -110,7 +110,7 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addConfigurableHttpServerMechanismFactoryNotAllowed() throws Exception {
+    public void addExistConfigurableHttpServerMechanismFactoryNotAllowed() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory
@@ -133,7 +133,7 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
     }
 
     @Test
-    public void addConfigurableHttpServerMechanismFactoryAllowed() throws Exception {
+    public void addExistConfigurableHttpServerMechanismFactoryAllowed() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory

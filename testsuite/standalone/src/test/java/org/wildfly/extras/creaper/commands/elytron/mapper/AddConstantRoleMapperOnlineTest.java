@@ -33,7 +33,7 @@ public class AddConstantRoleMapperOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addConstantRoleMapper() throws Exception {
+    public void addSimpleConstantRoleMapper() throws Exception {
         AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .addRoles("AnyRole")
                 .build();
@@ -44,7 +44,7 @@ public class AddConstantRoleMapperOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addConstantRoleMappers() throws Exception {
+    public void addTwoConstantRoleMappers() throws Exception {
         AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .addRoles("AnyRole")
                 .build();
@@ -70,7 +70,7 @@ public class AddConstantRoleMapperOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addDuplicateConstantRoleMapperNotAllowed() throws Exception {
+    public void addExistConstantRoleMapperNotAllowed() throws Exception {
         AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .addRoles("AnyRole")
                 .build();
@@ -82,7 +82,7 @@ public class AddConstantRoleMapperOnlineTest extends AbstractElytronOnlineTest {
                 + " already exists in configuration, exception should be thrown");
     }
 
-    public void addDuplicateConstantRoleMapperAllowed() throws Exception {
+    public void addExistConstantRoleMapperAllowed() throws Exception {
         AddConstantRoleMapper addConstantRoleMapper = new AddConstantRoleMapper.Builder(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .addRoles("AnyRole")
                 .build();

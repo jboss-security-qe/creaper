@@ -32,7 +32,7 @@ public class AddServiceLoaderSaslServerFactoryOnlineTest extends AbstractElytron
     }
 
     @Test
-    public void addServiceLoaderSaslServerFactory() throws Exception {
+    public void addSimpleServiceLoaderSaslServerFactory() throws Exception {
         AddServiceLoaderSaslServerFactory addServiceLoaderSaslServerFactory
                 = new AddServiceLoaderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .build();
@@ -44,7 +44,7 @@ public class AddServiceLoaderSaslServerFactoryOnlineTest extends AbstractElytron
     }
 
     @Test
-    public void addServiceLoaderSaslServerFactories() throws Exception {
+    public void addTwoServiceLoaderSaslServerFactories() throws Exception {
         AddServiceLoaderSaslServerFactory addServiceLoaderSaslServerFactory
                 = new AddServiceLoaderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .build();
@@ -77,7 +77,7 @@ public class AddServiceLoaderSaslServerFactoryOnlineTest extends AbstractElytron
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addServiceLoaderSaslServerFactoryNotAllowed() throws Exception {
+    public void addExistServiceLoaderSaslServerFactoryNotAllowed() throws Exception {
         AddServiceLoaderSaslServerFactory addServiceLoaderSaslServerFactory
                 = new AddServiceLoaderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .module(ELYTRON_MODULE)
@@ -95,7 +95,7 @@ public class AddServiceLoaderSaslServerFactoryOnlineTest extends AbstractElytron
     }
 
     @Test
-    public void addServiceLoaderSaslServerFactoryAllowed() throws Exception {
+    public void addExistServiceLoaderSaslServerFactoryAllowed() throws Exception {
         AddServiceLoaderSaslServerFactory addServiceLoaderSaslServerFactory
                 = new AddServiceLoaderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .module(ELYTRON_MODULE)

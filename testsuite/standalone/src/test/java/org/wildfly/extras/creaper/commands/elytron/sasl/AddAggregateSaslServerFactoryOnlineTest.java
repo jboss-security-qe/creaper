@@ -51,7 +51,7 @@ public class AddAggregateSaslServerFactoryOnlineTest extends AbstractElytronOnli
     }
 
     @Test
-    public void addAggregateSaslServerFactory() throws Exception {
+    public void addSimpleAggregateSaslServerFactory() throws Exception {
         client.apply(addProviderSaslServerFactory);
         client.apply(addProviderSaslServerFactory2);
 
@@ -67,7 +67,7 @@ public class AddAggregateSaslServerFactoryOnlineTest extends AbstractElytronOnli
     }
 
     @Test
-    public void addAggregateSaslServerFactories() throws Exception {
+    public void addTwoAggregateSaslServerFactories() throws Exception {
         client.apply(addProviderSaslServerFactory);
         client.apply(addProviderSaslServerFactory2);
 
@@ -112,7 +112,7 @@ public class AddAggregateSaslServerFactoryOnlineTest extends AbstractElytronOnli
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addAggregateSaslServerFactoryNotAllowed() throws Exception {
+    public void addExistAggregateSaslServerFactoryNotAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
         client.apply(addProviderSaslServerFactory2);
 
@@ -135,7 +135,7 @@ public class AddAggregateSaslServerFactoryOnlineTest extends AbstractElytronOnli
     }
 
     @Test
-    public void addAggregateSaslServerFactoryAllowed() throws Exception {
+    public void addExistAggregateSaslServerFactoryAllowed() throws Exception {
         client.apply(addProviderSaslServerFactory);
         client.apply(addProviderSaslServerFactory2);
         client.apply(addProviderSaslServerFactory3);

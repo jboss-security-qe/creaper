@@ -62,7 +62,7 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test
-    public void addLogicalPermissionMappers() throws Exception {
+    public void addTwoLogicalPermissionMappers() throws Exception {
         client.apply(addSimplePermissionMapper);
 
         AddLogicalPermissionMapper addLogicalPermissionMapper
@@ -88,7 +88,7 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addLogicalPermissionMapperNotAllowed() throws Exception {
+    public void addExistLogicalPermissionMapperNotAllowed() throws Exception {
         client.apply(addSimplePermissionMapper);
 
         AddLogicalPermissionMapper addLogicalPermissionMapper
@@ -111,7 +111,8 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
         fail("Logical permission mapper CreaperTestLogicalPermissionMapper already exists in configuration, exception should be thrown");
     }
 
-    public void addLogicalPermissionMapperAllowed() throws Exception {
+    @Test
+    public void addExistLogicalPermissionMapperAllowed() throws Exception {
         client.apply(addSimplePermissionMapper);
 
         AddLogicalPermissionMapper addLogicalPermissionMapper

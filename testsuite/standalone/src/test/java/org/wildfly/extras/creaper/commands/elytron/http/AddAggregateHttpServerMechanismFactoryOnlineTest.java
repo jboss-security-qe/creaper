@@ -56,7 +56,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
     }
 
     @Test
-    public void addAggregateHttpServerMechanismFactory() throws Exception {
+    public void addSimpleAggregateHttpServerMechanismFactory() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
         client.apply(addProviderHttpServerMechanismFactory2);
 
@@ -73,7 +73,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
     }
 
     @Test
-    public void addAggregateHttpServerMechanismFactories() throws Exception {
+    public void addTwoAggregateHttpServerMechanismFactories() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
         client.apply(addProviderHttpServerMechanismFactory2);
 
@@ -124,7 +124,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addAggregateHttpServerMechanismFactoryNotAllowed() throws Exception {
+    public void addExistAggregateHttpServerMechanismFactoryNotAllowed() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
         client.apply(addProviderHttpServerMechanismFactory2);
 
@@ -148,7 +148,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
     }
 
     @Test
-    public void addAggregateHttpServerMechanismFactoryAllowed() throws Exception {
+    public void addExistAggregateHttpServerMechanismFactoryAllowed() throws Exception {
         client.apply(addProviderHttpServerMechanismFactory);
         client.apply(addProviderHttpServerMechanismFactory2);
         client.apply(addProviderHttpServerMechanismFactory3);

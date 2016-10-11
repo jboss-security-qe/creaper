@@ -147,7 +147,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addSecurityDomain() throws Exception {
+    public void addSimpleSecurityDomain() throws Exception {
         client.apply(addFilesystemRealm);
 
         AddSecurityDomain addSecurityDomain = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
@@ -162,7 +162,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addSecurityDomains() throws Exception {
+    public void addTwoSecurityDomains() throws Exception {
         client.apply(addFilesystemRealm);
 
         AddSecurityDomain addSecurityDomain = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
@@ -250,7 +250,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addSecurityDomainNotAllowed() throws Exception {
+    public void addExistSecurityDomainNotAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addFilesystemRealm2);
 
@@ -273,7 +273,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addSecurityDomainAllowed() throws Exception {
+    public void addExistSecurityDomainAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addFilesystemRealm2);
 

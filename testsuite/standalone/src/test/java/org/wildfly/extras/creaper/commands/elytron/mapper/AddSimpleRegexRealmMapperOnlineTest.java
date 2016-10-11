@@ -41,7 +41,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     }
 
     @Test
-    public void addSimpleRegexRealmMappers() throws Exception {
+    public void addTwoSimpleRegexRealmMappers() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                 .pattern("somePattern")
@@ -84,7 +84,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addSimpleRegexRealmMapperNotAllowed() throws Exception {
+    public void addExistSimpleRegexRealmMapperNotAllowed() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                 .pattern("somePattern")
@@ -101,7 +101,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         fail("Simple regex realm mapper CreaperTestSimpleRegexRealmMapper already exists in configuration, exception should be thrown");
     }
 
-    public void addSimpleRegexRealmMapperAllowed() throws Exception {
+    public void addExistSimpleRegexRealmMapperAllowed() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                 .pattern("somePattern")

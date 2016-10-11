@@ -34,7 +34,7 @@ public class AddServiceLoaderHttpServerMechanismFactoryOnlineTest extends Abstra
     }
 
     @Test
-    public void addServiceLoaderHttpServerMechanismFactory() throws Exception {
+    public void addSimpleServiceLoaderHttpServerMechanismFactory() throws Exception {
         AddServiceLoaderHttpServerMechanismFactory addServiceLoaderHttpServerMechanismFactory
                 = new AddServiceLoaderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .build();
@@ -47,7 +47,7 @@ public class AddServiceLoaderHttpServerMechanismFactoryOnlineTest extends Abstra
     }
 
     @Test
-    public void addServiceLoaderHttpServerMechanismFactories() throws Exception {
+    public void addTwoServiceLoaderHttpServerMechanismFactories() throws Exception {
         AddServiceLoaderHttpServerMechanismFactory addServiceLoaderHttpServerMechanismFactory
                 = new AddServiceLoaderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .build();
@@ -82,7 +82,7 @@ public class AddServiceLoaderHttpServerMechanismFactoryOnlineTest extends Abstra
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addServiceLoaderHttpServerMechanismFactoryNotAllowed() throws Exception {
+    public void addExistServiceLoaderHttpServerMechanismFactoryNotAllowed() throws Exception {
         AddServiceLoaderHttpServerMechanismFactory addServiceLoaderHttpServerMechanismFactory
                 = new AddServiceLoaderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .module(ELYTRON_MODULE)
@@ -101,7 +101,7 @@ public class AddServiceLoaderHttpServerMechanismFactoryOnlineTest extends Abstra
     }
 
     @Test
-    public void addServiceLoaderHttpServerMechanismFactoryAllowed() throws Exception {
+    public void addExistServiceLoaderHttpServerMechanismFactoryAllowed() throws Exception {
         AddServiceLoaderHttpServerMechanismFactory addServiceLoaderHttpServerMechanismFactory
                 = new AddServiceLoaderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .module(ELYTRON_MODULE)

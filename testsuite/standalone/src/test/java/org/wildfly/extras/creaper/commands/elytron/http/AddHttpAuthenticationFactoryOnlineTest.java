@@ -140,7 +140,7 @@ public class AddHttpAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addHttpAuthenticationFactory() throws Exception {
+    public void addSimpleHttpAuthenticationFactory() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderHttpServerMechanismFactory);
@@ -157,7 +157,7 @@ public class AddHttpAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addHttpAuthenticationFactories() throws Exception {
+    public void addTwoHttpAuthenticationFactories() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderHttpServerMechanismFactory);
@@ -304,7 +304,7 @@ public class AddHttpAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addHttpAuthenticationFactoryNotAllowed() throws Exception {
+    public void addExistHttpAuthenticationFactoryNotAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderHttpServerMechanismFactory);
@@ -329,7 +329,7 @@ public class AddHttpAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    public void addHttpAuthenticationFactoryAllowed() throws Exception {
+    public void addExistHttpAuthenticationFactoryAllowed() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addSecurityDomain);
         client.apply(addProviderHttpServerMechanismFactory);

@@ -48,7 +48,7 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     }
 
     @Test
-    public void addSimplePermissionMappers() throws Exception {
+    public void addTwoSimplePermissionMappers() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
                 .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
@@ -136,7 +136,7 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     }
 
     @Test(expected = CommandFailedException.class)
-    public void addSimplePermissionMapperNotAllowed() throws Exception {
+    public void addExistSimplePermissionMapperNotAllowed() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
                 .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
@@ -162,7 +162,8 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
         fail("Simple permission mapper CreaperTestSimplePermissionMapper already exists in configuration, exception should be thrown");
     }
 
-    public void addSimplePermissionMapperAllowed() throws Exception {
+    @Test
+    public void addExistSimplePermissionMapperAllowed() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
                 .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
