@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -175,5 +179,22 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addAddCustomRoleMapper);
 
         fail("Creating command with test configuration should throw exception");
+    }
+
+    @Test
+    public void addCustomRoleMapper_configuration() throws Exception {
+        AddCustomRoleMapper addAddCustomRoleMapper = new AddCustomRoleMapper.Builder(TEST_ADD_CUSTOM_ROLE_MAPPER_NAME2)
+            .className(AddCustomRoleMapperImpl.class.getName())
+            .module(CUSTOM_ROLE_MAPPER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(addAddCustomRoleMapper);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS2, "configuration", expectedValues);
     }
 }

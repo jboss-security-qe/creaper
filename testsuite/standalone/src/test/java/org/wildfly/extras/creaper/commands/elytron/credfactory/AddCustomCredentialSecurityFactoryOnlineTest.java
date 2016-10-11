@@ -5,16 +5,19 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.realm.AddCustomModifiableRealmImpl;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -194,5 +197,23 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
         client.apply(addAddCustomCredentialSecurityFactory);
 
         fail("Creating command with test configuration should throw exception");
+    }
+
+    @Test
+    public void addCustomCredentialSecurityFactory_configuration() throws Exception {
+        AddCustomCredentialSecurityFactory command =
+            new AddCustomCredentialSecurityFactory.Builder(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_NAME2)
+            .className(AddCustomCredentialSecurityFactoryImpl.class.getName())
+            .module(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
+                .addConfiguration("configParam1", "configParameterValue")
+                .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(command);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS2, "configuration", expectedValues);
     }
 }

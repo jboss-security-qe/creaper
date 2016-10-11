@@ -5,16 +5,19 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.credfactory.AddCustomCredentialSecurityFactoryImpl;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -194,5 +197,23 @@ public class AddCustomNameRewriterOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addAddCustomNameRewriter);
 
         fail("Creating command with test configuration should throw exception");
+    }
+
+    @Test
+    public void addCustomNameRewriter_configuration() throws Exception {
+        AddCustomNameRewriter addAddCustomNameRewriter =
+            new AddCustomNameRewriter.Builder(TEST_ADD_CUSTOM_NAME_REWRITER_NAME2)
+            .className(AddCustomNameRewriterImpl.class.getName())
+            .module(CUSTOM_NAME_REWRITER_MODULE_NAME)
+                .addConfiguration("configParam1", "configParameterValue")
+                .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(addAddCustomNameRewriter);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_NAME_REWRITER_ADDRESS2, "configuration", expectedValues);
     }
 }

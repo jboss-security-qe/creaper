@@ -3,11 +3,14 @@ package org.wildfly.extras.creaper.commands.elytron;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -16,6 +19,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.core.ManagementClient;
+import org.wildfly.extras.creaper.core.online.Constants;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineOptions;
@@ -102,6 +106,33 @@ public abstract class AbstractElytronOnlineTest {
         readAttribute.assertSuccess("Read operation for " + attribute + " failed");
         assertEquals("Read operation for " + attribute + " return unexpected value", expectedValue,
                 readAttribute.stringListValue());
+    }
+
+    protected void checkAttributeProperties(Address address, String attribute, List<Property> expectedValues)
+        throws IOException {
+        ModelNodeResult readAttribute = ops.readAttribute(address, attribute);
+        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
+        ModelNode result = readAttribute.get(Constants.RESULT);
+        List<Property> propertyList = result.asPropertyList();
+
+        if (propertyList.size() != expectedValues.size()) {
+            fail("Configuration properties size must be same as expected values size. Was [" + propertyList.size()
+                + "] and matches [" + expectedValues.size() + "]");
+        }
+
+        int numberOfMatches = 0;
+        for (Property property : propertyList) {
+            for (Property expected : expectedValues) {
+                if (property.getName().equals(expected.getName()) && property.getValue().equals(expected.getValue())) {
+                    numberOfMatches++;
+                }
+            }
+        }
+
+        if (propertyList.size() != numberOfMatches) {
+            fail("Configuration properties size must be same as number of matches. Was [" + propertyList.size()
+                + "] and matches [" + numberOfMatches + "]");
+        }
     }
 
     /**

@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -176,5 +180,22 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addAddCustomRealm);
 
         fail("Command with wrong module-name should throw exception.");
+    }
+
+    @Test
+    public void addCustomRealm_configuration() throws Exception {
+        AddCustomRealm addAddCustomRealm = new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME2)
+            .className(AddCustomRealmImpl.class.getName())
+            .module(CUSTOM_REALM_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(addAddCustomRealm);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_REALM_ADDRESS2, "configuration", expectedValues);
     }
 }

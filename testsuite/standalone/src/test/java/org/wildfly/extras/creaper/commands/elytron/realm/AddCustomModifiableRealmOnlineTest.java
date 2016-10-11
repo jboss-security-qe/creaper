@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -189,5 +193,23 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
         client.apply(addAddCustomModifiableRealm);
 
         fail("Creating command with test configuration should throw exception");
+    }
+
+    @Test
+    public void addCustomModifiableRealm_configuration() throws Exception {
+        AddCustomModifiableRealm command =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME2)
+            .className(AddCustomModifiableRealmImpl.class.getName())
+            .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(command);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS2, "configuration", expectedValues);
     }
 }

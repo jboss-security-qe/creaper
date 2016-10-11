@@ -5,9 +5,13 @@ import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -193,5 +197,23 @@ public class AddCustomPrincipalDecoderOnlineTest extends AbstractElytronOnlineTe
         client.apply(addAddCustomPrincipalDecoder);
 
         fail("Creating command with test configuration should throw exception");
+    }
+
+    @Test
+    public void addCustomPrincipalDecoder_configuration() throws Exception {
+        AddCustomPrincipalDecoder addAddCustomPrincipalDecoder =
+            new AddCustomPrincipalDecoder.Builder(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_NAME2)
+            .className(AddCustomPrincipalDecoderImpl.class.getName())
+            .module(CUSTOM_PRINCIPAL_DECODER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .addConfiguration("configParam2", "configParameterValue2")
+            .build();
+
+        client.apply(addAddCustomPrincipalDecoder);
+
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS2, "configuration", expectedValues);
     }
 }
