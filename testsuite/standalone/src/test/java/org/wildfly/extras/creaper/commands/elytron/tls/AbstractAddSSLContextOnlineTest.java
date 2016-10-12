@@ -18,6 +18,7 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
     private static final Address TEST_KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME);
     private static final Address TEST_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME2);
     private static final String TEST_KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_PASSWORD = "password";
 
     protected static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
     private static final String TEST_KEY_MNGR_NAME2 = "CreaperTestKeyManager2";
@@ -45,10 +46,12 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
             AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                     .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME)
+                    .keyPassword(TEST_KEY_PASSWORD)
                     .build();
             AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
                     .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME2)
+                    .keyPassword(TEST_KEY_PASSWORD)
                     .build();
 
             AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)

@@ -12,7 +12,7 @@ public final class AddKeyManager implements OnlineCommand {
     private final String name;
     private final String algorithm;
     private final String keyStore;
-    private final String password;
+    private final String keyPassword;
     private final String provider;
     private final String providerLoader;
     private final boolean replaceExisting;
@@ -21,7 +21,7 @@ public final class AddKeyManager implements OnlineCommand {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;
-        this.password = builder.password;
+        this.keyPassword = builder.keyPassword;
         this.provider = builder.provider;
         this.providerLoader = builder.providerLoader;
         // Replace existing
@@ -41,7 +41,7 @@ public final class AddKeyManager implements OnlineCommand {
             .and("name", name)
             .and("algorithm", algorithm)
             .and("key-store", keyStore)
-            .andOptional("password", password)
+            .andOptional("key-password", keyPassword)
             .andOptional("provider", provider)
             .andOptional("provider-loader", providerLoader));
     }
@@ -51,7 +51,7 @@ public final class AddKeyManager implements OnlineCommand {
         private final String name;
         private String algorithm;
         private String keyStore;
-        private String password;
+        private String keyPassword;
         private String provider;
         private String providerLoader;
         private boolean replaceExisting;
@@ -73,8 +73,8 @@ public final class AddKeyManager implements OnlineCommand {
             return this;
         }
 
-        public Builder password(String password) {
-            this.password = password;
+        public Builder keyPassword(String keyPassword) {
+            this.keyPassword = keyPassword;
             return this;
         }
 
@@ -96,6 +96,9 @@ public final class AddKeyManager implements OnlineCommand {
         public AddKeyManager build() {
             if (algorithm == null || algorithm.isEmpty()) {
                 throw new IllegalArgumentException("Algorithm of the key-manager must be specified as non empty value");
+            }
+            if (keyPassword == null || keyPassword.isEmpty()) {
+                throw new IllegalArgumentException("Key password of the key-manager must be specified as non empty value");
             }
             return new AddKeyManager(this);
         }
