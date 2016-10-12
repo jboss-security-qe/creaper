@@ -120,6 +120,32 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomRealmAllowed() throws Exception {
+        AddCustomRealm addOperation =
+            new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
+            .className(AddCustomRealmImpl.class.getName())
+            .module(CUSTOM_REALM_MODULE_NAME)
+            .build();
+        AddCustomRealm addOperation2 =
+            new AddCustomRealm.Builder(TEST_ADD_CUSTOM_REALM_NAME)
+            .className(AddCustomRealmImpl.class.getName())
+            .module(CUSTOM_REALM_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_REALM_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealm_nullName() throws Exception {
         new AddCustomRealm.Builder(null)

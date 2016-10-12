@@ -120,6 +120,32 @@ public class AddCustomRoleMapperOnlineTest extends AbstractElytronOnlineTest {
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomRoleMapperAllowed() throws Exception {
+        AddCustomRoleMapper addOperation =
+            new AddCustomRoleMapper.Builder(TEST_ADD_CUSTOM_ROLE_MAPPER_NAME)
+            .className(AddCustomRoleMapperImpl.class.getName())
+            .module(CUSTOM_ROLE_MAPPER_MODULE_NAME)
+            .build();
+        AddCustomRoleMapper addOperation2 =
+            new AddCustomRoleMapper.Builder(TEST_ADD_CUSTOM_ROLE_MAPPER_NAME)
+            .className(AddCustomRoleMapperImpl.class.getName())
+            .module(CUSTOM_ROLE_MAPPER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_ROLE_MAPPER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRoleMapper_nullName() throws Exception {
         new AddCustomRoleMapper.Builder(null)

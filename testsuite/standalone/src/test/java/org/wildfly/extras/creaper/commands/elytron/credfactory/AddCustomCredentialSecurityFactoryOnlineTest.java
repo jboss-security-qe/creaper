@@ -131,6 +131,32 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomCredentialSecurityFactoryAllowed() throws Exception {
+        AddCustomCredentialSecurityFactory addOperation =
+            new AddCustomCredentialSecurityFactory.Builder(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_NAME)
+            .className(AddCustomCredentialSecurityFactoryImpl.class.getName())
+            .module(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
+            .build();
+        AddCustomCredentialSecurityFactory addOperation2 =
+            new AddCustomCredentialSecurityFactory.Builder(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_NAME)
+            .className(AddCustomCredentialSecurityFactoryImpl.class.getName())
+            .module(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomCredentialSecurityFactory_nullName() throws Exception {
         new AddCustomCredentialSecurityFactory.Builder(null)

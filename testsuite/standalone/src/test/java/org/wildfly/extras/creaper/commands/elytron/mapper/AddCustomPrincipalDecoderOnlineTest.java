@@ -131,6 +131,32 @@ public class AddCustomPrincipalDecoderOnlineTest extends AbstractElytronOnlineTe
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomPrincipalDecoderAllowed() throws Exception {
+        AddCustomPrincipalDecoder addOperation =
+            new AddCustomPrincipalDecoder.Builder(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_NAME)
+            .className(AddCustomPrincipalDecoderImpl.class.getName())
+            .module(CUSTOM_PRINCIPAL_DECODER_MODULE_NAME)
+            .build();
+        AddCustomPrincipalDecoder addOperation2 =
+            new AddCustomPrincipalDecoder.Builder(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_NAME)
+            .className(AddCustomPrincipalDecoderImpl.class.getName())
+            .module(CUSTOM_PRINCIPAL_DECODER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_PRINCIPAL_DECODER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomPrincipalDecoder_nullName() throws Exception {
         new AddCustomPrincipalDecoder.Builder(null)

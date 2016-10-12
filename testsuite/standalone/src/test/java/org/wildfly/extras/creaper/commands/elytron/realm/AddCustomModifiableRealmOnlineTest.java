@@ -130,6 +130,32 @@ public class AddCustomModifiableRealmOnlineTest extends AbstractElytronOnlineTes
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomModifiableRealmAllowed() throws Exception {
+        AddCustomModifiableRealm addOperation =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+            .className(AddCustomModifiableRealmImpl.class.getName())
+            .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
+            .build();
+        AddCustomModifiableRealm addOperation2 =
+            new AddCustomModifiableRealm.Builder(TEST_ADD_CUSTOM_MODIFIABLE_REALM_NAME)
+            .className(AddCustomModifiableRealmImpl.class.getName())
+            .module(CUSTOM_MODIFIABLE_REALM_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_MODIFIABLE_REALM_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomModifiableRealm_nullName() throws Exception {
         new AddCustomModifiableRealm.Builder(null)

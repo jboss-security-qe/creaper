@@ -131,6 +131,32 @@ public class AddCustomRoleDecoderOnlineTest extends AbstractElytronOnlineTest {
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomRoleDecoderAllowed() throws Exception {
+        AddCustomRoleDecoder addOperation =
+            new AddCustomRoleDecoder.Builder(TEST_ADD_CUSTOM_ROLE_DECODER_NAME)
+            .className(AddCustomRoleDecoderImpl.class.getName())
+            .module(CUSTOM_ROLE_DECODER_MODULE_NAME)
+            .build();
+        AddCustomRoleDecoder addOperation2 =
+            new AddCustomRoleDecoder.Builder(TEST_ADD_CUSTOM_ROLE_DECODER_NAME)
+            .className(AddCustomRoleDecoderImpl.class.getName())
+            .module(CUSTOM_ROLE_DECODER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_ROLE_DECODER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_ROLE_DECODER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_ROLE_DECODER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRoleDecoder_nullName() throws Exception {
         new AddCustomRoleDecoder.Builder(null)

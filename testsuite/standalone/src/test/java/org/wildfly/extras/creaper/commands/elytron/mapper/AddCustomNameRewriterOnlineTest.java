@@ -131,6 +131,32 @@ public class AddCustomNameRewriterOnlineTest extends AbstractElytronOnlineTest {
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomNameRewriterAllowed() throws Exception {
+        AddCustomNameRewriter addOperation =
+            new AddCustomNameRewriter.Builder(TEST_ADD_CUSTOM_NAME_REWRITER_NAME)
+            .className(AddCustomNameRewriterImpl.class.getName())
+            .module(CUSTOM_NAME_REWRITER_MODULE_NAME)
+            .build();
+        AddCustomNameRewriter addOperation2 =
+            new AddCustomNameRewriter.Builder(TEST_ADD_CUSTOM_NAME_REWRITER_NAME)
+            .className(AddCustomNameRewriterImpl.class.getName())
+            .module(CUSTOM_NAME_REWRITER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_NAME_REWRITER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_NAME_REWRITER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_NAME_REWRITER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomNameRewriter_nullName() throws Exception {
         new AddCustomNameRewriter.Builder(null)

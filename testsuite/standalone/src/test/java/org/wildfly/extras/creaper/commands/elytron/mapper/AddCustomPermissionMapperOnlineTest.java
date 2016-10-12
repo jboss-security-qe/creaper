@@ -131,6 +131,32 @@ public class AddCustomPermissionMapperOnlineTest extends AbstractElytronOnlineTe
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomPermissionAllowed() throws Exception {
+        AddCustomPermissionMapper addOperation =
+            new AddCustomPermissionMapper.Builder(TEST_ADD_CUSTOM_PERMISSION_MAPPER_NAME)
+            .className(AddCustomPermissionMapperImpl.class.getName())
+            .module(CUSTOM_PERMISSION_MAPPER_MODULE_NAME)
+            .build();
+        AddCustomPermissionMapper addOperation2 =
+            new AddCustomPermissionMapper.Builder(TEST_ADD_CUSTOM_PERMISSION_MAPPER_NAME)
+            .className(AddCustomPermissionMapperImpl.class.getName())
+            .module(CUSTOM_PERMISSION_MAPPER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_PERMISSION_MAPPER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_PERMISSION_MAPPER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_PERMISSION_MAPPER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomPermission_nullName() throws Exception {
         new AddCustomPermissionMapper.Builder(null)

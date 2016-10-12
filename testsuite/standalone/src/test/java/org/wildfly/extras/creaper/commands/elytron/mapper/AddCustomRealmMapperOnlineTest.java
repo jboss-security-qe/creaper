@@ -124,6 +124,32 @@ public class AddCustomRealmMapperOnlineTest extends AbstractElytronOnlineTest {
             + " already exists in configuration, exception should be thrown");
     }
 
+    @Test
+    public void addDuplicateCustomRealmMapperAllowed() throws Exception {
+        AddCustomRealmMapper addOperation =
+            new AddCustomRealmMapper.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+            .className(AddCustomRealmMapperImpl.class.getName())
+            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .build();
+        AddCustomRealmMapper addOperation2 =
+            new AddCustomRealmMapper.Builder(TEST_ADD_CUSTOM_REALM_MAPPER_NAME)
+            .className(AddCustomRealmMapperImpl.class.getName())
+            .module(CUSTOM_REALM_MAPPER_MODULE_NAME)
+            .addConfiguration("configParam1", "configParameterValue")
+            .replaceExisting()
+            .build();
+
+        client.apply(addOperation);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+        client.apply(addOperation2);
+        assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS));
+
+        // check whether it was really rewritten
+        List<Property> expectedValues = new ArrayList<>();
+        expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
+        checkAttributeProperties(TEST_ADD_CUSTOM_REALM_MAPPER_ADDRESS, "configuration", expectedValues);
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void addCustomRealmMapper_nullName() throws Exception {
         new AddCustomRealmMapper.Builder(null)
