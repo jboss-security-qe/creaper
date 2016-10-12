@@ -32,7 +32,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addSimpleRegexRealmMapper() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
 
         client.apply(addSimpleRegexRealmMapper);
@@ -44,12 +44,12 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addTwoSimpleRegexRealmMappers() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
 
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper2
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
 
         client.apply(addSimpleRegexRealmMapper);
@@ -64,13 +64,13 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addFullSimpleRegexRealmMapper() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper2
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .build();
         client.apply(addSimpleRegexRealmMapper2);
 
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .delegateRealmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
                 .build();
 
@@ -78,7 +78,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
 
         assertTrue("Simple regex realm mapper should be created", ops.exists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS));
 
-        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern");
+        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "(somePattern)");
         checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "delegate-realm-mapper",
                 TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
     }
@@ -87,12 +87,12 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addExistSimpleRegexRealmMapperNotAllowed() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
 
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper2
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .build();
 
         client.apply(addSimpleRegexRealmMapper);
@@ -104,12 +104,12 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addExistSimpleRegexRealmMapperAllowed() throws Exception {
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
 
         AddSimpleRegexRealmMapper addSimpleRegexRealmMapper2
                 = new AddSimpleRegexRealmMapper.Builder(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .replaceExisting()
                 .build();
 
@@ -118,13 +118,13 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         client.apply(addSimpleRegexRealmMapper2);
         assertTrue("Simple regex realm mapper should be created", ops.exists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern2");
+        checkAttribute(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS, "pattern", "(somePattern2)");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addSimpleRegexRealmMapper_nullName() throws Exception {
         new AddSimpleRegexRealmMapper.Builder(null)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
         fail("Creating command with null name should throw exception");
     }
@@ -132,7 +132,7 @@ public class AddSimpleRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addSimpleRegexRealmMapper_emptyName() throws Exception {
         new AddSimpleRegexRealmMapper.Builder("")
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
         fail("Creating command with empty name should throw exception");
     }

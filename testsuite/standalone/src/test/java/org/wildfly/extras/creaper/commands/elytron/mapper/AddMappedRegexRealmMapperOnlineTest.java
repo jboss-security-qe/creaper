@@ -32,7 +32,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addSimpleMappedRegexRealmMapper() throws Exception {
         AddMappedRegexRealmMapper addMappedRegexRealmMapper
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
 
@@ -45,12 +45,12 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addTwoMappedRegexRealmMappers() throws Exception {
         AddMappedRegexRealmMapper addMappedRegexRealmMapper
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
         AddMappedRegexRealmMapper addMappedRegexRealmMapper2
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME2)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
 
@@ -65,14 +65,14 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addFullMappedRegexRealmMapper() throws Exception {
         AddMappedRegexRealmMapper addMappedRegexRealmMapper2
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME2)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
         client.apply(addMappedRegexRealmMapper2);
 
         AddMappedRegexRealmMapper addMappedRegexRealmMapper
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .delegateRealmMapper(TEST_MAPPED_REGEX_REALM_MAPPER_NAME2)
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom1", "someTo1"),
                         new AddMappedRegexRealmMapper.RealmMapping("someFrom2", "someTo2"))
@@ -82,7 +82,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
 
         assertTrue("Mapped regex realm mapper should be created", ops.exists(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS));
 
-        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "(somePattern)");
         checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "delegate-realm-mapper",
                 TEST_MAPPED_REGEX_REALM_MAPPER_NAME2);
         checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "realm-map.someFrom1", "someTo1");
@@ -93,13 +93,13 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addExistMappedRegexRealmMapperNotAllowed() throws Exception {
         AddMappedRegexRealmMapper addMappedRegexRealmMapper
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
 
         AddMappedRegexRealmMapper addMappedRegexRealmMapper2
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
 
@@ -112,13 +112,13 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     public void addExistMappedRegexRealmMapperAllowed() throws Exception {
         AddMappedRegexRealmMapper addMappedRegexRealmMapper
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
 
         AddMappedRegexRealmMapper addMappedRegexRealmMapper2
                 = new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern2")
+                .pattern("(somePattern2)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .replaceExisting()
                 .build();
@@ -128,13 +128,13 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
         client.apply(addMappedRegexRealmMapper2);
         assertTrue("Mapped regex realm mapper should be created", ops.exists(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "somePattern2");
+        checkAttribute(TEST_MAPPED_REGEX_REALM_MAPPER_ADDRESS, "pattern", "(somePattern2)");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_nullName() throws Exception {
         new AddMappedRegexRealmMapper.Builder(null)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
         fail("Creating command with null name should throw exception");
@@ -143,7 +143,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_emptyName() throws Exception {
         new AddMappedRegexRealmMapper.Builder("")
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", "someTo"))
                 .build();
         fail("Creating command with empty name should throw exception");
@@ -170,7 +170,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_nullRealmMapping() throws Exception {
         new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(null)
                 .build();
         fail("Creating command with null realm mapping should throw exception");
@@ -179,7 +179,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_noRealmMapping() throws Exception {
         new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .build();
         fail("Creating command with no realm mapping should throw exception");
     }
@@ -187,7 +187,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_emptyRealmMapping() throws Exception {
         new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings()
                 .build();
         fail("Creating command with empty realm mapping should throw exception");
@@ -196,7 +196,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_nullFrom() throws Exception {
         new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping(null, "someTo"))
                 .build();
         fail("Creating command with null realm mapping 'from' should throw exception");
@@ -205,7 +205,7 @@ public class AddMappedRegexRealmMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addMappedRegexRealmMapper_nullTo() throws Exception {
         new AddMappedRegexRealmMapper.Builder(TEST_MAPPED_REGEX_REALM_MAPPER_NAME)
-                .pattern("somePattern")
+                .pattern("(somePattern)")
                 .addRealmMappings(new AddMappedRegexRealmMapper.RealmMapping("someFrom", null))
                 .build();
         fail("Creating command with null realm mapping 'to' should throw exception");
