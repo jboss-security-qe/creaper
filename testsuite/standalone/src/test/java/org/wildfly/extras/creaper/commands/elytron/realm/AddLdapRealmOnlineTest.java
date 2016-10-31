@@ -47,10 +47,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -67,10 +63,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -78,10 +70,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -188,10 +176,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -199,10 +183,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId2")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -221,10 +201,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
 
@@ -232,10 +208,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId2")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .replaceExisting()
                 .build();
@@ -254,10 +226,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with null name should throw exception");
@@ -269,10 +237,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with empty name should throw exception");
@@ -284,10 +248,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(null)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with null dir-context should throw exception");
@@ -299,10 +259,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext("")
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with empty dir-context should throw exception");
@@ -323,10 +279,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier(null)
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with null rdn-identifier of identity-mapping should throw exception");
@@ -338,10 +290,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .build())
                 .build();
         fail("Creating command with empty rdn-identifier of identity-mapping should throw exception");
@@ -353,10 +301,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
                                 .from(null)
                                 .build())
@@ -371,10 +315,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
                                 .from("")
                                 .build())
@@ -389,10 +329,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .addNewIdentityAttributes(new AddLdapRealm.NewIdentityAttributesBuilder()
                                 .addValues(null)
                                 .build())
@@ -407,10 +343,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .addNewIdentityAttributes(new AddLdapRealm.NewIdentityAttributesBuilder()
                                 .build())
                         .build())
@@ -424,10 +356,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
-                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
-                                .writable(true)
-                                .verifiable(true)
-                                .build())
                         .addNewIdentityAttributes(new AddLdapRealm.NewIdentityAttributesBuilder()
                                 .addValues()
                                 .build())
