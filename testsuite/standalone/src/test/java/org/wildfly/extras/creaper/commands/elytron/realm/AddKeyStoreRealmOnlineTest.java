@@ -3,6 +3,9 @@ package org.wildfly.extras.creaper.commands.elytron.realm;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -97,7 +100,7 @@ public class AddKeyStoreRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void aaddKeyStoreReal_emptyName() throws Exception {
+    public void addKeyStoreReal_emptyName() throws Exception {
         new AddKeyStoreRealm.Builder("");
         fail("Creating command with empty name should throw exception");
     }
@@ -119,8 +122,11 @@ public class AddKeyStoreRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     private void addKeyStore(String keyStoreName) throws CommandFailedException {
+        Map<String, String> credRef = new HashMap<>();
+        credRef.put("clear-text", "test-password");
         AddKeyStore addKeyStore = new AddKeyStore.Builder(keyStoreName)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(credRef)
                 .build();
         client.apply(addKeyStore);
     }

@@ -7,6 +7,11 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
+/**
+ * credential-reference is mandatory! https://issues.jboss.org/browse/JBEAP-6757
+ *
+ *
+ */
 public final class AddKeyManager implements OnlineCommand {
 
     private final String name;

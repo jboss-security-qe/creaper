@@ -108,6 +108,14 @@ public abstract class AbstractElytronOnlineTest {
                 readAttribute.stringListValue());
     }
 
+    protected void checkAttributeObject(Address address, String attribute, String objectProperty, String expectedValue)
+        throws IOException {
+        ModelNodeResult readAttribute = ops.readAttribute(address, attribute);
+        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
+        assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
+            readAttribute.asObject().get(Constants.RESULT).get(objectProperty).asString());
+    }
+
     protected void checkAttributeProperties(Address address, String attribute, List<Property> expectedValues)
         throws IOException {
         ModelNodeResult readAttribute = ops.readAttribute(address, attribute);

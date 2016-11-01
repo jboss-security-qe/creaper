@@ -1,5 +1,7 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
+import java.util.Map;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -7,13 +9,18 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
+/**
+ * credential-reference is mandatory! https://issues.jboss.org/browse/JBEAP-6748
+ *
+ *
+ */
 public final class AddKeyStore implements OnlineCommand {
 
     private final String name;
     private final String type;
     private final String provider;
     private final String providerLoader;
-    private final String password;
+    private final Map<String, String> credentialReference;
     private final String aliasFilter;
     private final String path;
     private final String relativeTo;
@@ -25,7 +32,7 @@ public final class AddKeyStore implements OnlineCommand {
         this.type = builder.type;
         this.provider = builder.provider;
         this.providerLoader = builder.providerLoader;
-        this.password = builder.password;
+        this.credentialReference = builder.credentialReference;
         this.aliasFilter = builder.aliasFilter;
         // File
         this.path = builder.path;
@@ -47,9 +54,9 @@ public final class AddKeyStore implements OnlineCommand {
         ops.add(keyStoreAddress, Values.empty()
             .and("name", name)
             .and("type", type)
+            .andObject("credential-reference", Values.fromMap(credentialReference))
             .andOptional("provider", provider)
             .andOptional("provider-loader", providerLoader)
-            .andOptional("password", password)
             .andOptional("alias-filter", aliasFilter)
             .andOptional("path", path)
             .andOptional("relative-to", relativeTo)
@@ -62,7 +69,7 @@ public final class AddKeyStore implements OnlineCommand {
         private String type;
         private String provider;
         private String providerLoader;
-        private String password;
+        private Map<String, String> credentialReference;
         private String aliasFilter;
         private String path;
         private String relativeTo;
@@ -91,8 +98,8 @@ public final class AddKeyStore implements OnlineCommand {
             return this;
         }
 
-        public Builder password(String password) {
-            this.password = password;
+        public Builder credentialReference(Map<String, String> credentialReference) {
+            this.credentialReference = credentialReference;
             return this;
         }
 

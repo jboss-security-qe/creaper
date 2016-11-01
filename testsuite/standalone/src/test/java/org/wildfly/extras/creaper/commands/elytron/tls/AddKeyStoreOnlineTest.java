@@ -5,6 +5,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
@@ -97,16 +99,18 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullKeyStore() throws Exception {
+        Map<String, String> credRef = new HashMap<>();
+        credRef.put("clear-text", "test-Password");
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
             .aliasFilter("server-alias")
-            .password("test-Password")
+            .credentialReference(credRef)
             .build();
         client.apply(addKeyStore);
         assertTrue("Key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS));
 
         checkAttribute("type", TEST_KEY_STORE_TYPE);
-        checkAttribute("password", "test-Password");
+        checkAttributeObject(TEST_KEY_STORE_ADDRESS, "credential-reference", "clear-text", "test-Password");
         checkAttribute("alias-filter", "server-alias");
     }
 
