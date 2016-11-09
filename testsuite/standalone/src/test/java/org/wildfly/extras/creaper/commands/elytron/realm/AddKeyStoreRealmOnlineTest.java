@@ -3,17 +3,16 @@ package org.wildfly.extras.creaper.commands.elytron.realm;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyStore;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 
 @RunWith(Arquillian.class)
@@ -122,8 +121,10 @@ public class AddKeyStoreRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     private void addKeyStore(String keyStoreName) throws CommandFailedException {
-        Map<String, String> credRef = new HashMap<>();
-        credRef.put("clear-text", "test-password");
+        Values credRef = new CredentialRefBuilder()
+            .clearText("test-Password")
+            .build();
+
         AddKeyStore addKeyStore = new AddKeyStore.Builder(keyStoreName)
                 .type(TEST_KEY_STORE_TYPE)
                 .credentialReference(credRef)
