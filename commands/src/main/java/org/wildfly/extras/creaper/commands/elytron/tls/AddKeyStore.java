@@ -130,6 +130,9 @@ public final class AddKeyStore implements OnlineCommand {
             if (type == null || type.isEmpty()) {
                 throw new IllegalArgumentException("Type of the key-store must be specified as non empty value");
             }
+            if (credentialReference == null) {
+                throw new IllegalArgumentException("Credential reference of the key-store must be specified");
+            }
             return new AddKeyStore(this);
         }
     }

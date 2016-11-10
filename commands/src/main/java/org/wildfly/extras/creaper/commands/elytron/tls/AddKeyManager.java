@@ -17,7 +17,7 @@ public final class AddKeyManager implements OnlineCommand {
     private final String name;
     private final String algorithm;
     private final String keyStore;
-    private final String keyPassword;
+    private final Values credentialReference;
     private final String provider;
     private final String providerLoader;
     private final boolean replaceExisting;
@@ -26,9 +26,9 @@ public final class AddKeyManager implements OnlineCommand {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;
-        this.keyPassword = builder.keyPassword;
         this.provider = builder.provider;
         this.providerLoader = builder.providerLoader;
+        this.credentialReference = builder.credentialReference;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
     }
@@ -46,7 +46,7 @@ public final class AddKeyManager implements OnlineCommand {
             .and("name", name)
             .and("algorithm", algorithm)
             .and("key-store", keyStore)
-            .andOptional("key-password", keyPassword)
+            .andObject("credential-reference", credentialReference)
             .andOptional("provider", provider)
             .andOptional("provider-loader", providerLoader));
     }
@@ -56,7 +56,7 @@ public final class AddKeyManager implements OnlineCommand {
         private final String name;
         private String algorithm;
         private String keyStore;
-        private String keyPassword;
+        private Values credentialReference;
         private String provider;
         private String providerLoader;
         private boolean replaceExisting;
@@ -78,11 +78,6 @@ public final class AddKeyManager implements OnlineCommand {
             return this;
         }
 
-        public Builder keyPassword(String keyPassword) {
-            this.keyPassword = keyPassword;
-            return this;
-        }
-
         public Builder provider(String provider) {
             this.provider = provider;
             return this;
@@ -90,6 +85,11 @@ public final class AddKeyManager implements OnlineCommand {
 
         public Builder providerLoader(String providerLoader) {
             this.providerLoader = providerLoader;
+            return this;
+        }
+
+        public Builder credentialReference(Values credentialReference) {
+            this.credentialReference = credentialReference;
             return this;
         }
 
@@ -102,8 +102,8 @@ public final class AddKeyManager implements OnlineCommand {
             if (algorithm == null || algorithm.isEmpty()) {
                 throw new IllegalArgumentException("Algorithm of the key-manager must be specified as non empty value");
             }
-            if (keyPassword == null || keyPassword.isEmpty()) {
-                throw new IllegalArgumentException("Key password of the key-manager must be specified as non empty value");
+            if (credentialReference == null) {
+                throw new IllegalArgumentException("Credential reference of the key-manager must be specified");
             }
             return new AddKeyManager(this);
         }

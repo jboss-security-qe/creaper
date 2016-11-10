@@ -11,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -23,6 +24,7 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     private static final String KEY_STORE_NAME = "CreaperTestKeyStore";
     private static final Address KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", KEY_STORE_NAME);
     private static final String KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
 
     private static final String FILTERING_KEY_STORE_NAME = "CreaperTestFilteringKeyStore";
     private static final String FILTERING_KEY_STORE_NAME2 = "CreaperTestFilteringKeyStore2";
@@ -38,6 +40,9 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
         try (OnlineManagementClient client = createManagementClient()) {
             AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME)
                     .type(KEY_STORE_TYPE)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_STORE_PASSWORD)
+                            .build())
                     .build();
             client.apply(addKeyStore);
         }

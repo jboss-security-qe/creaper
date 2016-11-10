@@ -6,6 +6,7 @@ import javax.net.ssl.TrustManagerFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -18,6 +19,7 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
     private static final Address TEST_KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME);
     private static final Address TEST_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME2);
     private static final String TEST_KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
     private static final String TEST_KEY_PASSWORD = "password";
 
     protected static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
@@ -38,20 +40,30 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
         try (OnlineManagementClient client = createManagementClient()) {
             AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                     .type(TEST_KEY_STORE_TYPE)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_STORE_PASSWORD)
+                            .build())
                     .build();
             AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
                     .type(TEST_KEY_STORE_TYPE)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_STORE_PASSWORD)
+                            .build())
                     .build();
 
             AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                     .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME)
-                    .keyPassword(TEST_KEY_PASSWORD)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_PASSWORD)
+                            .build())
                     .build();
             AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
                     .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                     .keyStore(TEST_KEY_STORE_NAME2)
-                    .keyPassword(TEST_KEY_PASSWORD)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_PASSWORD)
+                            .build())
                     .build();
 
             AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)

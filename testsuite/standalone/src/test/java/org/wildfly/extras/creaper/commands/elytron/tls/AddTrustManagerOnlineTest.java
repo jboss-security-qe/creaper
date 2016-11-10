@@ -15,6 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -29,7 +30,7 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TEST_KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME);
     private static final Address TEST_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME2);
     private static final String TEST_KEY_STORE_TYPE = "JKS";
-
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
     private static final String TRUST_MNGR_NAME = "CreaperTestTrustManager";
     private static final String TRUST_MNGR_NAME2 = "CreaperTestTrustManager2";
     private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME);
@@ -41,9 +42,15 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
         try (OnlineManagementClient client = createManagementClient()) {
             AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                     .type(TEST_KEY_STORE_TYPE)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_STORE_PASSWORD)
+                            .build())
                     .build();
             AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
                     .type(TEST_KEY_STORE_TYPE)
+                    .credentialReference(new CredentialRefBuilder()
+                            .clearText(TEST_KEY_STORE_PASSWORD)
+                            .build())
                     .build();
 
             client.apply(addKeyStore);

@@ -14,7 +14,6 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
 @RunWith(Arquillian.class)
 public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
@@ -22,6 +21,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     private static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
     private static final String TEST_KEY_STORE_NAME2 = "CreaperTestKeyStore2";
     private static final String TEST_KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
     private static final Address TEST_KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME);
     private static final Address TEST_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME2);
 
@@ -36,6 +36,9 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addSimpleKeyStore() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
                 .build();
         assertFalse("The key store should not exist", ops.exists(TEST_KEY_STORE_ADDRESS));
         client.apply(addKeyStore);
@@ -46,9 +49,15 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addTwoSimpleKeyStores() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
                 .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
                 .build();
 
         assertFalse("The key store should not exist", ops.exists(TEST_KEY_STORE_ADDRESS));
@@ -65,9 +74,15 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addExistKeyStoreNotAllowed() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
                 .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
                 .build();
 
         client.apply(addKeyStore);
@@ -81,9 +96,15 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addExistKeyStoreAllowed() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
              .type(TEST_KEY_STORE_TYPE)
+             .credentialReference(new CredentialRefBuilder()
+                     .clearText(TEST_KEY_STORE_PASSWORD)
+                     .build())
             .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .aliasFilter("alias")
             .replaceExisting()
             .build();
@@ -99,20 +120,19 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullKeyStore() throws Exception {
-        Values credRef = new CredentialRefBuilder()
-            .clearText("test-Password")
-            .build();
 
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
             .aliasFilter("server-alias")
-            .credentialReference(credRef)
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .build();
         client.apply(addKeyStore);
         assertTrue("Key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS));
 
         checkAttribute("type", TEST_KEY_STORE_TYPE);
-        checkAttributeObject(TEST_KEY_STORE_ADDRESS, "credential-reference", "clear-text", "test-Password");
+        checkAttributeObject(TEST_KEY_STORE_ADDRESS, "credential-reference", "clear-text", TEST_KEY_STORE_PASSWORD);
         checkAttribute("alias-filter", "server-alias");
     }
 
@@ -120,6 +140,9 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_nullName() throws Exception {
         new AddKeyStore.Builder(null)
             .type(TEST_KEY_STORE_TYPE)
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .build();
         fail("Creating command with null keystore name should throw exception");
     }
@@ -128,6 +151,9 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_emptyName() throws Exception {
         new AddKeyStore.Builder("")
             .type(TEST_KEY_STORE_TYPE)
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .build();
         fail("Creating command with empty keystore name should throw exception");
     }
@@ -136,6 +162,9 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_nullType() throws Exception {
         new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(null)
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .build();
         fail("Creating command with null keystore type should throw exception");
     }
@@ -144,8 +173,20 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_emptyType() throws Exception {
         new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type("")
+            .credentialReference(new CredentialRefBuilder()
+                    .clearText(TEST_KEY_STORE_PASSWORD)
+                    .build())
             .build();
         fail("Creating command with empty keystore type should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addKeyStore_nullCredentialRef() throws Exception {
+        new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+            .type(TEST_KEY_STORE_TYPE)
+            .credentialReference(null)
+            .build();
+        fail("Creating command with null credential ref should throw exception");
     }
 
     private void checkAttribute(String attribute, String expectedValue) throws IOException {
