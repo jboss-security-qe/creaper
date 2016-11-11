@@ -1,10 +1,11 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -109,7 +110,7 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
 
         assertTrue("Simple permission mapper should be created", ops.exists(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS));
 
-        checkSimplePermissionMapperAttribute("mapping-mode", "XOR");
+        checkSimplePermissionMapperAttribute("mapping-mode", "xor");
 
         checkSimplePermissionMapperAttribute("permission-mappings[0].roles[0]", "SomeRoles1");
         checkSimplePermissionMapperAttribute("permission-mappings[0].principals[0]", "SomePrincipal1");

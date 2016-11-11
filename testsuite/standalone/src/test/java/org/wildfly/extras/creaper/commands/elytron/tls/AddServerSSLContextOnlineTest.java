@@ -18,6 +18,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 @RunWith(Arquillian.class)
 public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTest {
 
+    private static final String SERVER_SSL_CONTEXT_PROTOCOL = "TLSv1.2";
     private static final String SERVER_SSL_CONTEXT_NAME = "CreaperTestServerSSLContext";
     private static final String SERVER_SSL_CONTEXT_NAME2 = "CreaperTestServerSSLContext2";
     private static final Address SERVER_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS.and("server-ssl-context",
@@ -99,7 +100,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
                 .trustManagers(TRUST_MNGR_NAME)
                 .maximumSessionCacheSize(0)
                 .sessionTimeout(0)
-                .protocols("TLSv1_2")
+                .protocols(SERVER_SSL_CONTEXT_PROTOCOL)
                 .needClientAuth(true)
                 .wantClientAuth(true)
                 .authenticationOptional(true)
@@ -113,7 +114,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         checkAttribute("trust-managers", TRUST_MNGR_NAME);
         checkAttribute("maximum-session-cache-size", "0");
         checkAttribute("session-timeout", "0");
-        checkAttribute("protocols", Arrays.asList("TLSv1_2"));
+        checkAttribute("protocols", Arrays.asList(SERVER_SSL_CONTEXT_PROTOCOL));
         checkAttribute("need-client-auth", "true");
         checkAttribute("want-client-auth", "true");
         checkAttribute("authentication-optional", "true");

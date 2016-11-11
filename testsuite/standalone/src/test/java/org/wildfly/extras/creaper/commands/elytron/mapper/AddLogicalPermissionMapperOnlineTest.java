@@ -56,7 +56,7 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
 
         assertTrue("Logical permission mapper should be created", ops.exists(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS));
 
-        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "UNLESS");
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "unless");
         checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "left", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
         checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "right", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
     }
@@ -135,7 +135,7 @@ public class AddLogicalPermissionMapperOnlineTest extends AbstractElytronOnlineT
         client.apply(addLogicalPermissionMapper2);
         assertTrue("Logical permission mapper should be created", ops.exists(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "AND");
+        checkAttribute(TEST_LOGICAL_PERMISSION_MAPPER_ADDRESS, "logical-operation", "and");
     }
 
     @Test(expected = IllegalArgumentException.class)

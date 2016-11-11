@@ -18,6 +18,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 @RunWith(Arquillian.class)
 public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTest {
 
+    private static final String CLIENT_SSL_CONTEXT_PROTOCOL = "TLSv1.2";
     private static final String CLIENT_SSL_CONTEXT_NAME = "CreaperTestCLientSSLContext";
     private static final String CLIENT_SSL_CONTEXT_NAME2 = "CreaperTestCLientSSLContext2";
     private static final Address CLIENT_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS.and("client-ssl-context",
@@ -99,7 +100,7 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
                 .trustManagers(TRUST_MNGR_NAME)
                 .maximumSessionCacheSize(0)
                 .sessionTimeout(0)
-                .protocols("TLSv1_2")
+                .protocols(CLIENT_SSL_CONTEXT_PROTOCOL)
                 .build();
         client.apply(addClientSSLContext);
         assertTrue("The client ssl context should be created", ops.exists(CLIENT_SSL_CONTEXT_ADDRESS));
@@ -109,7 +110,7 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         checkAttribute("trust-managers", TRUST_MNGR_NAME);
         checkAttribute("maximum-session-cache-size", "0");
         checkAttribute("session-timeout", "0");
-        checkAttribute("protocols", Arrays.asList("TLSv1_2"));
+        checkAttribute("protocols", Arrays.asList(CLIENT_SSL_CONTEXT_PROTOCOL));
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -77,7 +77,7 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 
         assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
 
-        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "OR");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "or");
         checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "left", "creaper-contant-role-mapper-1");
         checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "right", "creaper-contant-role-mapper-2");
     }
@@ -114,7 +114,7 @@ public class AddLogicalRoleMapperOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addLogicalRoleMapper2);
         assertTrue("Logical role mapper should be created", ops.exists(TEST_LOGICAL_ROLE_MAPPER_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "AND");
+        checkAttribute(TEST_LOGICAL_ROLE_MAPPER_ADDRESS, "logical-operation", "and");
     }
 
     @Test(expected = IllegalArgumentException.class)
