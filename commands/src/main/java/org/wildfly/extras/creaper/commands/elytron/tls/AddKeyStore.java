@@ -1,5 +1,6 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -18,7 +19,7 @@ public final class AddKeyStore implements OnlineCommand {
     private final String type;
     private final String provider;
     private final String providerLoader;
-    private final Values credentialReference;
+    private final CredentialRef credentialReference;
     private final String aliasFilter;
     private final String path;
     private final String relativeTo;
@@ -52,7 +53,7 @@ public final class AddKeyStore implements OnlineCommand {
         ops.add(keyStoreAddress, Values.empty()
             .and("name", name)
             .and("type", type)
-            .andObject("credential-reference", credentialReference)
+            .andObject("credential-reference", credentialReference.toValues())
             .andOptional("provider", provider)
             .andOptional("provider-loader", providerLoader)
             .andOptional("alias-filter", aliasFilter)
@@ -67,7 +68,7 @@ public final class AddKeyStore implements OnlineCommand {
         private String type;
         private String provider;
         private String providerLoader;
-        private Values credentialReference;
+        private CredentialRef credentialReference;
         private String aliasFilter;
         private String path;
         private String relativeTo;
@@ -96,7 +97,7 @@ public final class AddKeyStore implements OnlineCommand {
             return this;
         }
 
-        public Builder credentialReference(Values credentialReference) {
+        public Builder credentialReference(CredentialRef credentialReference) {
             this.credentialReference = credentialReference;
             return this;
         }

@@ -27,46 +27,65 @@ import java.util.Map;
 
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-public final class CredentialRefBuilder {
+public final class CredentialRef {
     private String alias;
     private String type;
     private String store;
     private String clearText;
 
-    public CredentialRefBuilder alias(String alias) {
+    public CredentialRef(CredentialRefBuilder builder) {
+        this.alias = builder.alias;
+        this.type = builder.type;
+        this.store = builder.store;
+        this.clearText = builder.clearText;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
         this.alias = alias;
-        return this;
     }
 
-    public CredentialRefBuilder type(String type) {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
         this.type = type;
-        return this;
     }
 
-    public CredentialRefBuilder store(String store) {
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
         this.store = store;
-        return this;
     }
 
-    public CredentialRefBuilder clearText(String clearText) {
+    public String getClearText() {
+        return clearText;
+    }
+
+    public void setClearText(String clearText) {
         this.clearText = clearText;
-        return this;
     }
 
-    public Values build() {
+    public Values toValues() {
         final Map<String, String> credentialReference = new HashMap<String, String>();
 
         if (isNotBlank(alias)) {
-            credentialReference.put("alias", alias);
+            credentialReference.put("alias", getAlias());
         }
         if (isNotBlank(type)) {
-            credentialReference.put("type", type);
+            credentialReference.put("type", getType());
         }
         if (isNotBlank(store)) {
-            credentialReference.put("store", store);
+            credentialReference.put("store", getStore());
         }
         if (isNotBlank(clearText)) {
-            credentialReference.put("clear-text", clearText);
+            credentialReference.put("clear-text", getClearText());
         }
 
         return Values.fromMap(credentialReference);
@@ -74,5 +93,36 @@ public final class CredentialRefBuilder {
 
     private static boolean isNotBlank(String str) {
         return (str != null && str.length() > 0);
+    }
+
+    public static final class CredentialRefBuilder {
+        private String alias;
+        private String type;
+        private String store;
+        private String clearText;
+
+        public CredentialRefBuilder alias(String alias) {
+            this.alias = alias;
+            return this;
+        }
+
+        public CredentialRefBuilder type(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public CredentialRefBuilder store(String store) {
+            this.store = store;
+            return this;
+        }
+
+        public CredentialRefBuilder clearText(String clearText) {
+            this.clearText = clearText;
+            return this;
+        }
+
+        public CredentialRef build() {
+            return new CredentialRef(this);
+        }
     }
 }

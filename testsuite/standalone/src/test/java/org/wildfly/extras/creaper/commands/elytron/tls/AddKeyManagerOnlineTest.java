@@ -15,7 +15,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -44,13 +44,13 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         try (OnlineManagementClient client = createManagementClient()) {
             AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                     .type(TEST_KEY_STORE_TYPE)
-                    .credentialReference(new CredentialRefBuilder()
+                    .credentialReference(new CredentialRef.CredentialRefBuilder()
                             .clearText(TEST_KEY_STORE_PASSWORD)
                             .build())
                     .build();
             AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
                     .type(TEST_KEY_STORE_TYPE)
-                    .credentialReference(new CredentialRefBuilder()
+                    .credentialReference(new CredentialRef.CredentialRefBuilder()
                             .clearText(TEST_KEY_STORE_PASSWORD)
                             .build())
                     .build();
@@ -83,7 +83,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
@@ -97,14 +97,14 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME2)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
@@ -124,14 +124,14 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
@@ -148,14 +148,14 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("test-Password")
                         .build())
                 .replaceExisting()
@@ -176,7 +176,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
@@ -192,7 +192,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyManager_nullName() throws Exception {
         new AddKeyManager.Builder(null)
             .algorithm(TEST_KEY_MANAGER_ALGORITHM)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
             .build();
@@ -203,7 +203,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyManager_emptyName() throws Exception {
         new AddKeyManager.Builder("")
             .algorithm(TEST_KEY_MANAGER_ALGORITHM)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
             .build();
@@ -214,7 +214,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyManager_nullAlgorithm() throws Exception {
         new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
             .algorithm(null)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
             .build();
@@ -225,7 +225,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyManager_emptyAlgorithm() throws Exception {
         new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
             .algorithm("")
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
             .build();

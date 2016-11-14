@@ -11,7 +11,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -36,7 +36,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addSimpleKeyStore() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_STORE_PASSWORD)
                         .build())
                 .build();
@@ -49,13 +49,13 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addTwoSimpleKeyStores() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_STORE_PASSWORD)
                         .build())
                 .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME2)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_STORE_PASSWORD)
                         .build())
                 .build();
@@ -74,13 +74,13 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addExistKeyStoreNotAllowed() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_STORE_PASSWORD)
                         .build())
                 .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(new CredentialRefBuilder()
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_STORE_PASSWORD)
                         .build())
                 .build();
@@ -96,13 +96,13 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addExistKeyStoreAllowed() throws Exception {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
              .type(TEST_KEY_STORE_TYPE)
-             .credentialReference(new CredentialRefBuilder()
+             .credentialReference(new CredentialRef.CredentialRefBuilder()
                      .clearText(TEST_KEY_STORE_PASSWORD)
                      .build())
             .build();
         AddKeyStore addKeyStore2 = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .aliasFilter("alias")
@@ -124,7 +124,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(TEST_KEY_STORE_TYPE)
             .aliasFilter("server-alias")
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .build();
@@ -140,7 +140,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_nullName() throws Exception {
         new AddKeyStore.Builder(null)
             .type(TEST_KEY_STORE_TYPE)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .build();
@@ -151,7 +151,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_emptyName() throws Exception {
         new AddKeyStore.Builder("")
             .type(TEST_KEY_STORE_TYPE)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .build();
@@ -162,7 +162,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_nullType() throws Exception {
         new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type(null)
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .build();
@@ -173,7 +173,7 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addKeyStore_emptyType() throws Exception {
         new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
             .type("")
-            .credentialReference(new CredentialRefBuilder()
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_STORE_PASSWORD)
                     .build())
             .build();

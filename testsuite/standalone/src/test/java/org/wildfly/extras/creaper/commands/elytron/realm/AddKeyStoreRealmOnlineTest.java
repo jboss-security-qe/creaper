@@ -8,11 +8,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyStore;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
 
 @RunWith(Arquillian.class)
@@ -121,13 +120,11 @@ public class AddKeyStoreRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     private void addKeyStore(String keyStoreName) throws CommandFailedException {
-        Values credRef = new CredentialRefBuilder()
-            .clearText("test-Password")
-            .build();
-
         AddKeyStore addKeyStore = new AddKeyStore.Builder(keyStoreName)
                 .type(TEST_KEY_STORE_TYPE)
-                .credentialReference(credRef)
+            .credentialReference(new CredentialRef.CredentialRefBuilder()
+                    .clearText("test-Password")
+                    .build())
                 .build();
         client.apply(addKeyStore);
     }

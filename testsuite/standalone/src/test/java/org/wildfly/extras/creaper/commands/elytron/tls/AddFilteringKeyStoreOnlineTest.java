@@ -11,7 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.CredentialRefBuilder;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -40,7 +40,7 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
         try (OnlineManagementClient client = createManagementClient()) {
             AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME)
                     .type(KEY_STORE_TYPE)
-                    .credentialReference(new CredentialRefBuilder()
+                    .credentialReference(new CredentialRef.CredentialRefBuilder()
                             .clearText(TEST_KEY_STORE_PASSWORD)
                             .build())
                     .build();
