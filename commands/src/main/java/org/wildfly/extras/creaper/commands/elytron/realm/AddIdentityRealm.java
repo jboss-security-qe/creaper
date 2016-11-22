@@ -18,7 +18,7 @@ public final class AddIdentityRealm implements OnlineCommand {
     private final List<String> attributeValues;
     private final boolean replaceExisting;
 
-    public AddIdentityRealm(Builder builder) {
+    private AddIdentityRealm(Builder builder) {
         this.name = builder.name;
         this.identity = builder.identity;
         this.attributeName = builder.attributeName;
