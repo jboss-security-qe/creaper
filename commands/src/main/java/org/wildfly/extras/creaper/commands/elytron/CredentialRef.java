@@ -22,9 +22,6 @@
 
 package org.wildfly.extras.creaper.commands.elytron;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 public final class CredentialRef {
@@ -73,26 +70,11 @@ public final class CredentialRef {
     }
 
     public Values toValues() {
-        final Map<String, String> credentialReference = new HashMap<String, String>();
-
-        if (isNotBlank(alias)) {
-            credentialReference.put("alias", getAlias());
-        }
-        if (isNotBlank(type)) {
-            credentialReference.put("type", getType());
-        }
-        if (isNotBlank(store)) {
-            credentialReference.put("store", getStore());
-        }
-        if (isNotBlank(clearText)) {
-            credentialReference.put("clear-text", getClearText());
-        }
-
-        return Values.fromMap(credentialReference);
-    }
-
-    private static boolean isNotBlank(String str) {
-        return (str != null && str.length() > 0);
+        return Values.empty()
+            .andOptional("alias", getAlias())
+            .andOptional("type", getType())
+            .andOptional("store", getStore())
+            .andOptional("clear-text", getClearText());
     }
 
     public static final class CredentialRefBuilder {
