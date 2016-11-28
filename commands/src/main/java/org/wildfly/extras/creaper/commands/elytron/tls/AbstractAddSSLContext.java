@@ -31,7 +31,7 @@ abstract class AbstractAddSSLContext implements OnlineCommand {
 
         protected final String name;
         protected String cipherSuiteFilter;
-        protected List<String> protocols = null;
+        protected List<String> protocols;
         protected Integer maximumSessionCacheSize;
         protected Integer sessionTimeout;
         protected String keyManagers;
