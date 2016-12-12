@@ -22,6 +22,8 @@
 
 package org.wildfly.extras.creaper.commands.elytron;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 public final class CredentialRef {
@@ -75,6 +77,15 @@ public final class CredentialRef {
             .andOptional("type", getType())
             .andOptional("store", getStore())
             .andOptional("clear-text", getClearText());
+    }
+
+    public Map<String, Object> toParameters() {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("atrCredentialRefAlias", alias);
+        parameters.put("atrCredentialRefType", type);
+        parameters.put("atrCredentialRefStore", store);
+        parameters.put("atrCredentialRefClearText", clearText);
+        return parameters;
     }
 
     public static final class CredentialRefBuilder {
