@@ -2,10 +2,11 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.Arrays;
 import java.util.List;
+import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 
-abstract class AbstractAddSSLContext implements OnlineCommand {
+abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
 
     protected final String name;
     protected final String cipherSuiteFilter;

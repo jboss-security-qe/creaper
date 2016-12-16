@@ -1,6 +1,10 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.offline.OfflineCommand;
+import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -13,7 +17,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
  *
  *
  */
-public final class AddKeyManager implements OnlineCommand {
+public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String algorithm;
@@ -50,6 +54,20 @@ public final class AddKeyManager implements OnlineCommand {
             .andObject("credential-reference", credentialReference.toValues())
             .andOptional("provider", provider)
             .andOptional("provider-loader", providerLoader));
+    }
+
+    @Override
+    public void apply(OfflineCommandContext ctx) throws Exception {
+        ctx.client.apply(GroovyXmlTransform.of(AddKeyManager.class)
+                .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
+                .parameter("atrName", name)
+                .parameter("atrAlgorithm", algorithm)
+                .parameter("atrKeyStore", keyStore)
+                .parameters(credentialReference.toParameters())
+                .parameter("atrProvider", provider)
+                .parameter("atrProviderLoader", providerLoader)
+                .parameter("atrReplaceExisting", replaceExisting)
+                .build());
     }
 
     public static final class Builder {

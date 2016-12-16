@@ -2,9 +2,15 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.offline.OfflineCommand;
+import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -12,7 +18,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-public final class AddLdapKeyStore implements OnlineCommand {
+public final class AddLdapKeyStore implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String dirContext;
@@ -56,7 +62,7 @@ public final class AddLdapKeyStore implements OnlineCommand {
             .and("search-path", searchPath)
             .andOptional("search-recursive", searchRecursive)
             .andOptional("search-time-limit", searchTimeLimit)
-            .andOptional("filterAlias", filterAlias)
+            .andOptional("filter-alias", filterAlias)
             .andOptional("filter-certificate", filterCertificate)
             .andOptional("filter-iterate", filterIterate);
         // LdapMapping
@@ -109,6 +115,24 @@ public final class AddLdapKeyStore implements OnlineCommand {
 
         ops.add(keyStoreAddress, keyStoreValues);
 
+    }
+
+    @Override
+    public void apply(OfflineCommandContext ctx) throws Exception {
+        ctx.client.apply(GroovyXmlTransform.of(AddLdapKeyStore.class)
+                .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
+                .parameter("atrName", name)
+                .parameter("atrDirContext", dirContext)
+                .parameter("atrSearchPath", searchPath)
+                .parameter("atrSearchRecursive", searchRecursive)
+                .parameter("atrSearchTimeLimit", searchTimeLimit)
+                .parameter("atrFilterAlias", filterAlias)
+                .parameter("atrFilterCertificate", filterCertificate)
+                .parameter("atrFilterIterate", filterIterate)
+                .parameters(ldapMapping != null ? ldapMapping.toParameters() : LdapMapping.EMPTY_PARAMETERS)
+                .parameters(newItemTemplate != null ? newItemTemplate.toParameters() : NewItemTemplate.EMPTY_PARAMETERS)
+                .parameter("atrReplaceExisting", replaceExisting)
+                .build());
     }
 
     public static final class Builder {
@@ -198,6 +222,16 @@ public final class AddLdapKeyStore implements OnlineCommand {
 
     public static final class LdapMapping {
 
+        static final Map<String, Object> EMPTY_PARAMETERS = new HashMap<String, Object>();
+
+        static {
+            EMPTY_PARAMETERS.put("atrAliasAttribute", null);
+            EMPTY_PARAMETERS.put("atrCertificateAttribute", null);
+            EMPTY_PARAMETERS.put("atrCertificateType", null);
+            EMPTY_PARAMETERS.put("atrCertificateChainAttribute", null);
+            EMPTY_PARAMETERS.put("atrCertificateChainEncoding", null);
+        }
+
         private String aliasAttribute;
         private String certificateAttribute;
         private String certificateType;
@@ -232,6 +266,15 @@ public final class AddLdapKeyStore implements OnlineCommand {
             return certificateChainEncoding;
         }
 
+        public Map<String, Object> toParameters() {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("atrAliasAttribute", aliasAttribute);
+            parameters.put("atrCertificateAttribute", certificateAttribute);
+            parameters.put("atrCertificateType", certificateType);
+            parameters.put("atrCertificateChainAttribute", certificateChainAttribute);
+            parameters.put("atrCertificateChainEncoding", certificateChainEncoding);
+            return parameters;
+        }
     }
 
     public static final class LdapMappingBuilder {
@@ -274,6 +317,14 @@ public final class AddLdapKeyStore implements OnlineCommand {
 
     public static final class NewItemTemplate {
 
+        static final Map<String, Object> EMPTY_PARAMETERS = new HashMap<String, Object>();
+
+        static {
+            EMPTY_PARAMETERS.put("atrNewItemAttributes", null);
+            EMPTY_PARAMETERS.put("atrNewItemPath", null);
+            EMPTY_PARAMETERS.put("atrNewItemRdn", null);
+        }
+
         private final List<NewItemAttribute> newItemAttributes;
         private final String newItemPath;
         private final String newItemRdn;
@@ -297,6 +348,13 @@ public final class AddLdapKeyStore implements OnlineCommand {
             return newItemAttributes;
         }
 
+        public Map<String, Object> toParameters() {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("atrNewItemAttributes", newItemAttributes);
+            parameters.put("atrNewItemPath", newItemPath);
+            parameters.put("atrNewItemRdn", newItemRdn);
+            return parameters;
+        }
     }
 
     public static final class NewItemTemplateBuilder {

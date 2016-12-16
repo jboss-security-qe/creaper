@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -28,6 +31,21 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
                 .andOptional("key-managers", keyManagers)
                 .andOptional("trust-managers", trustManagers)
                 .andListOptional(String.class, "protocols", protocols));
+    }
+
+    @Override
+    public void apply(OfflineCommandContext ctx) throws Exception {
+        ctx.client.apply(GroovyXmlTransform.of(AddClientSSLContext.class)
+                .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
+                .parameter("atrName", name)
+                .parameter("atrCipherSuiteFilter", cipherSuiteFilter)
+                .parameter("atrMaximumSessionCacheSize", maximumSessionCacheSize)
+                .parameter("atrSessionTimeout", sessionTimeout)
+                .parameter("atrKeyManagers", keyManagers)
+                .parameter("atrTrustManagers", trustManagers)
+                .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
+                .parameter("atrReplaceExisting", replaceExisting)
+                .build());
     }
 
     public static final class Builder extends AbstractAddSSLContext.Builder<Builder> {
