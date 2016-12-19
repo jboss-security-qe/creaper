@@ -11,11 +11,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-/**
- * affected by https://issues.jboss.org/browse/JBEAP-6301
- *
- * @author olukas
- */
 public final class AddLdapRealm implements OnlineCommand {
 
     private final String name;
@@ -80,6 +75,19 @@ public final class AddLdapRealm implements OnlineCommand {
             addOptionalToModelNode(node, "seed-from", identityMapping.getOtpCredentialMapper().getSeedFrom());
             addOptionalToModelNode(node, "sequence-from", identityMapping.getOtpCredentialMapper().getSequenceFrom());
             identityMappingModelNode.add("otp-credential-mapper", node.asObject());
+        }
+        if (identityMapping.getX509CredentialMapper() != null) {
+            ModelNode node = new ModelNode();
+            addOptionalToModelNode(node, "digest-from", identityMapping.getX509CredentialMapper().getDigestFrom());
+            addOptionalToModelNode(node, "digest-algorithm",
+                    identityMapping.getX509CredentialMapper().getDigestAlgorithm());
+            addOptionalToModelNode(node, "certificate-from",
+                    identityMapping.getX509CredentialMapper().getCertificateFrom());
+            addOptionalToModelNode(node, "serial-number-from",
+                    identityMapping.getX509CredentialMapper().getSerialNumberFrom());
+            addOptionalToModelNode(node, "subject-dn-from",
+                    identityMapping.getX509CredentialMapper().getSubjectDnFrom());
+            identityMappingModelNode.add("x509-credential-mapper", node.asObject());
         }
         if (identityMapping.getNewIdentityAttributes() != null
                 && !identityMapping.getNewIdentityAttributes().isEmpty()) {
@@ -180,6 +188,7 @@ public final class AddLdapRealm implements OnlineCommand {
         private final List<AttributeMapping> attributeMappings;
         private final UserPasswordMapper userPasswordMapper;
         private final OtpCredentialMapper otpCredentialMapper;
+        private final X509CredentialMapper x509CredentialMapper;
         private final List<NewIdentityAttributes> newIdentityAttributes;
 
         private IdentityMapping(IdentityMappingBuilder builder) {
@@ -192,6 +201,7 @@ public final class AddLdapRealm implements OnlineCommand {
             this.userPasswordMapper = builder.userPasswordMapper;
             this.otpCredentialMapper = builder.otpCredentialMapper;
             this.newIdentityAttributes = builder.newIdentityAttributes;
+            this.x509CredentialMapper = builder.x509CredentialMapper;
         }
 
         public String getRdnIdentifier() {
@@ -226,6 +236,10 @@ public final class AddLdapRealm implements OnlineCommand {
             return otpCredentialMapper;
         }
 
+        public X509CredentialMapper getX509CredentialMapper() {
+            return x509CredentialMapper;
+        }
+
         public List<NewIdentityAttributes> getNewIdentityAttributes() {
             return newIdentityAttributes;
         }
@@ -242,6 +256,7 @@ public final class AddLdapRealm implements OnlineCommand {
         private List<AttributeMapping> attributeMappings = new ArrayList<AttributeMapping>();
         private UserPasswordMapper userPasswordMapper;
         private OtpCredentialMapper otpCredentialMapper;
+        private X509CredentialMapper x509CredentialMapper;
         private List<NewIdentityAttributes> newIdentityAttributes = new ArrayList<NewIdentityAttributes>();
 
         public IdentityMappingBuilder rdnIdentifier(String rdnIdentifier) {
@@ -284,6 +299,12 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public IdentityMappingBuilder otpCredentialMapper(OtpCredentialMapper otpCredentialMapper) {
             this.otpCredentialMapper = otpCredentialMapper;
+            return this;
+        }
+
+        public IdentityMappingBuilder x509CredentialMapper(
+                X509CredentialMapper x509CredentialMapper) {
+            this.x509CredentialMapper = x509CredentialMapper;
             return this;
         }
 
@@ -496,6 +517,82 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public OtpCredentialMapper build() {
             return new OtpCredentialMapper(this);
+        }
+    }
+
+    public static final class X509CredentialMapper {
+
+        private final String digestFrom;
+        private final String digestAlgorithm;
+        private final String certificateFrom;
+        private final String serialNumberFrom;
+        private final String subjectDnFrom;
+
+        private X509CredentialMapper(X509CredentialMapperBuilder builder) {
+            this.digestFrom = builder.digestFrom;
+            this.digestAlgorithm = builder.digestAlgorithm;
+            this.certificateFrom = builder.certificateFrom;
+            this.serialNumberFrom = builder.serialNumberFrom;
+            this.subjectDnFrom = builder.subjectDnFrom;
+        }
+
+        public String getDigestFrom() {
+            return digestFrom;
+        }
+
+        public String getDigestAlgorithm() {
+            return digestAlgorithm;
+        }
+
+        public String getCertificateFrom() {
+            return certificateFrom;
+        }
+
+        public String getSerialNumberFrom() {
+            return serialNumberFrom;
+        }
+
+        public String getSubjectDnFrom() {
+            return subjectDnFrom;
+        }
+
+    }
+
+    public static final class X509CredentialMapperBuilder {
+
+        private String digestFrom;
+        private String digestAlgorithm;
+        private String certificateFrom;
+        private String serialNumberFrom;
+        private String subjectDnFrom;
+
+        public X509CredentialMapperBuilder digestFrom(String digestFrom) {
+            this.digestFrom = digestFrom;
+            return this;
+        }
+
+        public X509CredentialMapperBuilder digestAlgorithm(String digestAlgorithm) {
+            this.digestAlgorithm = digestAlgorithm;
+            return this;
+        }
+
+        public X509CredentialMapperBuilder certificateFrom(String certificateFrom) {
+            this.certificateFrom = certificateFrom;
+            return this;
+        }
+
+        public X509CredentialMapperBuilder serialNumberFrom(String serialNumberFrom) {
+            this.serialNumberFrom = serialNumberFrom;
+            return this;
+        }
+
+        public X509CredentialMapperBuilder subjectDnFrom(String subjectDnFrom) {
+            this.subjectDnFrom = subjectDnFrom;
+            return this;
+        }
+
+        public X509CredentialMapper build() {
+            return new X509CredentialMapper(this);
         }
     }
 

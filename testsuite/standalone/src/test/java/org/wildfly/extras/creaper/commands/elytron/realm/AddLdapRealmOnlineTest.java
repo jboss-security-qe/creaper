@@ -118,6 +118,13 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                                 .seedFrom("someSeedFrom")
                                 .sequenceFrom("someSequenceFrom")
                                 .build())
+                        .x509CredentialMapper(new AddLdapRealm.X509CredentialMapperBuilder()
+                                .digestFrom("someDigestFrom")
+                                .digestAlgorithm("someDigestAlgorithm")
+                                .certificateFrom("someCertificateFrom")
+                                .serialNumberFrom("someSerialNumberFrom")
+                                .subjectDnFrom("someSubjectDnFrom")
+                                .build())
                         .addNewIdentityAttributes(new AddLdapRealm.NewIdentityAttributesBuilder()
                                 .name("someName")
                                 .addValues("someValue1", "someValue2")
@@ -160,6 +167,12 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.otp-credential-mapper.hash-from", "someHashFrom");
         checkAttribute("identity-mapping.otp-credential-mapper.seed-from", "someSeedFrom");
         checkAttribute("identity-mapping.otp-credential-mapper.sequence-from", "someSequenceFrom");
+
+        checkAttribute("identity-mapping.x509-credential-mapper.digest-from", "someDigestFrom");
+        checkAttribute("identity-mapping.x509-credential-mapper.digest-algorithm", "someDigestAlgorithm");
+        checkAttribute("identity-mapping.x509-credential-mapper.certificate-from", "someCertificateFrom");
+        checkAttribute("identity-mapping.x509-credential-mapper.serial-number-from", "someSerialNumberFrom");
+        checkAttribute("identity-mapping.x509-credential-mapper.subject-dn-from", "someSubjectDnFrom");
 
         checkAttribute("identity-mapping.new-identity-attributes[0].name", "someName");
         checkAttribute("identity-mapping.new-identity-attributes[0].value[0]", "someValue1");
