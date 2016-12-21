@@ -26,12 +26,13 @@ import java.security.GeneralSecurityException;
 import java.util.Map;
 
 import org.wildfly.extension.elytron.Configurable;
-import org.wildfly.security.SecurityFactory;
+import org.wildfly.extension.elytron.capabilities.CredentialSecurityFactory;
+import org.wildfly.security.credential.Credential;
 
-public class AddCustomCredentialSecurityFactoryImpl<T> implements SecurityFactory<T>, Configurable {
+public class AddCustomCredentialSecurityFactoryImpl<T> implements CredentialSecurityFactory, Configurable {
 
     @Override
-    public T create() throws GeneralSecurityException {
+    public Credential create() throws GeneralSecurityException {
         return null;
     }
 

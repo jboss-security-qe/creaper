@@ -48,11 +48,13 @@ public final class AddLdapRealm implements OnlineCommand {
             List<ModelNode> newAttributeMappingNodeList = new ArrayList<ModelNode>();
             for (AttributeMapping attributeMapping : identityMapping.getAttributeMappings()) {
                 ModelNode node = new ModelNode();
-                node.add("from", attributeMapping.getFrom());
+                addOptionalToModelNode(node, "from", attributeMapping.getFrom());
                 addOptionalToModelNode(node, "to", attributeMapping.getTo());
                 addOptionalToModelNode(node, "filter", attributeMapping.getFilter());
                 addOptionalToModelNode(node, "filter-base-dn", attributeMapping.getFilterBaseDn());
-                addOptionalToModelNode(node, "as-rdn", attributeMapping.getAsRdn());
+                addOptionalToModelNode(node, "extract-rdn", attributeMapping.getExtractRdn());
+                addOptionalToModelNode(node, "search-recursive", attributeMapping.getSearchRecursive());
+                addOptionalToModelNode(node, "role-recursion", attributeMapping.getRoleRecursion());
                 node = node.asObject();
                 newAttributeMappingNodeList.add(node);
             }
@@ -124,6 +126,12 @@ public final class AddLdapRealm implements OnlineCommand {
     }
 
     private void addOptionalToModelNode(ModelNode node, String name, Boolean value) {
+        if (value != null) {
+            node.add(name, value);
+        }
+    }
+
+    private void addOptionalToModelNode(ModelNode node, String name, Integer value) {
         if (value != null) {
             node.add(name, value);
         }
@@ -330,14 +338,18 @@ public final class AddLdapRealm implements OnlineCommand {
         private final String to;
         private final String filter;
         private final String filterBaseDn;
-        private final String asRdn;
+        private final String extractRdn;
+        private final Boolean searchRecursive;
+        private final Integer roleRecursion;
 
         private AttributeMapping(AttributeMappingBuilder builder) {
             this.from = builder.from;
             this.to = builder.to;
             this.filter = builder.filter;
             this.filterBaseDn = builder.filterBaseDn;
-            this.asRdn = builder.asRdn;
+            this.extractRdn = builder.extractRdn;
+            this.searchRecursive = builder.searchRecursive;
+            this.roleRecursion = builder.roleRecursion;
         }
 
         public String getFrom() {
@@ -356,8 +368,16 @@ public final class AddLdapRealm implements OnlineCommand {
             return filterBaseDn;
         }
 
-        public String getAsRdn() {
-            return asRdn;
+        public String getExtractRdn() {
+            return extractRdn;
+        }
+
+        public Boolean getSearchRecursive() {
+            return searchRecursive;
+        }
+
+        public Integer getRoleRecursion() {
+            return roleRecursion;
         }
 
     }
@@ -368,7 +388,9 @@ public final class AddLdapRealm implements OnlineCommand {
         private String to;
         private String filter;
         private String filterBaseDn;
-        private String asRdn;
+        private String extractRdn;
+        private Boolean searchRecursive;
+        private Integer roleRecursion;
 
         public AttributeMappingBuilder from(String from) {
             this.from = from;
@@ -390,15 +412,22 @@ public final class AddLdapRealm implements OnlineCommand {
             return this;
         }
 
-        public AttributeMappingBuilder asRdn(String asRdn) {
-            this.asRdn = asRdn;
+        public AttributeMappingBuilder extractRdn(String extractRdn) {
+            this.extractRdn = extractRdn;
+            return this;
+        }
+
+        public AttributeMappingBuilder searchRecursive(Boolean searchRecursive) {
+            this.searchRecursive = searchRecursive;
+            return this;
+        }
+
+        public AttributeMappingBuilder roleRecursion(Integer roleRecursion) {
+            this.roleRecursion = roleRecursion;
             return this;
         }
 
         public AttributeMapping build() {
-            if (from == null || from.isEmpty()) {
-                throw new IllegalArgumentException("from must not be null and must have a minimum length of 1 characters");
-            }
             return new AttributeMapping(this);
         }
 
@@ -635,6 +664,9 @@ public final class AddLdapRealm implements OnlineCommand {
         }
 
         public NewIdentityAttributes build() {
+            if (name == null || name.isEmpty()) {
+                throw new IllegalArgumentException("name must not be null and must have a minimum length of 1 characters");
+            }
             if (values == null || values.isEmpty()) {
                 throw new IllegalArgumentException("values must not be null and must include at least one entry");
             }

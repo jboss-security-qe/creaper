@@ -98,14 +98,18 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                                 .to("someAttributeTo")
                                 .filter("someAttributeFilter")
                                 .filterBaseDn("someAttributeFilterBaseDn")
-                                .asRdn("someAttributeAsRdn")
+                                .extractRdn("someAttributeAsRdn")
+                                .searchRecursive(true)
+                                .roleRecursion(0)
                                 .build(),
                                 new AddLdapRealm.AttributeMappingBuilder()
                                 .from("someAttributeFrom2")
                                 .to("someAttributeTo2")
                                 .filter("someAttributeFilter2")
                                 .filterBaseDn("someAttributeFilterBaseDn2")
-                                .asRdn("someAttributeAsRdn2")
+                                .extractRdn("someAttributeAsRdn2")
+                                .searchRecursive(false)
+                                .roleRecursion(5)
                                 .build())
                         .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
                                 .from("someUserPasswordFrom")
@@ -152,12 +156,16 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.attribute-mapping[0].to", "someAttributeTo");
         checkAttribute("identity-mapping.attribute-mapping[0].filter", "someAttributeFilter");
         checkAttribute("identity-mapping.attribute-mapping[0].filter-base-dn", "someAttributeFilterBaseDn");
-        checkAttribute("identity-mapping.attribute-mapping[0].as-rdn", "someAttributeAsRdn");
+        checkAttribute("identity-mapping.attribute-mapping[0].extract-rdn", "someAttributeAsRdn");
+        checkAttribute("identity-mapping.attribute-mapping[0].search-recursive", "true");
+        checkAttribute("identity-mapping.attribute-mapping[0].role-recursion", "0");
         checkAttribute("identity-mapping.attribute-mapping[1].from", "someAttributeFrom2");
         checkAttribute("identity-mapping.attribute-mapping[1].to", "someAttributeTo2");
         checkAttribute("identity-mapping.attribute-mapping[1].filter", "someAttributeFilter2");
         checkAttribute("identity-mapping.attribute-mapping[1].filter-base-dn", "someAttributeFilterBaseDn2");
-        checkAttribute("identity-mapping.attribute-mapping[1].as-rdn", "someAttributeAsRdn2");
+        checkAttribute("identity-mapping.attribute-mapping[1].extract-rdn", "someAttributeAsRdn2");
+        checkAttribute("identity-mapping.attribute-mapping[1].search-recursive", "false");
+        checkAttribute("identity-mapping.attribute-mapping[1].role-recursion", "5");
 
         checkAttribute("identity-mapping.user-password-mapper.from", "someUserPasswordFrom");
         checkAttribute("identity-mapping.user-password-mapper.writable", "true");
@@ -306,34 +314,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                         .build())
                 .build();
         fail("Creating command with empty rdn-identifier of identity-mapping should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addLdapRealm_nullFrom_attributeMapping() throws Exception {
-        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
-                .dirContext(TEST_DIR_CONTEXT_NAME)
-                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
-                        .rdnIdentifier("someId")
-                        .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
-                                .from(null)
-                                .build())
-                        .build())
-                .build();
-        fail("Creating command with null from of attribute-mapping should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addLdapRealm_emptyFrom_attributeMapping() throws Exception {
-        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
-                .dirContext(TEST_DIR_CONTEXT_NAME)
-                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
-                        .rdnIdentifier("someId")
-                        .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
-                                .from("")
-                                .build())
-                        .build())
-                .build();
-        fail("Creating command with empty from of attribute-mapping should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

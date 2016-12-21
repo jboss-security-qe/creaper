@@ -15,8 +15,8 @@ public final class AddSecurityDomain implements OnlineCommand {
 
     private final String name;
     private final String defaultRealm;
-    private final String preRealmNameRewriter;
-    private final String postRealmNameRewriter;
+    private final String preRealmPrincipalTransformer;
+    private final String postRealmPrincipalTransformer;
     private final String principalDecoder;
     private final String realmMapper;
     private final String roleMapper;
@@ -28,8 +28,8 @@ public final class AddSecurityDomain implements OnlineCommand {
     private AddSecurityDomain(Builder builder) {
         this.name = builder.name;
         this.defaultRealm = builder.defaultRealm;
-        this.preRealmNameRewriter = builder.preRealmNameRewriter;
-        this.postRealmNameRewriter = builder.postRealmNameRewriter;
+        this.preRealmPrincipalTransformer = builder.preRealmPrincipalTransformer;
+        this.postRealmPrincipalTransformer = builder.postRealmPrincipalTransformer;
         this.principalDecoder = builder.principalDecoder;
         this.realmMapper = builder.realmMapper;
         this.roleMapper = builder.roleMapper;
@@ -52,8 +52,8 @@ public final class AddSecurityDomain implements OnlineCommand {
         for (Realm realm : realms) {
             ModelNode configNode = new ModelNode();
             configNode.add("realm", realm.getName());
-            if (realm.getNameRewriter() != null && !realm.getNameRewriter().isEmpty()) {
-                configNode.add("name-rewriter", realm.getNameRewriter());
+            if (realm.getPrincipalTransformer() != null && !realm.getPrincipalTransformer().isEmpty()) {
+                configNode.add("principal-transformer", realm.getPrincipalTransformer());
             }
             if (realm.getRoleDecoder() != null && !realm.getRoleDecoder().isEmpty()) {
                 configNode.add("role-decoder", realm.getRoleDecoder());
@@ -68,8 +68,8 @@ public final class AddSecurityDomain implements OnlineCommand {
         ops.add(securityDomainAddress, Values.empty()
                 .and("default-realm", defaultRealm)
                 .andList(ModelNode.class, "realms", realmsModelNodeList)
-                .andOptional("pre-realm-name-rewriter", preRealmNameRewriter)
-                .andOptional("post-realm-name-rewriter", postRealmNameRewriter)
+                .andOptional("pre-realm-principal-transformer", preRealmPrincipalTransformer)
+                .andOptional("post-realm-principal-transformer", postRealmPrincipalTransformer)
                 .andOptional("principal-decoder", principalDecoder)
                 .andOptional("realm-mapper", realmMapper)
                 .andOptional("role-mapper", roleMapper)
@@ -81,8 +81,8 @@ public final class AddSecurityDomain implements OnlineCommand {
 
         private final String name;
         private String defaultRealm;
-        private String preRealmNameRewriter;
-        private String postRealmNameRewriter;
+        private String preRealmPrincipalTransformer;
+        private String postRealmPrincipalTransformer;
         private String principalDecoder;
         private String realmMapper;
         private String roleMapper;
@@ -106,13 +106,13 @@ public final class AddSecurityDomain implements OnlineCommand {
             return this;
         }
 
-        public Builder preRealmNameRewriter(String preRealmNameRewriter) {
-            this.preRealmNameRewriter = preRealmNameRewriter;
+        public Builder preRealmPrincipalTransformer(String preRealmPrincipalTransformer) {
+            this.preRealmPrincipalTransformer = preRealmPrincipalTransformer;
             return this;
         }
 
-        public Builder postRealmNameRewriter(String postRealmNameRewriter) {
-            this.postRealmNameRewriter = postRealmNameRewriter;
+        public Builder postRealmPrincipalTransformer(String postRealmPrincipalTransformer) {
+            this.postRealmPrincipalTransformer = postRealmPrincipalTransformer;
             return this;
         }
 
@@ -178,13 +178,13 @@ public final class AddSecurityDomain implements OnlineCommand {
     public static final class Realm {
 
         private final String name;
-        private final String nameRewriter;
+        private final String principalTransformer;
         private final String roleDecoder;
         private final String roleMapper;
 
         private Realm(RealmBuilder builder) {
             this.name = builder.name;
-            this.nameRewriter = builder.nameRewriter;
+            this.principalTransformer = builder.principalTransformer;
             this.roleDecoder = builder.roleDecoder;
             this.roleMapper = builder.roleMapper;
         }
@@ -193,8 +193,8 @@ public final class AddSecurityDomain implements OnlineCommand {
             return name;
         }
 
-        public String getNameRewriter() {
-            return nameRewriter;
+        public String getPrincipalTransformer() {
+            return principalTransformer;
         }
 
         public String getRoleDecoder() {
@@ -210,7 +210,7 @@ public final class AddSecurityDomain implements OnlineCommand {
     public static final class RealmBuilder {
 
         private final String name;
-        private String nameRewriter;
+        private String principalTransformer;
         private String roleDecoder;
         private String roleMapper;
 
@@ -224,8 +224,8 @@ public final class AddSecurityDomain implements OnlineCommand {
             this.name = name;
         }
 
-        public RealmBuilder nameRewriter(String nameRewriter) {
-            this.nameRewriter = nameRewriter;
+        public RealmBuilder principalTransformer(String principalTransformer) {
+            this.principalTransformer = principalTransformer;
             return this;
         }
 

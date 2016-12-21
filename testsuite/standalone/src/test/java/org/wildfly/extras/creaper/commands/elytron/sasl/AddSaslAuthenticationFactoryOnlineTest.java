@@ -12,7 +12,7 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.Mechanism;
 import org.wildfly.extras.creaper.commands.elytron.credfactory.AddKerberosSecurityFactory;
 import org.wildfly.extras.creaper.commands.elytron.domain.AddSecurityDomain;
-import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantNameRewriter;
+import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalTransformer;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddSimpleRegexRealmMapper;
 import org.wildfly.extras.creaper.commands.elytron.realm.AddFilesystemRealm;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -69,19 +69,19 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
             = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME2)
             .build();
 
-    private static final String TEST_CONSTANT_NAME_REWRITER_NAME = "CreaperTestConstantNameRewriter";
-    private static final Address TEST_CONSTANT_NAME_REWRITER_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("constant-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-    private final AddConstantNameRewriter addConstantNameRewriter
-            = new AddConstantNameRewriter.Builder(TEST_CONSTANT_NAME_REWRITER_NAME)
+    private static final String TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME = "CreaperTestConstantPrincipalTransformer";
+    private static final Address TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+    private final AddConstantPrincipalTransformer addConstantPrincipalTransformer
+            = new AddConstantPrincipalTransformer.Builder(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
             .constant("name1")
             .build();
 
-    private static final String TEST_CONSTANT_NAME_REWRITER_NAME2 = "CreaperTestConstantNameRewriter2";
-    private static final Address TEST_CONSTANT_NAME_REWRITER_ADDRESS2 = SUBSYSTEM_ADDRESS
-            .and("constant-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
-    private final AddConstantNameRewriter addConstantNameRewriter2
-            = new AddConstantNameRewriter.Builder(TEST_CONSTANT_NAME_REWRITER_NAME2)
+    private static final String TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2 = "CreaperTestConstantPrincipalTransformer2";
+    private static final Address TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS2 = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+    private final AddConstantPrincipalTransformer addConstantPrincipalTransformer2
+            = new AddConstantPrincipalTransformer.Builder(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
             .constant("name2")
             .build();
 
@@ -130,8 +130,8 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS2);
         ops.removeIfExists(TEST_SERVER_FACTORY_ADDRESS);
         ops.removeIfExists(TEST_SERVER_FACTORY_ADDRESS2);
-        ops.removeIfExists(TEST_CONSTANT_NAME_REWRITER_ADDRESS);
-        ops.removeIfExists(TEST_CONSTANT_NAME_REWRITER_ADDRESS2);
+        ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS);
+        ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS2);
         ops.removeIfExists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS);
         ops.removeIfExists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS2);
         ops.removeIfExists(TEST_KERBEROS_SECURITY_FACTORY_ADDRESS);
@@ -188,8 +188,8 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
         client.apply(addFilesystemRealm2);
         client.apply(addSecurityDomain);
         client.apply(addProviderSaslServerFactory);
-        client.apply(addConstantNameRewriter);
-        client.apply(addConstantNameRewriter2);
+        client.apply(addConstantPrincipalTransformer);
+        client.apply(addConstantPrincipalTransformer2);
         client.apply(addSimpleRegexRealmMapper);
         client.apply(addSimpleRegexRealmMapper2);
         client.apply(addKerberosSecurityFactory);
@@ -204,22 +204,22 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
                         .mechanismName("someName")
                         .hostName("someHostName")
                         .protocol("someProtocol")
-                        .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
-                        .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                        .finalNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
+                        .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
+                        .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                        .finalPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                         .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                         .addMechanismRealmConfigurations(new Mechanism.MechanismRealmBuilder()
                                 .realmName(TEST_FILESYSTEM_REALM_NAME)
-                                .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
-                                .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                                .finalNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
+                                .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
+                                .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                                .finalPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                                 .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                                 .build(),
                                 new Mechanism.MechanismRealmBuilder()
                                 .realmName(TEST_FILESYSTEM_REALM_NAME2)
-                                .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                                .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
-                                .finalNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
+                                .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                                .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
+                                .finalPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
                                 .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
                                 .build())
                         .build(),
@@ -228,15 +228,15 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
                         .mechanismName("someName2")
                         .hostName("someHostName2")
                         .protocol("someProtocol2")
-                        .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                        .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
-                        .finalNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
+                        .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                        .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
+                        .finalPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
                         .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
                         .addMechanismRealmConfigurations(new Mechanism.MechanismRealmBuilder()
                                 .realmName(TEST_FILESYSTEM_REALM_NAME2)
-                                .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                                .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
-                                .finalNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
+                                .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                                .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
+                                .finalPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
                                 .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2)
                                 .build())
                         .build())
@@ -252,52 +252,59 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
         checkAttribute("mechanism-configurations[0].mechanism-name", "someName");
         checkAttribute("mechanism-configurations[0].host-name", "someHostName");
         checkAttribute("mechanism-configurations[0].protocol", "someProtocol");
-        checkAttribute("mechanism-configurations[0].pre-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-        checkAttribute("mechanism-configurations[0].post-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[0].final-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
+        checkAttribute("mechanism-configurations[0].pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+        checkAttribute("mechanism-configurations[0].post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[0].final-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
         checkAttribute("mechanism-configurations[0].realm-mapper", TEST_SIMPLE_REGEX_REALM_MAPPER_NAME);
         checkAttribute("mechanism-configurations[0].credential-security-factory", TEST_KERBEROS_SECURITY_FACTORY_NAME);
 
         checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].realm-name",
                 TEST_FILESYSTEM_REALM_NAME);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].pre-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].post-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].final-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].final-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
         checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[0].realm-mapper",
                 TEST_SIMPLE_REGEX_REALM_MAPPER_NAME);
 
         checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].realm-name",
                 TEST_FILESYSTEM_REALM_NAME2);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].pre-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].post-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME);
-        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].final-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+        checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].final-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
         checkAttribute("mechanism-configurations[0].mechanism-realm-configurations[1].realm-mapper",
                 TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
 
         checkAttribute("mechanism-configurations[1].mechanism-name", "someName2");
         checkAttribute("mechanism-configurations[1].host-name", "someHostName2");
         checkAttribute("mechanism-configurations[1].protocol", "someProtocol2");
-        checkAttribute("mechanism-configurations[1].pre-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[1].post-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-        checkAttribute("mechanism-configurations[1].final-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
+        checkAttribute("mechanism-configurations[1].pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[1].post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+        checkAttribute("mechanism-configurations[1].final-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2
+        );
         checkAttribute("mechanism-configurations[1].realm-mapper", TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
         checkAttribute("mechanism-configurations[1].credential-security-factory",
                 TEST_KERBEROS_SECURITY_FACTORY_NAME2);
 
         checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].realm-name",
                 TEST_FILESYSTEM_REALM_NAME2);
-        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].pre-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].post-realm-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
-        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].final-name-rewriter",
-                TEST_CONSTANT_NAME_REWRITER_NAME2);
+        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+        checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].final-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
         checkAttribute("mechanism-configurations[1].mechanism-realm-configurations[0].realm-mapper",
                 TEST_SIMPLE_REGEX_REALM_MAPPER_NAME2);
 

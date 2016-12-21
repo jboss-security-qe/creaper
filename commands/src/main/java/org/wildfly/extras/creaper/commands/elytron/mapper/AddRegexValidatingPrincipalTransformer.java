@@ -7,51 +7,49 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-public final class AddRegexNameRewriter implements OnlineCommand {
+public final class AddRegexValidatingPrincipalTransformer implements OnlineCommand {
 
     private final String name;
     private final String pattern;
-    private final String replacement;
-    private final Boolean replaceAll;
+    private final Boolean match;
     private final boolean replaceExisting;
 
-    private AddRegexNameRewriter(Builder builder) {
+    private AddRegexValidatingPrincipalTransformer(Builder builder) {
         this.name = builder.name;
         this.pattern = builder.pattern;
-        this.replacement = builder.replacement;
-        this.replaceAll = builder.replaceAll;
+        this.match = builder.match;
         this.replaceExisting = builder.replaceExisting;
     }
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address regexNameRewriterAddress = Address.subsystem("elytron").and("regex-name-rewriter", name);
+        Address regexPrincipalTransformerAddress = Address.subsystem("elytron").and("regex-validating-principal-transformer",
+                name);
         if (replaceExisting) {
-            ops.removeIfExists(regexNameRewriterAddress);
+            ops.removeIfExists(regexPrincipalTransformerAddress);
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(regexNameRewriterAddress, Values.empty()
+        ops.add(regexPrincipalTransformerAddress, Values.empty()
                 .and("pattern", pattern)
-                .and("replacement", replacement)
-                .andOptional("replace-all", replaceAll));
+                .and("match", match)
+                .andOptional("replace-all", match));
     }
 
     public static final class Builder {
 
         private final String name;
         private String pattern;
-        private String replacement;
-        private Boolean replaceAll;
+        private Boolean match;
         private boolean replaceExisting;
 
         public Builder(String name) {
             if (name == null) {
-                throw new IllegalArgumentException("Name of the regex-name-rewriter must be specified as non null value");
+                throw new IllegalArgumentException("Name of the regex-validating-principal-transformer must be specified as non null value");
             }
             if (name.isEmpty()) {
-                throw new IllegalArgumentException("Name of the regex-name-rewriter must not be empty value");
+                throw new IllegalArgumentException("Name of the regex-validating-principal-transformer must not be empty value");
             }
             this.name = name;
         }
@@ -61,13 +59,8 @@ public final class AddRegexNameRewriter implements OnlineCommand {
             return this;
         }
 
-        public Builder replacement(String replacement) {
-            this.replacement = replacement;
-            return this;
-        }
-
-        public Builder replaceAll(boolean replaceAll) {
-            this.replaceAll = replaceAll;
+        public Builder match(boolean match) {
+            this.match = match;
             return this;
         }
 
@@ -76,14 +69,14 @@ public final class AddRegexNameRewriter implements OnlineCommand {
             return this;
         }
 
-        public AddRegexNameRewriter build() {
+        public AddRegexValidatingPrincipalTransformer build() {
             if (pattern == null || pattern.isEmpty()) {
                 throw new IllegalArgumentException("Pattern must not be null and must have a minimum length of 1 character");
             }
-            if (replacement == null || replacement.isEmpty()) {
-                throw new IllegalArgumentException("Replacement must not be null and must have a minimum length of 1 character");
+            if (match == null) {
+                throw new IllegalArgumentException("Match must not be null");
             }
-            return new AddRegexNameRewriter(this);
+            return new AddRegexValidatingPrincipalTransformer(this);
         }
     }
 }

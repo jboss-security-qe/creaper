@@ -9,9 +9,9 @@ public final class Mechanism {
     private final String mechanismName;
     private final String hostName;
     private final String protocol;
-    private final String preRealmNameRewriter;
-    private final String postRealmNameRewriter;
-    private final String finalNameRewriter;
+    private final String preRealmPrincipalTransformer;
+    private final String postRealmPrincipalTransformer;
+    private final String finalPrincipalTransformer;
     private final String realmMapper;
     private final String credentialSecurityFactory;
     private final List<MechanismRealm> mechanismRealmConfigurations;
@@ -20,9 +20,9 @@ public final class Mechanism {
         this.mechanismName = builder.mechanismName;
         this.hostName = builder.hostName;
         this.protocol = builder.protocol;
-        this.preRealmNameRewriter = builder.preRealmNameRewriter;
-        this.postRealmNameRewriter = builder.postRealmNameRewriter;
-        this.finalNameRewriter = builder.finalNameRewriter;
+        this.preRealmPrincipalTransformer = builder.preRealmPrincipalTransformer;
+        this.postRealmPrincipalTransformer = builder.postRealmPrincipalTransformer;
+        this.finalPrincipalTransformer = builder.finalPrincipalTransformer;
         this.realmMapper = builder.realmMapper;
         this.credentialSecurityFactory = builder.credentialSecurityFactory;
         this.mechanismRealmConfigurations = builder.mechanismRealmConfigurations;
@@ -40,16 +40,16 @@ public final class Mechanism {
         return protocol;
     }
 
-    public String getPreRealmNameRewriter() {
-        return preRealmNameRewriter;
+    public String getPreRealmPrincipalTransformer() {
+        return preRealmPrincipalTransformer;
     }
 
-    public String getPostRealmNameRewriter() {
-        return postRealmNameRewriter;
+    public String getPostRealmPrincipalTransformer() {
+        return postRealmPrincipalTransformer;
     }
 
-    public String getFinalNameRewriter() {
-        return finalNameRewriter;
+    public String getFinalPrincipalTransformer() {
+        return finalPrincipalTransformer;
     }
 
     public String getRealmMapper() {
@@ -69,9 +69,9 @@ public final class Mechanism {
         private String mechanismName;
         private String hostName;
         private String protocol;
-        private String preRealmNameRewriter;
-        private String postRealmNameRewriter;
-        private String finalNameRewriter;
+        private String preRealmPrincipalTransformer;
+        private String postRealmPrincipalTransformer;
+        private String finalPrincipalTransformer;
         private String realmMapper;
         private String credentialSecurityFactory;
         private List<MechanismRealm> mechanismRealmConfigurations = new ArrayList<MechanismRealm>();
@@ -91,18 +91,18 @@ public final class Mechanism {
             return this;
         }
 
-        public Builder preRealmNameRewriter(String preRealmNameRewriter) {
-            this.preRealmNameRewriter = preRealmNameRewriter;
+        public Builder preRealmPrincipalTransformer(String preRealmPrincipalTransformer) {
+            this.preRealmPrincipalTransformer = preRealmPrincipalTransformer;
             return this;
         }
 
-        public Builder postRealmNameRewriter(String postRealmNameRewriter) {
-            this.postRealmNameRewriter = postRealmNameRewriter;
+        public Builder postRealmPrincipalTransformer(String postRealmPrincipalTransformer) {
+            this.postRealmPrincipalTransformer = postRealmPrincipalTransformer;
             return this;
         }
 
-        public Builder finalNameRewriter(String finalNameRewriter) {
-            this.finalNameRewriter = finalNameRewriter;
+        public Builder finalPrincipalTransformer(String finalPrincipalTransformer) {
+            this.finalPrincipalTransformer = finalPrincipalTransformer;
             return this;
         }
 
@@ -133,16 +133,16 @@ public final class Mechanism {
     public static final class MechanismRealm {
 
         private final String realmName;
-        private final String preRealmNameRewriter;
-        private final String postRealmNameRewriter;
-        private final String finalNameRewriter;
+        private final String preRealmPrincipalTransformer;
+        private final String postRealmPrincipalTransformer;
+        private final String finalPrincipalTransformer;
         private final String realmMapper;
 
         private MechanismRealm(MechanismRealmBuilder builder) {
             this.realmName = builder.realmName;
-            this.preRealmNameRewriter = builder.preRealmNameRewriter;
-            this.postRealmNameRewriter = builder.postRealmNameRewriter;
-            this.finalNameRewriter = builder.finalNameRewriter;
+            this.preRealmPrincipalTransformer = builder.preRealmPrincipalTransformer;
+            this.postRealmPrincipalTransformer = builder.postRealmPrincipalTransformer;
+            this.finalPrincipalTransformer = builder.finalPrincipalTransformer;
             this.realmMapper = builder.realmMapper;
         }
 
@@ -150,16 +150,16 @@ public final class Mechanism {
             return realmName;
         }
 
-        public String getPreRealmNameRewriter() {
-            return preRealmNameRewriter;
+        public String getPreRealmPrincipalTransformer() {
+            return preRealmPrincipalTransformer;
         }
 
-        public String getPostRealmNameRewriter() {
-            return postRealmNameRewriter;
+        public String getPostRealmPrincipalTransformer() {
+            return postRealmPrincipalTransformer;
         }
 
-        public String getFinalNameRewriter() {
-            return finalNameRewriter;
+        public String getFinalPrincipalTransformer() {
+            return finalPrincipalTransformer;
         }
 
         public String getRealmMapper() {
@@ -171,9 +171,9 @@ public final class Mechanism {
     public static final class MechanismRealmBuilder {
 
         private String realmName;
-        private String preRealmNameRewriter;
-        private String postRealmNameRewriter;
-        private String finalNameRewriter;
+        private String preRealmPrincipalTransformer;
+        private String postRealmPrincipalTransformer;
+        private String finalPrincipalTransformer;
         private String realmMapper;
 
         public MechanismRealmBuilder realmName(String realmName) {
@@ -181,18 +181,18 @@ public final class Mechanism {
             return this;
         }
 
-        public MechanismRealmBuilder preRealmNameRewriter(String preRealmNameRewriter) {
-            this.preRealmNameRewriter = preRealmNameRewriter;
+        public MechanismRealmBuilder preRealmPrincipalTransformer(String preRealmPrincipalTransformer) {
+            this.preRealmPrincipalTransformer = preRealmPrincipalTransformer;
             return this;
         }
 
-        public MechanismRealmBuilder postRealmNameRewriter(String postRealmNameRewriter) {
-            this.postRealmNameRewriter = postRealmNameRewriter;
+        public MechanismRealmBuilder postRealmPrincipalTransformer(String postRealmPrincipalTransformer) {
+            this.postRealmPrincipalTransformer = postRealmPrincipalTransformer;
             return this;
         }
 
-        public MechanismRealmBuilder finalNameRewriter(String finalNameRewriter) {
-            this.finalNameRewriter = finalNameRewriter;
+        public MechanismRealmBuilder finalPrincipalTransformer(String finalPrincipalTransformer) {
+            this.finalPrincipalTransformer = finalPrincipalTransformer;
             return this;
         }
 

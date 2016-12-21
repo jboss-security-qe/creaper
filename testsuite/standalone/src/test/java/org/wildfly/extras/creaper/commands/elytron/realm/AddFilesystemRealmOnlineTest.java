@@ -8,7 +8,6 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantNameRewriter;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -22,15 +21,10 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TEST_FILESYSTEM_REALM_ADDRESS2 = SUBSYSTEM_ADDRESS
             .and("filesystem-realm", TEST_FILESYSTEM_REALM_NAME2);
 
-    private static final String TEST_CONSTANT_NAME_REWRITER_NAME = "SomeCreaperConstantNameRewriter";
-    private static final Address TEST_CONSTANT_NAME_REWRITER_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("constant-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS);
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS2);
-        ops.removeIfExists(TEST_CONSTANT_NAME_REWRITER_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -64,18 +58,10 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullFilesystemRealm() throws Exception {
-        AddConstantNameRewriter addConstantNameRewriter
-                = new AddConstantNameRewriter.Builder(TEST_CONSTANT_NAME_REWRITER_NAME)
-                .constant("name1")
-                .build();
-
-        client.apply(addConstantNameRewriter);
-
         AddFilesystemRealm addFilesystemRealm = new AddFilesystemRealm.Builder(TEST_FILESYSTEM_REALM_NAME)
                 .path("filesystem")
                 .relativeTo("jboss.server.config.dir")
                 .levels(5)
-                .nameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
                 .build();
 
         client.apply(addFilesystemRealm);
@@ -85,7 +71,6 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "path", "filesystem");
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "relative-to", "jboss.server.config.dir");
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "levels", "5");
-        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
     }
 
     @Test(expected = CommandFailedException.class)

@@ -8,7 +8,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
-import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantNameRewriter;
+import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalTransformer;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalDecoder;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantRoleMapper;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddSimplePermissionMapper;
@@ -54,19 +54,19 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                     .build())
             .build();
 
-    private static final String TEST_CONSTANT_NAME_REWRITER_NAME = "CreaperTestConstantNameRewriter";
-    private static final Address TEST_CONSTANT_NAME_REWRITER_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("constant-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-    private final AddConstantNameRewriter addConstantNameRewriter
-            = new AddConstantNameRewriter.Builder(TEST_CONSTANT_NAME_REWRITER_NAME)
+    private static final String TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME = "CreaperTestConstantPrincipalTransformer";
+    private static final Address TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+    private final AddConstantPrincipalTransformer addConstantPrincipalTransformer
+            = new AddConstantPrincipalTransformer.Builder(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
             .constant("name1")
             .build();
 
-    private static final String TEST_CONSTANT_NAME_REWRITER_NAME2 = "CreaperTestConstantNameRewriter2";
-    private static final Address TEST_CONSTANT_NAME_REWRITER_ADDRESS2 = SUBSYSTEM_ADDRESS
-            .and("constant-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
-    private final AddConstantNameRewriter addConstantNameRewriter2
-            = new AddConstantNameRewriter.Builder(TEST_CONSTANT_NAME_REWRITER_NAME2)
+    private static final String TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2 = "CreaperTestConstantPrincipalTransformer2";
+    private static final Address TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS2 = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
+    private final AddConstantPrincipalTransformer addConstantPrincipalTransformer2
+            = new AddConstantPrincipalTransformer.Builder(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
             .constant("name2")
             .build();
 
@@ -135,8 +135,8 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS);
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS2);
         ops.removeIfExists(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS);
-        ops.removeIfExists(TEST_CONSTANT_NAME_REWRITER_ADDRESS);
-        ops.removeIfExists(TEST_CONSTANT_NAME_REWRITER_ADDRESS2);
+        ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS);
+        ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS2);
         ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS);
         ops.removeIfExists(TEST_SIMPLE_REGEX_REALM_MAPPER_ADDRESS);
         ops.removeIfExists(TEST_CONSTANT_ROLE_MAPPER_ADDRESS);
@@ -188,8 +188,8 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addFilesystemRealm);
         client.apply(addFilesystemRealm2);
         client.apply(addSimplePermissionMapper);
-        client.apply(addConstantNameRewriter);
-        client.apply(addConstantNameRewriter2);
+        client.apply(addConstantPrincipalTransformer);
+        client.apply(addConstantPrincipalTransformer2);
         client.apply(addConstantPrincipalDecoder);
         client.apply(addSimpleRegexRealmMapper);
         client.apply(addConstantRoleMapper);
@@ -207,19 +207,19 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         AddSecurityDomain addSecurityDomain = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
                 .defaultRealm(TEST_FILESYSTEM_REALM_NAME)
                 .permissionMapper(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .postRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
-                .preRealmNameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
+                .postRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
+                .preRealmPrincipalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
                 .principalDecoder(TEST_CONSTANT_PRINCIPAL_DECODER_NAME)
                 .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                 .roleMapper(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .trustedSecurityDomains(TEST_SECURITY_DOMAIN_NAME2, TEST_SECURITY_DOMAIN_NAME3)
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
-                        .nameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME)
+                        .principalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                         .roleDecoder(TEST_SIMPLE_ROLE_DECODER_NAME)
                         .roleMapper(TEST_CONSTANT_ROLE_MAPPER_NAME)
                         .build(),
                         new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME2)
-                        .nameRewriter(TEST_CONSTANT_NAME_REWRITER_NAME2)
+                        .principalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2)
                         .roleDecoder(TEST_SIMPLE_ROLE_DECODER_NAME2)
                         .roleMapper(TEST_CONSTANT_ROLE_MAPPER_NAME2)
                         .build())
@@ -230,8 +230,10 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "default-realm", TEST_FILESYSTEM_REALM_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "permission-mapper", TEST_SIMPLE_PERMISSION_MAPPER_NAME);
-        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "post-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
-        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "pre-realm-name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "post-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "pre-realm-principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "principal-decoder", TEST_CONSTANT_PRINCIPAL_DECODER_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realm-mapper", TEST_SIMPLE_REGEX_REALM_MAPPER_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "role-mapper", TEST_CONSTANT_ROLE_MAPPER_NAME);
@@ -239,12 +241,14 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "trusted-security-domains[1]", TEST_SECURITY_DOMAIN_NAME3);
 
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].realm", TEST_FILESYSTEM_REALM_NAME);
-        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].role-decoder", TEST_SIMPLE_ROLE_DECODER_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].role-mapper", TEST_CONSTANT_ROLE_MAPPER_NAME);
 
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[1].realm", TEST_FILESYSTEM_REALM_NAME2);
-        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[1].name-rewriter", TEST_CONSTANT_NAME_REWRITER_NAME2);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[1].principal-transformer",
+                TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME2);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[1].role-decoder", TEST_SIMPLE_ROLE_DECODER_NAME2);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[1].role-mapper", TEST_CONSTANT_ROLE_MAPPER_NAME2);
     }

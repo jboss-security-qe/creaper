@@ -11,7 +11,6 @@ public final class AddFilesystemRealm implements OnlineCommand {
 
     private final String name;
     private final Integer levels;
-    private final String nameRewriter;
     private final String path;
     private final String relativeTo;
     private final boolean replaceExisting;
@@ -19,7 +18,6 @@ public final class AddFilesystemRealm implements OnlineCommand {
     private AddFilesystemRealm(Builder builder) {
         this.name = builder.name;
         this.levels = builder.levels;
-        this.nameRewriter = builder.nameRewriter;
         this.path = builder.path;
         this.relativeTo = builder.relativeTo;
         this.replaceExisting = builder.replaceExisting;
@@ -37,7 +35,6 @@ public final class AddFilesystemRealm implements OnlineCommand {
         ops.add(securityRealmAddress, Values.empty()
                 .and("path", path)
                 .andOptional("levels", levels)
-                .andOptional("name-rewriter", nameRewriter)
                 .andOptional("relative-to", relativeTo));
 
         new Administration(ctx.client).reloadIfRequired();
@@ -48,7 +45,6 @@ public final class AddFilesystemRealm implements OnlineCommand {
 
         private final String name;
         private Integer levels;
-        private String nameRewriter;
         private String path;
         private String relativeTo;
         private boolean replaceExisting;
@@ -65,11 +61,6 @@ public final class AddFilesystemRealm implements OnlineCommand {
 
         public Builder levels(Integer levels) {
             this.levels = levels;
-            return this;
-        }
-
-        public Builder nameRewriter(String nameRewriter) {
-            this.nameRewriter = nameRewriter;
             return this;
         }
 

@@ -15,7 +15,7 @@
     
     <properties>
         <version.wildfly-elytron>1.1.0.Beta8</version.wildfly-elytron>
-        <version.org.wildfly.security.elytron-subsystem>1.0.0.Alpha9</version.org.wildfly.security.elytron-subsystem>
+        <version.org.wildfly.security.elytron-subsystem>1.0.0.Alpha17</version.org.wildfly.security.elytron-subsystem>
     </properties>
 
     <dependencies>

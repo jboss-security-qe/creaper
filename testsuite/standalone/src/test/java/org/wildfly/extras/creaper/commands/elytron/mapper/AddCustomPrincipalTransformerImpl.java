@@ -22,29 +22,23 @@
 
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
-import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
+import org.wildfly.extension.elytron.Configurable;
+import java.security.Principal;
+import java.util.Map;
+import org.wildfly.extension.elytron.capabilities.PrincipalTransformer;
 
-public final class AddCustomNameRewriter extends AbstractAddCustom {
+public class AddCustomPrincipalTransformerImpl implements PrincipalTransformer, Configurable {
 
-    protected AddCustomNameRewriter(Builder builder) {
-        super(builder);
+    @Override
+    public Principal apply(Principal p) {
+        return p;
     }
 
     @Override
-    protected String getCustomTypeName() {
-        return "custom-name-rewriter";
-    }
-
-    public static final class Builder extends AbstractAddCustom.Builder<Builder> {
-        public Builder(String name) {
-            super(name);
-        }
-
-        public AddCustomNameRewriter build() {
-            if (className == null || className.isEmpty()) {
-                throw new IllegalArgumentException("className must not be null or empty string");
-            }
-            return new AddCustomNameRewriter(this);
+    public void initialize(Map<String, String> configuration) {
+        if (configuration.containsKey("throwException")) {
+            throw new IllegalStateException("Only test purpose. This exception was thrown on demand.");
         }
     }
+
 }

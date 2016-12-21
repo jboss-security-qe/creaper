@@ -46,12 +46,12 @@ public final class AddHttpAuthenticationFactory implements OnlineCommand {
                 addOptionalToModelNode(mechanismNode, "mechanism-name", mechanismConfiguration.getMechanismName());
                 addOptionalToModelNode(mechanismNode, "host-name", mechanismConfiguration.getHostName());
                 addOptionalToModelNode(mechanismNode, "protocol", mechanismConfiguration.getProtocol());
-                addOptionalToModelNode(mechanismNode, "pre-realm-name-rewriter",
-                        mechanismConfiguration.getPreRealmNameRewriter());
-                addOptionalToModelNode(mechanismNode, "post-realm-name-rewriter",
-                        mechanismConfiguration.getPostRealmNameRewriter());
-                addOptionalToModelNode(mechanismNode, "final-name-rewriter",
-                        mechanismConfiguration.getFinalNameRewriter());
+                addOptionalToModelNode(mechanismNode, "pre-realm-principal-transformer",
+                        mechanismConfiguration.getPreRealmPrincipalTransformer());
+                addOptionalToModelNode(mechanismNode, "post-realm-principal-transformer",
+                        mechanismConfiguration.getPostRealmPrincipalTransformer());
+                addOptionalToModelNode(mechanismNode, "final-principal-transformer",
+                        mechanismConfiguration.getFinalPrincipalTransformer());
                 addOptionalToModelNode(mechanismNode, "realm-mapper", mechanismConfiguration.getRealmMapper());
                 addOptionalToModelNode(mechanismNode, "credential-security-factory",
                         mechanismConfiguration.getCredentialSecurityFactory());
@@ -65,12 +65,12 @@ public final class AddHttpAuthenticationFactory implements OnlineCommand {
                             : mechanismConfiguration.getMechanismRealmConfigurations()) {
                         ModelNode mechanismRealmNode = new ModelNode();
                         mechanismRealmNode.add("realm-name", mechanismRealm.getRealmName());
-                        addOptionalToModelNode(mechanismRealmNode, "pre-realm-name-rewriter",
-                                mechanismRealm.getPreRealmNameRewriter());
-                        addOptionalToModelNode(mechanismRealmNode, "post-realm-name-rewriter",
-                                mechanismRealm.getPostRealmNameRewriter());
-                        addOptionalToModelNode(mechanismRealmNode, "final-name-rewriter",
-                                mechanismRealm.getFinalNameRewriter());
+                        addOptionalToModelNode(mechanismRealmNode, "pre-realm-principal-transformer",
+                                mechanismRealm.getPreRealmPrincipalTransformer());
+                        addOptionalToModelNode(mechanismRealmNode, "post-realm-principal-transformer",
+                                mechanismRealm.getPostRealmPrincipalTransformer());
+                        addOptionalToModelNode(mechanismRealmNode, "final-principal-transformer",
+                                mechanismRealm.getFinalPrincipalTransformer());
                         addOptionalToModelNode(mechanismRealmNode, "realm-mapper", mechanismRealm.getRealmMapper());
                         mechanismRealmNode = mechanismRealmNode.asObject();
                         mechanismRealmConfigurationsNodeList.add(mechanismRealmNode);
