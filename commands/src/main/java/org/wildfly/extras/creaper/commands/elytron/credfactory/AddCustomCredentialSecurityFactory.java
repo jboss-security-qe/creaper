@@ -23,6 +23,7 @@
 package org.wildfly.extras.creaper.commands.elytron.credfactory;
 
 import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 
 public final class AddCustomCredentialSecurityFactory extends AbstractAddCustom {
 
@@ -33,6 +34,11 @@ public final class AddCustomCredentialSecurityFactory extends AbstractAddCustom 
     @Override
     protected String getCustomTypeName() {
         return "custom-credential-security-factory";
+    }
+
+    @Override
+    protected GroovyXmlTransform.Builder getGroovyBuilder() {
+        return GroovyXmlTransform.of(AddCustomCredentialSecurityFactory.class);
     }
 
     public static final class Builder extends AbstractAddCustom.Builder<Builder> {

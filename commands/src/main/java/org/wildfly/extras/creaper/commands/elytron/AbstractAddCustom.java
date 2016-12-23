@@ -3,6 +3,10 @@ package org.wildfly.extras.creaper.commands.elytron;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.offline.OfflineCommand;
+import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -10,7 +14,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-public abstract class AbstractAddCustom implements OnlineCommand {
+public abstract class AbstractAddCustom implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String className;
@@ -41,6 +45,20 @@ public abstract class AbstractAddCustom implements OnlineCommand {
             .andObjectOptional("configuration", Values.fromMap(configuration)));
     }
 
+    @Override
+    public final void apply(OfflineCommandContext ctx) throws Exception {
+        ctx.client.apply(getGroovyBuilder()
+                .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
+                .parameter("atrName", name)
+                .parameter("atrClassName", className)
+                .parameter("atrModule", module)
+                .parameter("atrConfiguration", configuration)
+                .parameter("atrReplaceExisting", replaceExisting)
+                .build());
+    }
+
+    protected abstract GroovyXmlTransform.Builder getGroovyBuilder();
+
     protected abstract String getCustomTypeName();
 
     protected abstract static class Builder<T extends Builder> {
@@ -61,6 +79,8 @@ public abstract class AbstractAddCustom implements OnlineCommand {
 
             this.name = name;
         }
+
+        public abstract <S extends AbstractAddCustom> S build();
 
         public final T className(String className) {
             this.className = className;

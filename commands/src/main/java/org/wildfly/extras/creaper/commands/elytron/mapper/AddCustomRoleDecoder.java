@@ -23,6 +23,7 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 
 public final class AddCustomRoleDecoder extends AbstractAddCustom {
 
@@ -33,6 +34,11 @@ public final class AddCustomRoleDecoder extends AbstractAddCustom {
     @Override
     protected String getCustomTypeName() {
         return "custom-role-decoder";
+    }
+
+    @Override
+    protected GroovyXmlTransform.Builder getGroovyBuilder() {
+        return GroovyXmlTransform.of(AddCustomRoleDecoder.class);
     }
 
     public static final class Builder extends AbstractAddCustom.Builder<Builder> {

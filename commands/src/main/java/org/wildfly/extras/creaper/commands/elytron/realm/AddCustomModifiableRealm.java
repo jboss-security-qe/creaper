@@ -23,6 +23,7 @@
 package org.wildfly.extras.creaper.commands.elytron.realm;
 
 import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 
 public final class AddCustomModifiableRealm extends AbstractAddCustom {
 
@@ -33,6 +34,11 @@ public final class AddCustomModifiableRealm extends AbstractAddCustom {
     @Override
     protected String getCustomTypeName() {
         return "custom-modifiable-realm";
+    }
+
+    @Override
+    protected GroovyXmlTransform.Builder getGroovyBuilder() {
+        return GroovyXmlTransform.of(AddCustomModifiableRealm.class);
     }
 
     public static final class Builder extends AbstractAddCustom.Builder<Builder> {

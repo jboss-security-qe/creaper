@@ -23,6 +23,7 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import org.wildfly.extras.creaper.commands.elytron.AbstractAddCustom;
+import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 
 public final class AddCustomPrincipalTransformer extends AbstractAddCustom {
 
@@ -33,6 +34,11 @@ public final class AddCustomPrincipalTransformer extends AbstractAddCustom {
     @Override
     protected String getCustomTypeName() {
         return "custom-principal-transformer";
+    }
+
+    @Override
+    protected GroovyXmlTransform.Builder getGroovyBuilder() {
+        return GroovyXmlTransform.of(AddCustomPrincipalTransformer.class);
     }
 
     public static final class Builder extends AbstractAddCustom.Builder<Builder> {
