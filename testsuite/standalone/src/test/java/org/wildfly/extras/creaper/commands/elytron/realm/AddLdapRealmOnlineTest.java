@@ -91,6 +91,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                         .rdnIdentifier("someId")
                         .searchBaseDn("someSearchBaseDn")
                         .useRecursiveSearch(true)
+                        .filterName("someFilterName")
                         .iteratorFilter("someIteratorFilter")
                         .newIdentityParentDn("DN=someDn")
                         .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
@@ -149,6 +150,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.rdn-identifier", "someId");
         checkAttribute("identity-mapping.search-base-dn", "someSearchBaseDn");
         checkAttribute("identity-mapping.use-recursive-search", "true");
+        checkAttribute("identity-mapping.filter-name", "someFilterName");
         checkAttribute("identity-mapping.iterator-filter", "someIteratorFilter");
         checkAttribute("identity-mapping.new-identity-parent-dn", "DN=someDn");
 

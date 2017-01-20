@@ -41,6 +41,7 @@ public final class AddLdapRealm implements OnlineCommand {
         addOptionalToModelNode(identityMappingModelNode, "search-base-dn", identityMapping.getSearchBaseDn());
         addOptionalToModelNode(identityMappingModelNode, "use-recursive-search",
                 identityMapping.getUseRecursiveSearch());
+        addOptionalToModelNode(identityMappingModelNode, "filter-name", identityMapping.getFilterName());
         addOptionalToModelNode(identityMappingModelNode, "iterator-filter", identityMapping.getIteratorFilter());
         addOptionalToModelNode(identityMappingModelNode, "new-identity-parent-dn",
                 identityMapping.getNewIdentityParentDn());
@@ -191,6 +192,7 @@ public final class AddLdapRealm implements OnlineCommand {
         private final String rdnIdentifier;
         private final String searchBaseDn;
         private final Boolean useRecursiveSearch;
+        private final String filterName;
         private final String iteratorFilter;
         private final String newIdentityParentDn;
         private final List<AttributeMapping> attributeMappings;
@@ -203,6 +205,7 @@ public final class AddLdapRealm implements OnlineCommand {
             this.rdnIdentifier = builder.rdnIdentifier;
             this.searchBaseDn = builder.searchBaseDn;
             this.useRecursiveSearch = builder.useRecursiveSearch;
+            this.filterName = builder.filterName;
             this.iteratorFilter = builder.iteratorFilter;
             this.newIdentityParentDn = builder.newIdentityParentDn;
             this.attributeMappings = builder.attributeMappings;
@@ -222,6 +225,10 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public Boolean getUseRecursiveSearch() {
             return useRecursiveSearch;
+        }
+
+        public String getFilterName() {
+            return filterName;
         }
 
         public String getIteratorFilter() {
@@ -259,6 +266,7 @@ public final class AddLdapRealm implements OnlineCommand {
         private String rdnIdentifier;
         private String searchBaseDn;
         private Boolean useRecursiveSearch;
+        private String filterName;
         private String iteratorFilter;
         private String newIdentityParentDn;
         private List<AttributeMapping> attributeMappings = new ArrayList<AttributeMapping>();
@@ -279,6 +287,11 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public IdentityMappingBuilder useRecursiveSearch(Boolean useRecursiveSearch) {
             this.useRecursiveSearch = useRecursiveSearch;
+            return this;
+        }
+
+        public IdentityMappingBuilder filterName(String filterName) {
+            this.filterName = filterName;
             return this;
         }
 
