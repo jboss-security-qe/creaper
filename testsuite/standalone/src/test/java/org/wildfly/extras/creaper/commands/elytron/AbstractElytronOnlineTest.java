@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.core.ManagementClient;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.Constants;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -69,6 +71,9 @@ public abstract class AbstractElytronOnlineTest {
     @Before
     public void setupCreaperForTest() throws IOException {
         client = createManagementClient();
+        assumeTrue("The test requires Elytron (since WildFly 11)",
+                client.version().greaterThanOrEqualTo(ServerVersion.VERSION_5_0_0));
+
         ops = new Operations(client);
         administration = new Administration(client);
     }
