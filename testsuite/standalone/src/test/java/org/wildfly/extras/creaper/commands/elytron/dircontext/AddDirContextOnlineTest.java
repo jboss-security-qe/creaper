@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.dircontext;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -8,9 +11,7 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddServerSSLContext;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 
 @RunWith(Arquillian.class)
 public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
@@ -38,7 +39,6 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContext() throws Exception {
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
         client.apply(addDirContext);
 
@@ -49,12 +49,10 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContexts() throws Exception {
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
 
         AddDirContext addDirContext2 = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME2)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
 
         client.apply(addDirContext);
@@ -73,11 +71,15 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.STRONG)
-                .credential("test-credential")
                 .enableConnectionPooling(false)
                 .principal("test-principal")
                 .referralMode(AddDirContext.ReferralMode.THROW)
                 .sslContext(TEST_SERVER_SSL_CONTEXT)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .addMechanismProperties(new AddDirContext.Property("property1", "value1"),
+                        new AddDirContext.Property("property2", "value2"))
                 .build();
 
         client.apply(addDirContext);
@@ -85,23 +87,23 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "url", "localhost");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "authentication-level", "STRONG");
-        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential", "test-credential");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "enable-connection-pooling", "false");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "principal", "test-principal");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "referral-mode", "THROW");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential-reference.clear-text", "somePassword");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property1", "value1");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property2", "value2");
     }
 
     @Test(expected = CommandFailedException.class)
     public void addDirContextNotAllowed() throws Exception {
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
 
         AddDirContext addDirContext2 = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
 
         client.apply(addDirContext);
@@ -114,12 +116,10 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContextAllowed() throws Exception {
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
 
         AddDirContext addDirContext2 = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("http://www.example.com/")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .replaceExisting()
                 .build();
 
@@ -135,7 +135,6 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContext_nullName() throws Exception {
         new AddDirContext.Builder(null)
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
         fail("Creating command with null name should throw exception");
     }
@@ -144,7 +143,6 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContext_emptyName() throws Exception {
         new AddDirContext.Builder("")
                 .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
         fail("Creating command with empty name should throw exception");
     }
@@ -153,7 +151,6 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContext_nullUrl() throws Exception {
         new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url(null)
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
         fail("Creating command with null url should throw exception");
     }
@@ -162,28 +159,8 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     public void addDirContext_emptyUrl() throws Exception {
         new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.NONE)
                 .build();
         fail("Creating command with empty url should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void addDirContext_undefinedCredential() throws Exception {
-        new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
-                .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.SIMPLE)
-                .principal("test-principal")
-                .build();
-        fail("Creating command without defined credential should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addDirContext_undefinedPrincipal() throws Exception {
-        new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
-                .url("localhost")
-                .authenticationLevel(AddDirContext.AuthenticationLevel.SIMPLE)
-                .credential("test-credential")
-                .build();
-        fail("Creating command without defined principal should throw exception");
-    }
 }

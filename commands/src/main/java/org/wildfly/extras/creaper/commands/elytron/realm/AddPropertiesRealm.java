@@ -14,6 +14,7 @@ public final class AddPropertiesRealm implements OnlineCommand {
     private final String name;
     private final String groupsAttribute;
     private final Boolean plainText;
+    private final String digestRealmName;
     private final String userProperiesPath;
     private final String userPropertiesRelativeTo;
     private final String groupsProperiesPath;
@@ -24,6 +25,7 @@ public final class AddPropertiesRealm implements OnlineCommand {
         this.name = builder.name;
         this.groupsAttribute = builder.groupsAttribute;
         this.plainText = builder.plainText;
+        this.digestRealmName = builder.digestRealmName;
         this.userProperiesPath = builder.userProperiesPath;
         this.userPropertiesRelativeTo = builder.userPropertiesRelativeTo;
         this.groupsProperiesPath = builder.groupsProperiesPath;
@@ -50,9 +52,10 @@ public final class AddPropertiesRealm implements OnlineCommand {
                 .andOptional("groups-attribute", groupsAttribute)
                 .andObject("users-properties", Values.empty()
                         .and("path", userProperiesPath)
-                        .andOptional("relative-to", userPropertiesRelativeTo))
-                .andObjectOptional("groups-properties", groupsProperties)
-                .andOptional("plain-text", plainText));
+                        .andOptional("relative-to", userPropertiesRelativeTo)
+                        .andOptional("plain-text", plainText)
+                        .andOptional("digest-realm-name", digestRealmName))
+                .andObjectOptional("groups-properties", groupsProperties));
 
         new Administration(ctx.client).reloadIfRequired();
     }
@@ -62,6 +65,7 @@ public final class AddPropertiesRealm implements OnlineCommand {
         private final String name;
         private String groupsAttribute;
         private Boolean plainText;
+        private String digestRealmName;
         private String userProperiesPath;
         private String userPropertiesRelativeTo;
         private String groupsProperiesPath;
@@ -85,6 +89,11 @@ public final class AddPropertiesRealm implements OnlineCommand {
 
         public Builder plainText(Boolean plainText) {
             this.plainText = plainText;
+            return this;
+        }
+
+        public Builder digestRealmName(String digestRealmName) {
+            this.digestRealmName = digestRealmName;
             return this;
         }
 

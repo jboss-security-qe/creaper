@@ -87,6 +87,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         AddLdapRealm addLdapRealm = new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
                 .dirContext(TEST_DIR_CONTEXT_NAME)
                 .directVerification(false)
+                .allowBlankPassword(true)
                 .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
                         .rdnIdentifier("someId")
                         .searchBaseDn("someSearchBaseDn")
@@ -102,6 +103,8 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                                 .extractRdn("someAttributeAsRdn")
                                 .searchRecursive(true)
                                 .roleRecursion(0)
+                                .roleRecursionName("someRoleRecursionName1")
+                                .reference("someReference1")
                                 .build(),
                                 new AddLdapRealm.AttributeMappingBuilder()
                                 .from("someAttributeFrom2")
@@ -111,6 +114,8 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                                 .extractRdn("someAttributeAsRdn2")
                                 .searchRecursive(false)
                                 .roleRecursion(5)
+                                .roleRecursionName("someRoleRecursionName2")
+                                .reference("someReference2")
                                 .build())
                         .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
                                 .from("someUserPasswordFrom")
@@ -147,6 +152,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute("dir-context", TEST_DIR_CONTEXT_NAME);
         checkAttribute("direct-verification", "false");
+        checkAttribute("allow-blank-password", "true");
         checkAttribute("identity-mapping.rdn-identifier", "someId");
         checkAttribute("identity-mapping.search-base-dn", "someSearchBaseDn");
         checkAttribute("identity-mapping.use-recursive-search", "true");
@@ -161,6 +167,8 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.attribute-mapping[0].extract-rdn", "someAttributeAsRdn");
         checkAttribute("identity-mapping.attribute-mapping[0].search-recursive", "true");
         checkAttribute("identity-mapping.attribute-mapping[0].role-recursion", "0");
+        checkAttribute("identity-mapping.attribute-mapping[0].role-recursion-name", "someRoleRecursionName1");
+        checkAttribute("identity-mapping.attribute-mapping[0].reference", "someReference1");
         checkAttribute("identity-mapping.attribute-mapping[1].from", "someAttributeFrom2");
         checkAttribute("identity-mapping.attribute-mapping[1].to", "someAttributeTo2");
         checkAttribute("identity-mapping.attribute-mapping[1].filter", "someAttributeFilter2");
@@ -168,6 +176,8 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.attribute-mapping[1].extract-rdn", "someAttributeAsRdn2");
         checkAttribute("identity-mapping.attribute-mapping[1].search-recursive", "false");
         checkAttribute("identity-mapping.attribute-mapping[1].role-recursion", "5");
+        checkAttribute("identity-mapping.attribute-mapping[1].role-recursion-name", "someRoleRecursionName2");
+        checkAttribute("identity-mapping.attribute-mapping[1].reference", "someReference2");
 
         checkAttribute("identity-mapping.user-password-mapper.from", "someUserPasswordFrom");
         checkAttribute("identity-mapping.user-password-mapper.writable", "true");

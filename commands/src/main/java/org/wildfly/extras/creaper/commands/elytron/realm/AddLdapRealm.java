@@ -16,6 +16,7 @@ public final class AddLdapRealm implements OnlineCommand {
     private final String name;
     private final String dirContext;
     private final Boolean directVerification;
+    private final Boolean allowBlankPassword;
     private final IdentityMapping identityMapping;
     private final boolean replaceExisting;
 
@@ -23,6 +24,7 @@ public final class AddLdapRealm implements OnlineCommand {
         this.name = builder.name;
         this.dirContext = builder.dirContext;
         this.directVerification = builder.directVerification;
+        this.allowBlankPassword = builder.allowBlankPassword;
         this.identityMapping = builder.identityMapping;
         this.replaceExisting = builder.replaceExisting;
     }
@@ -56,6 +58,8 @@ public final class AddLdapRealm implements OnlineCommand {
                 addOptionalToModelNode(node, "extract-rdn", attributeMapping.getExtractRdn());
                 addOptionalToModelNode(node, "search-recursive", attributeMapping.getSearchRecursive());
                 addOptionalToModelNode(node, "role-recursion", attributeMapping.getRoleRecursion());
+                addOptionalToModelNode(node, "role-recursion-name", attributeMapping.getRoleRecursionName());
+                addOptionalToModelNode(node, "reference", attributeMapping.getReference());
                 node = node.asObject();
                 newAttributeMappingNodeList.add(node);
             }
@@ -116,6 +120,7 @@ public final class AddLdapRealm implements OnlineCommand {
         ops.add(realmAddress, Values.empty()
                 .and("dir-context", dirContext)
                 .andOptional("direct-verification", directVerification)
+                .andOptional("allow-blank-password", allowBlankPassword)
                 .and("identity-mapping", identityMappingModelNode.asObject()));
 
     }
@@ -143,6 +148,7 @@ public final class AddLdapRealm implements OnlineCommand {
         private final String name;
         private String dirContext;
         private Boolean directVerification;
+        private Boolean allowBlankPassword;
         private IdentityMapping identityMapping;
         private boolean replaceExisting;
 
@@ -163,6 +169,11 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public Builder directVerification(Boolean directVerification) {
             this.directVerification = directVerification;
+            return this;
+        }
+
+        public Builder allowBlankPassword(Boolean allowBlankPassword) {
+            this.allowBlankPassword = allowBlankPassword;
             return this;
         }
 
@@ -354,6 +365,8 @@ public final class AddLdapRealm implements OnlineCommand {
         private final String extractRdn;
         private final Boolean searchRecursive;
         private final Integer roleRecursion;
+        private final String roleRecursionName;
+        private final String reference;
 
         private AttributeMapping(AttributeMappingBuilder builder) {
             this.from = builder.from;
@@ -363,6 +376,8 @@ public final class AddLdapRealm implements OnlineCommand {
             this.extractRdn = builder.extractRdn;
             this.searchRecursive = builder.searchRecursive;
             this.roleRecursion = builder.roleRecursion;
+            this.roleRecursionName = builder.roleRecursionName;
+            this.reference = builder.reference;
         }
 
         public String getFrom() {
@@ -393,6 +408,14 @@ public final class AddLdapRealm implements OnlineCommand {
             return roleRecursion;
         }
 
+        public String getRoleRecursionName() {
+            return roleRecursionName;
+        }
+
+        public String getReference() {
+            return reference;
+        }
+
     }
 
     public static final class AttributeMappingBuilder {
@@ -404,6 +427,8 @@ public final class AddLdapRealm implements OnlineCommand {
         private String extractRdn;
         private Boolean searchRecursive;
         private Integer roleRecursion;
+        private String roleRecursionName;
+        private String reference;
 
         public AttributeMappingBuilder from(String from) {
             this.from = from;
@@ -437,6 +462,16 @@ public final class AddLdapRealm implements OnlineCommand {
 
         public AttributeMappingBuilder roleRecursion(Integer roleRecursion) {
             this.roleRecursion = roleRecursion;
+            return this;
+        }
+
+        public AttributeMappingBuilder roleRecursionName(String roleRecursionName) {
+            this.roleRecursionName = roleRecursionName;
+            return this;
+        }
+
+        public AttributeMappingBuilder reference(String reference) {
+            this.reference = reference;
             return this;
         }
 

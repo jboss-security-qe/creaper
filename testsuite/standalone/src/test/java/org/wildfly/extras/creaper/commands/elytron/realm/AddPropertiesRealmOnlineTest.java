@@ -91,6 +91,7 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
                 .groupsProperiesPath("mgmt-groups.properties")
                 .groupsPropertiesRelativeTo("jboss.server.config.dir")
                 .plainText(true)
+                .digestRealmName("someDigestRealmName")
                 .groupsAttribute("myGroup")
                 .build();
 
@@ -100,10 +101,11 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.path", "mgmt-users.properties");
         checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.relative-to", "jboss.server.config.dir");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.plain-text", "true");
+        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "users-properties.digest-realm-name", "someDigestRealmName");
         checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-properties.path", "mgmt-groups.properties");
         checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-properties.relative-to", "jboss.server.config.dir");
         checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "groups-attribute", "myGroup");
-        checkAttribute(TEST_PROPERTIES_REALM_ADDRESS, "plain-text", "true");
     }
 
     @Test(expected = CommandFailedException.class)

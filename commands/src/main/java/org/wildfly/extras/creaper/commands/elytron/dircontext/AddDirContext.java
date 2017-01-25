@@ -1,5 +1,10 @@
 package org.wildfly.extras.creaper.commands.elytron.dircontext;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -13,10 +18,11 @@ public final class AddDirContext implements OnlineCommand {
     private final String url;
     private final AuthenticationLevel authenticationLevel;
     private final String principal;
-    private final String credential;
     private final Boolean enableConnectionPooling;
     private final String sslContext;
     private final ReferralMode referralMode;
+    private final List<Property> properties;
+    private final CredentialRef credentialReference;
     private final boolean replaceExisting;
 
     private AddDirContext(Builder builder) {
@@ -24,11 +30,12 @@ public final class AddDirContext implements OnlineCommand {
         this.url = builder.url;
         this.authenticationLevel = builder.authenticationLevel;
         this.principal = builder.principal;
-        this.credential = builder.credential;
         this.enableConnectionPooling = builder.enableConnectionPooling;
         this.sslContext = builder.sslContext;
         this.referralMode = builder.referralMode;
         this.replaceExisting = builder.replaceExisting;
+        this.properties = builder.properties;
+        this.credentialReference = builder.credentialReference;
     }
 
     @Override
@@ -41,17 +48,28 @@ public final class AddDirContext implements OnlineCommand {
             new Administration(ctx.client).reloadIfRequired();
         }
 
+        ModelNode propertiesNode = null;
+        if (properties != null && !properties.isEmpty()) {
+            propertiesNode = new ModelNode();
+            for (Property property : properties) {
+                propertiesNode.add(property.getKey(), property.getValue());
+            }
+            propertiesNode = propertiesNode.asObject();
+        }
+
         String authenticationModeValue = authenticationLevel == null ? null : authenticationLevel.name();
         String referralModeValue = referralMode == null ? null : referralMode.name();
+        Values credentialReferenceValues = credentialReference != null ? credentialReference.toValues() : null;
 
         ops.add(dirContextAddress, Values.empty()
                 .and("url", url)
                 .andOptional("authentication-level", authenticationModeValue)
                 .andOptional("principal", principal)
-                .andOptional("credential", credential)
                 .andOptional("enable-connection-pooling", enableConnectionPooling)
                 .andOptional("ssl-context", sslContext)
-                .andOptional("referral-mode", referralModeValue));
+                .andOptional("referral-mode", referralModeValue)
+                .andOptional("properties", propertiesNode)
+                .andObjectOptional("credential-reference", credentialReferenceValues));
     }
 
     /**
@@ -64,10 +82,11 @@ public final class AddDirContext implements OnlineCommand {
         private String url;
         private AuthenticationLevel authenticationLevel;
         private String principal;
-        private String credential;
         private Boolean enableConnectionPooling;
         private String sslContext;
         private ReferralMode referralMode;
+        private List<Property> properties = new ArrayList<Property>();
+        private CredentialRef credentialReference;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -95,11 +114,6 @@ public final class AddDirContext implements OnlineCommand {
             return this;
         }
 
-        public Builder credential(String credential) {
-            this.credential = credential;
-            return this;
-        }
-
         public Builder enableConnectionPooling(boolean enableConnectionPooling) {
             this.enableConnectionPooling = enableConnectionPooling;
             return this;
@@ -115,6 +129,19 @@ public final class AddDirContext implements OnlineCommand {
             return this;
         }
 
+        public Builder addMechanismProperties(Property... properties) {
+            if (properties == null) {
+                throw new IllegalArgumentException("Properties added to authentication-configuration must not be null");
+            }
+            Collections.addAll(this.properties, properties);
+            return this;
+        }
+
+        public Builder credentialReference(CredentialRef credentialReference) {
+            this.credentialReference = credentialReference;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
@@ -124,16 +151,28 @@ public final class AddDirContext implements OnlineCommand {
             if (url == null || url.isEmpty()) {
                 throw new IllegalArgumentException("url must not be null or empty");
             }
-            if (!AuthenticationLevel.NONE.equals(authenticationLevel)) {
-                if (principal == null || principal.isEmpty()) {
-                    throw new IllegalArgumentException("principal must not be null or empty if authentication-level is SIMPLE (default) or STRONG");
-                }
-                if (credential == null || credential.isEmpty()) {
-                    throw new IllegalArgumentException("credential must not be null or empty if authentication-level is SIMPLE (default) or STRONG");
-                }
-            }
             return new AddDirContext(this);
         }
+    }
+
+    public static final class Property {
+
+        private final String key;
+        private final String value;
+
+        public Property(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
     }
 
     public static enum AuthenticationLevel {
