@@ -21,6 +21,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
     private final Integer requestLifetime;
     private final Boolean server;
     private final Boolean debug;
+    private final Boolean obtainKerberosTicket;
     private final boolean replaceExisting;
 
     private AddKerberosSecurityFactory(Builder builder) {
@@ -33,6 +34,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         this.requestLifetime = builder.requestLifetime;
         this.server = builder.server;
         this.debug = builder.debug;
+        this.obtainKerberosTicket = builder.obtainKerberosTicket;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
     }
@@ -55,7 +57,8 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
             .andOptional("minimum-remaining-lifetime", minimumRemainingLifetime)
             .andOptional("request-lifetime", requestLifetime)
             .andOptional("server", server)
-            .andOptional("debug", debug));
+            .andOptional("debug", debug)
+            .andOptional("obtain-kerberos-ticket", obtainKerberosTicket));
     }
 
     public static final class Builder {
@@ -69,6 +72,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         private Integer requestLifetime;
         private Boolean server;
         private Boolean debug;
+        private Boolean obtainKerberosTicket;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -117,6 +121,11 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
 
         public Builder debug(Boolean debug) {
             this.debug = debug;
+            return this;
+        }
+
+        public Builder obtainKerberosTicket(Boolean obtainKerberosTicket) {
+            this.obtainKerberosTicket = obtainKerberosTicket;
             return this;
         }
 

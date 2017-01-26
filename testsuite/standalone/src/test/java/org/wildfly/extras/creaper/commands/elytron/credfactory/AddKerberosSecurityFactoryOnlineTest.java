@@ -122,6 +122,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .requestLifetime(2)
                 .debug(true)
                 .server(false)
+                .obtainKerberosTicket(true)
                 .build();
         client.apply(addKerberosSecurityFactory);
         assertTrue("Kerberos security factory should be created", ops.exists(KRB_ADDRESS));
@@ -134,6 +135,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         checkAttribute(KRB_ADDRESS, "request-lifetime", "2");
         checkAttribute(KRB_ADDRESS, "debug", "true");
         checkAttribute(KRB_ADDRESS, "server", "false");
+        checkAttribute(KRB_ADDRESS, "obtain-kerberos-ticket", "true");
     }
 
     @Test(expected = IllegalArgumentException.class)
