@@ -3,13 +3,21 @@ package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
+import org.wildfly.extras.creaper.core.online.OnlineCommand;
+import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -28,6 +36,17 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
     private static final Address TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2 = TEST_CREDENTIAL_STORE_ADDRESS
             .and("alias", TEST_CREDENTIAL_STORE_ALIAS_NAME2);
 
+    @ClassRule
+    public static TemporaryFolder tmp = new TemporaryFolder();
+
+    @BeforeClass
+    public static void createTmpPath() throws Exception {
+        try (OnlineManagementClient client = createManagementClient()) {
+            AddTmpDirectoryToPath addTargetToPath = new AddTmpDirectoryToPath();
+            client.apply(addTargetToPath);
+        }
+    }
+
     @Before
     public void createCredentialStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
@@ -35,6 +54,7 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())
+                .relativeTo("tmp")
                 .build();
 
         client.apply(addCredentialStore);
@@ -197,4 +217,18 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
 
         fail("Creating command with empty secret-value should throw exception");
     }
+
+    private static final class AddTmpDirectoryToPath implements OnlineCommand {
+
+        @Override
+        public void apply(OnlineCommandContext ctx) throws Exception {
+            Operations ops = new Operations(ctx.client);
+            Address pathAddress = Address.root()
+                    .and("path", "tmp");
+
+            ops.add(pathAddress, Values.empty()
+                    .and("path", tmp.getRoot().getAbsolutePath()));
+        }
+    }
+
 }
