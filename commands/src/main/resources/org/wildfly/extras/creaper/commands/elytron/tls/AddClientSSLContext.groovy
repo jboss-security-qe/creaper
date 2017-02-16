@@ -5,6 +5,8 @@ if (atrSessionTimeout != null) sslContextAttrs['session-timeout'] = atrSessionTi
 if (atrKeyManagers != null) sslContextAttrs['key-managers'] = atrKeyManagers
 if (atrTrustManagers != null) sslContextAttrs['trust-managers'] = atrTrustManagers
 if (atrProtocols != null) sslContextAttrs['protocols'] = atrProtocols
+if (atrProviders != null) sslContextAttrs['providers'] = atrProviders
+if (atrProviderName != null) sslContextAttrs['provider-name'] = atrProviderName
 
 def sslContextDefinition = {
     'client-ssl-context'(sslContextAttrs)

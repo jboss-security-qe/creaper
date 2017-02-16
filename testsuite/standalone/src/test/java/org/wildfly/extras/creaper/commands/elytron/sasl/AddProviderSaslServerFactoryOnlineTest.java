@@ -65,14 +65,14 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     public void addFullProviderSaslServerFactory() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         client.apply(addProviderSaslServerFactory);
 
         assertTrue("Provider sasl server factory should be created", ops.exists(TEST_SERVER_FACTORY_ADDRESS));
 
-        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "provider-loader", PROVIDER_LOADER_NAME);
+        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "providers", PROVIDER_LOADER_NAME);
 
     }
 
@@ -81,12 +81,12 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     public void addExistProviderSaslServerFactoryNotAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         AddProviderSaslServerFactory addProviderSaslServerFactory2
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME2)
+                .providers(PROVIDER_LOADER_NAME2)
                 .build();
 
         client.apply(addProviderSaslServerFactory);
@@ -100,12 +100,12 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     public void addExistProviderSaslServerFactoryAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         AddProviderSaslServerFactory addProviderSaslServerFactory2
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME2)
+                .providers(PROVIDER_LOADER_NAME2)
                 .replaceExisting()
                 .build();
 
@@ -114,7 +114,7 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
         client.apply(addProviderSaslServerFactory2);
         assertTrue("Provider sasl server factory should be created", ops.exists(TEST_SERVER_FACTORY_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "provider-loader", PROVIDER_LOADER_NAME2);
+        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "providers", PROVIDER_LOADER_NAME2);
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -2,9 +2,9 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import static org.junit.Assert.fail;
 import static org.wildfly.extras.creaper.XmlAssert.assertXmlIdentical;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+
 import java.io.File;
+
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,6 +14,9 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineOptions;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 public class AddServerSSLContextOfflineTest {
 
@@ -98,7 +101,7 @@ public class AddServerSSLContextOfflineTest {
             + "                                        key-managers=\"keyManagers\" trust-managers=\"trustManagers\" "
             + "                                        protocols=\"TLSv1.2 TLSv1.1\" authentication-optional=\"true\" "
             + "                                        need-client-auth=\"false\" want-client-auth=\"true\" "
-            + "                                        security-domain=\"securityDomain\"/>\n"
+            + "                                        security-domain=\"securityDomain\" provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -245,6 +248,8 @@ public class AddServerSSLContextOfflineTest {
                 .needClientAuth(false)
                 .wantClientAuth(true)
                 .securityDomain("securityDomain")
+                .providerName("ksProvider")
+                .providers("ksProviderLoader")
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_EMPTY, Files.toString(cfg, Charsets.UTF_8));

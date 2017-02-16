@@ -1,7 +1,11 @@
 package org.wildfly.extras.creaper.commands.elytron.providerloader;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Rule;
@@ -15,17 +19,14 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 @RunWith(Arquillian.class)
 public class AddProviderLoaderOnlineTest extends AbstractElytronOnlineTest {
 
     private static final String TEST_PROVIDER_LOADER_NAME = "CreaperTestProviderLoader";
-    private static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS.and("provider-loader",
+    private static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS.and("providers",
             TEST_PROVIDER_LOADER_NAME);
     private static final String TEST_PROVIDER_LOADER_NAME2 = "CreaperTestProviderLoader2";
-    private static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("provider-loader",
+    private static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("providers",
             TEST_PROVIDER_LOADER_NAME2);
 
     private static final String TEST_MODULE_NAME = "com.example.creaper-test-module";

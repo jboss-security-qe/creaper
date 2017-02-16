@@ -1,8 +1,8 @@
 keyStoreAttrs = ['name': atrName]
 if (atrType != null) keyStoreAttrs['type'] = atrType
 if (atrAliasFilter != null) keyStoreAttrs['alias-filter'] = atrAliasFilter
-if (atrProvider != null) keyStoreAttrs['provider'] = atrProvider
-if (atrProviderLoader != null) keyStoreAttrs['provider-loader'] = atrProviderLoader
+if (atrProviderName != null) keyStoreAttrs['provider-name'] = atrProviderName
+if (atrProviders != null) keyStoreAttrs['providers'] = atrProviders
 
 fileAttrs = [:]
 if (atrPath != null) fileAttrs['path'] = atrPath

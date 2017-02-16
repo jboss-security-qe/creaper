@@ -21,8 +21,8 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String type;
-    private final String provider;
-    private final String providerLoader;
+    private final String providerName;
+    private final String providers;
     private final CredentialRef credentialReference;
     private final String aliasFilter;
     private final String path;
@@ -33,8 +33,8 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
     private AddKeyStore(Builder builder) {
         this.name = builder.name;
         this.type = builder.type;
-        this.provider = builder.provider;
-        this.providerLoader = builder.providerLoader;
+        this.providerName = builder.providerName;
+        this.providers = builder.providers;
         this.credentialReference = builder.credentialReference;
         this.aliasFilter = builder.aliasFilter;
         // File
@@ -58,8 +58,8 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
             .and("name", name)
             .and("type", type)
             .andObject("credential-reference", credentialReference.toValues())
-            .andOptional("provider", provider)
-            .andOptional("provider-loader", providerLoader)
+            .andOptional("provider-name", providerName)
+            .andOptional("providers", providers)
             .andOptional("alias-filter", aliasFilter)
             .andOptional("path", path)
             .andOptional("relative-to", relativeTo)
@@ -73,8 +73,8 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
                 .parameter("atrName", name)
                 .parameter("atrType", type)
                 .parameters(credentialReference.toParameters())
-                .parameter("atrProvider", provider)
-                .parameter("atrProviderLoader", providerLoader)
+                .parameter("atrProviderName", providerName)
+                .parameter("atrProviders", providers)
                 .parameter("atrAliasFilter", aliasFilter)
                 .parameter("atrPath", path)
                 .parameter("atrRelativeTo", relativeTo)
@@ -87,8 +87,8 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
 
         private final String name;
         private String type;
-        private String provider;
-        private String providerLoader;
+        private String providerName;
+        private String providers;
         private CredentialRef credentialReference;
         private String aliasFilter;
         private String path;
@@ -108,13 +108,13 @@ public final class AddKeyStore implements OnlineCommand, OfflineCommand {
             return this;
         }
 
-        public Builder provider(String provider) {
-            this.provider = provider;
+        public Builder providerName(String providerName) {
+            this.providerName = providerName;
             return this;
         }
 
-        public Builder providerLoader(String providerLoader) {
-            this.providerLoader = providerLoader;
+        public Builder providers(String providers) {
+            this.providers = providers;
             return this;
         }
 

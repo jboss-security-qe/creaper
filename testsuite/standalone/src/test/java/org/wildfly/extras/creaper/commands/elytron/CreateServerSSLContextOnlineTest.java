@@ -125,6 +125,11 @@ public class CreateServerSSLContextOnlineTest extends AbstractAddSSLContextOnlin
                 .trustStorePath("/path")
                 .trustStoreRelativeTo("jboss.server.config.dir")
                 .trustStoreRequired(false)
+//                .trustManagerProviders("elytron")
+//                .trustStoreProviders("elytron")
+//                .keyStoreProviders("elytron")
+//                .keyManagerProviders("elytron")
+//                .providers("elytron")
                 .build();
         client.apply(createServerSSLContext);
         assertTrue("The server ssl context should be created", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
@@ -136,6 +141,7 @@ public class CreateServerSSLContextOnlineTest extends AbstractAddSSLContextOnlin
         checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "need-client-auth", "true");
         checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "want-client-auth", "true");
         checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "authentication-optional", "true");
+//        checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "providers", "elytron");
 //        checkAttribute(SERVER_SSL_CONTEXT_ADDRESS, "security-domain", "ApplicationDomain");
         checkAttribute(KEY_STORE_ADDRESS, "credential-reference.clear-text", PASSWORD);
         checkAttribute(KEY_STORE_ADDRESS, "alias-filter", "alias");
@@ -143,15 +149,19 @@ public class CreateServerSSLContextOnlineTest extends AbstractAddSSLContextOnlin
         checkAttribute(KEY_STORE_ADDRESS, "relative-to", "jboss.server.config.dir");
         checkAttribute(KEY_STORE_ADDRESS, "required", "false");
         checkAttribute(KEY_STORE_ADDRESS, "type", "JKS");
+//        checkAttribute(KEY_STORE_ADDRESS, "providers", "elytron");
         checkAttribute(TRUST_STORE_ADDRESS, "credential-reference.clear-text", PASSWORD);
         checkAttribute(TRUST_STORE_ADDRESS, "alias-filter", "alias");
         checkAttribute(TRUST_STORE_ADDRESS, "path", "/path");
         checkAttribute(TRUST_STORE_ADDRESS, "relative-to", "jboss.server.config.dir");
         checkAttribute(TRUST_STORE_ADDRESS, "required", "false");
         checkAttribute(TRUST_STORE_ADDRESS, "type", "JKS");
+//        checkAttribute(TRUST_STORE_ADDRESS, "providers", "elytron");
         checkAttribute(KEY_MANAGER_ADDRESS, "credential-reference.clear-text", PASSWORD);
         checkAttribute(KEY_MANAGER_ADDRESS, "algorithm", "PKIX");
+//        checkAttribute(KEY_MANAGER_ADDRESS, "providers", "elytron");
         checkAttribute(TRUST_MANAGER_ADDRESS, "algorithm", "PKIX");
+//        checkAttribute(TRUST_MANAGER_ADDRESS, "providers", "elytron");
     }
 
     @Test(expected = IllegalArgumentException.class)

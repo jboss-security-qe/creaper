@@ -9,6 +9,8 @@ if (atrAuthenticationOptional != null) sslContextAttrs['authentication-optional'
 if (atrNeedClientAuth != null) sslContextAttrs['need-client-auth'] = atrNeedClientAuth
 if (atrWantClientAuth != null) sslContextAttrs['want-client-auth'] = atrWantClientAuth
 if (atrSecurityDomain != null) sslContextAttrs['security-domain'] = atrSecurityDomain
+if (atrProviders != null) sslContextAttrs['providers'] = atrProviders
+if (atrProviderName != null) sslContextAttrs['provider-name'] = atrProviderName
 
 def sslContextDefinition = {
     'server-ssl-context'(sslContextAttrs)

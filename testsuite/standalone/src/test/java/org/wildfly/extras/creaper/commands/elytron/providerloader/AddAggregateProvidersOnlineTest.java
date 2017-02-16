@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.providerloader;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Before;
@@ -8,9 +11,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class AddAggregateProvidersOnlineTest extends AbstractElytronOnlineTest {
@@ -24,10 +24,10 @@ public class AddAggregateProvidersOnlineTest extends AbstractElytronOnlineTest {
 
     protected static final String TEST_PROVIDER_LOADER_NAME = "CreaperTestProviderLoader";
     protected static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("provider-loader", TEST_PROVIDER_LOADER_NAME);
+            .and("providers", TEST_PROVIDER_LOADER_NAME);
     protected static final String TEST_PROVIDER_LOADER_NAME2 = "CreaperTestProviderLoader2";
     protected static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS
-            .and("provider-loader", TEST_PROVIDER_LOADER_NAME2);
+            .and("providers", TEST_PROVIDER_LOADER_NAME2);
 
     @Before
     public void createProviderLoaders() throws Exception {

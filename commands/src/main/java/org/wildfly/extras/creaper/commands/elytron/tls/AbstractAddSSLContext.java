@@ -2,8 +2,8 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.Arrays;
 import java.util.List;
-import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 
+import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 
 abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
@@ -15,6 +15,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
     protected final Integer sessionTimeout;
     protected final String keyManagers;
     protected final String trustManagers;
+    protected final String providers;
+    protected final String providerName;
     protected final boolean replaceExisting;
 
     protected AbstractAddSSLContext(Builder builder) {
@@ -25,6 +27,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         this.sessionTimeout = builder.sessionTimeout;
         this.keyManagers = builder.keyManagers;
         this.trustManagers = builder.trustManagers;
+        this.providers = builder.providers;
+        this.providerName = builder.providerName;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -38,6 +42,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         protected String keyManagers;
         protected String trustManagers;
         private boolean replaceExisting;
+        protected String providers;
+        protected String providerName;
 
         public Builder(String name) {
             if (name == null) {
@@ -83,6 +89,16 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
 
         public final THIS replaceExisting() {
             this.replaceExisting = true;
+            return (THIS) this;
+        }
+
+        public final THIS providers(String providers) {
+            this.providers = providers;
+            return (THIS) this;
+        }
+
+        public final THIS providerName(String providerName) {
+            this.providerName = providerName;
             return (THIS) this;
         }
 

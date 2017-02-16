@@ -23,16 +23,16 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
     private final String algorithm;
     private final String keyStore;
     private final CredentialRef credentialReference;
-    private final String provider;
-    private final String providerLoader;
+    private final String providerName;
+    private final String providers;
     private final boolean replaceExisting;
 
     private AddKeyManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;
-        this.provider = builder.provider;
-        this.providerLoader = builder.providerLoader;
+        this.providerName = builder.providerName;
+        this.providers = builder.providers;
         this.credentialReference = builder.credentialReference;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
@@ -52,8 +52,8 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
             .and("algorithm", algorithm)
             .and("key-store", keyStore)
             .andObject("credential-reference", credentialReference.toValues())
-            .andOptional("provider", provider)
-            .andOptional("provider-loader", providerLoader));
+            .andOptional("provider-name", providerName)
+            .andOptional("providers", providers));
     }
 
     @Override
@@ -64,8 +64,8 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
                 .parameter("atrAlgorithm", algorithm)
                 .parameter("atrKeyStore", keyStore)
                 .parameters(credentialReference.toParameters())
-                .parameter("atrProvider", provider)
-                .parameter("atrProviderLoader", providerLoader)
+                .parameter("atrProviderName", providerName)
+                .parameter("atrProviders", providers)
                 .parameter("atrReplaceExisting", replaceExisting)
                 .build());
     }
@@ -76,8 +76,8 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
         private String algorithm;
         private String keyStore;
         private CredentialRef credentialReference;
-        private String provider;
-        private String providerLoader;
+        private String providerName;
+        private String providers;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -97,13 +97,13 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
             return this;
         }
 
-        public Builder provider(String provider) {
-            this.provider = provider;
+        public Builder providerName(String providerName) {
+            this.providerName = providerName;
             return this;
         }
 
-        public Builder providerLoader(String providerLoader) {
-            this.providerLoader = providerLoader;
+        public Builder providers(String providers) {
+            this.providers = providers;
             return this;
         }
 

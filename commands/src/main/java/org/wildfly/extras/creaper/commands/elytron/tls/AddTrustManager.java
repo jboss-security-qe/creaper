@@ -16,16 +16,16 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
     private final String name;
     private final String algorithm;
     private final String keyStore;
-    private final String provider;
-    private final String providerLoader;
+    private final String providerName;
+    private final String providers;
     private final boolean replaceExisting;
 
     private AddTrustManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
         this.keyStore = builder.keyStore;
-        this.provider = builder.provider;
-        this.providerLoader = builder.providerLoader;
+        this.providerName = builder.providerName;
+        this.providers = builder.providers;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -42,8 +42,8 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
             .and("name", name)
             .and("algorithm", algorithm)
             .and("key-store", keyStore)
-            .andOptional("provider", provider)
-            .andOptional("provider-loader", providerLoader));
+            .andOptional("provider-name", providerName)
+            .andOptional("providers", providers));
     }
 
     @Override
@@ -53,8 +53,8 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
                 .parameter("atrName", name)
                 .parameter("atrAlgorithm", algorithm)
                 .parameter("atrKeyStore", keyStore)
-                .parameter("atrProvider", provider)
-                .parameter("atrProviderLoader", providerLoader)
+                .parameter("atrProviderName", providerName)
+                .parameter("atrProviders", providers)
                 .parameter("atrReplaceExisting", replaceExisting)
                 .build());
     }
@@ -64,8 +64,8 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
         private final String name;
         private String algorithm;
         private String keyStore;
-        private String provider;
-        private String providerLoader;
+        private String providerName;
+        private String providers;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -85,13 +85,13 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
             return this;
         }
 
-        public Builder provider(String provider) {
-            this.provider = provider;
+        public Builder providerName(String providerName) {
+            this.providerName = providerName;
             return this;
         }
 
-        public Builder providerLoader(String providerLoader) {
-            this.providerLoader = providerLoader;
+        public Builder providers(String providers) {
+            this.providers = providers;
             return this;
         }
 

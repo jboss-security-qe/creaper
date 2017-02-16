@@ -17,9 +17,7 @@ import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
  *
  * <p>
  * It should be possible to configure most of use cases atomic creaper commands
- * allows. But there are some limitations as provider and providerLoader if set
- * are used globally for all resources which can specify that (key-store,
- * key-manager, trust-manager)
+ * allows.
  * </p>
  *
  */
@@ -40,6 +38,7 @@ public class CreateServerSSLContext implements OnlineCommand {
     private final String securityDomain;
     private final Integer maximumSessionCacheSize;
     private final Integer sessionTimeout;
+    private final String providers;
     // Keystore
     private final String keyStoreType;
     private final String keyStorePath;
@@ -48,6 +47,8 @@ public class CreateServerSSLContext implements OnlineCommand {
     private final String keyStoreAlias;
     private final String keyStoreRelativeTo;
     private final Boolean keyStoreRequired;
+    private final String keyStoreProviders;
+    private final String keyManagerProviders;
     // Truststore
     private final String trustStoreType;
     private final String trustStorePath;
@@ -55,8 +56,8 @@ public class CreateServerSSLContext implements OnlineCommand {
     private final String trustStoreAlias;
     private final String trustStoreRelativeTo;
     private final Boolean trustStoreRequired;
-    private final String trustStoreProvider;
-    private final String trustStoreProviderLoader;
+    private final String trustStoreProviders;
+    private final String trustManagerProviders;
 
     // Multiple usage
     private final String algorithm;         // keystore manager, truststore manager
@@ -86,8 +87,11 @@ public class CreateServerSSLContext implements OnlineCommand {
         this.trustStoreRelativeTo = builder.trustStoreRelativeTo;
         this.trustStoreRequired = builder.trustStoreRequired;
         this.algorithm = builder.algorithm;
-        this.trustStoreProvider = builder.trustStoreProvider;
-        this.trustStoreProviderLoader = builder.trustStoreProviderLoader;
+        this.trustStoreProviders = builder.trustStoreProviders;
+        this.keyStoreProviders = builder.keyStoreProviders;
+        this.keyManagerProviders = builder.keyManagerProviders;
+        this.trustManagerProviders = builder.trustManagerProviders;
+        this.providers = builder.providers;
     }
 
     @Override
@@ -99,6 +103,7 @@ public class CreateServerSSLContext implements OnlineCommand {
                 .relativeTo(keyStoreRelativeTo)
                 .required(keyStoreRequired)
                 .aliasFilter(keyStoreAlias)
+                .providers(keyStoreProviders)
                 .credentialReference(new CredentialRefBuilder()
                     .clearText(keyStorePassword)
                     .build())
@@ -108,6 +113,7 @@ public class CreateServerSSLContext implements OnlineCommand {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(getUniqueName(KEY_MANAGER_NAME))
                 .keyStore(getUniqueName(KEY_STORE_NAME))
                 .algorithm(algorithm)
+                .providers(keyManagerProviders)
                 .credentialReference(new CredentialRefBuilder()
                     .clearText(keyPassword)
                     .build())
@@ -123,6 +129,7 @@ public class CreateServerSSLContext implements OnlineCommand {
                     .relativeTo(trustStoreRelativeTo)
                     .required(trustStoreRequired)
                     .aliasFilter(trustStoreAlias)
+                    .providers(trustStoreProviders)
                     .credentialReference(new CredentialRefBuilder()
                         .clearText(trustStorePassword)
                         .build())
@@ -130,8 +137,7 @@ public class CreateServerSSLContext implements OnlineCommand {
 
             addTrustManager = new AddTrustManager.Builder(getUniqueName(TRUST_MANAGER_NAME))
                     .algorithm(algorithm)
-                    .provider(trustStoreProvider)
-                    .providerLoader(trustStoreProviderLoader)
+                    .providers(trustManagerProviders)
                     .keyStore(getUniqueName(TRUST_STORE_NAME))
                     .build();
         }
@@ -145,6 +151,7 @@ public class CreateServerSSLContext implements OnlineCommand {
                 .securityDomain(securityDomain)
                 .authenticationOptional(authenticationOptional)
                 .wantClientAuth(wantClientAuth)
+                .providers(providers)
                 .keyManagers(getUniqueName(KEY_MANAGER_NAME));
 
         if (isTrustStoreConfigured()) {
@@ -241,6 +248,7 @@ public class CreateServerSSLContext implements OnlineCommand {
         private String securityDomain;
         private Integer maximumSessionCacheSize;
         private Integer sessionTimeout;
+        private String providers;
         // Keystore
         private String keyStoreType = "JKS";
         private String keyStorePath;
@@ -249,6 +257,8 @@ public class CreateServerSSLContext implements OnlineCommand {
         private String keyStoreAlias;
         private String keyStoreRelativeTo;
         private Boolean keyStoreRequired;
+        private String keyStoreProviders;
+        private String keyManagerProviders;
         // Truststore
         private String trustStoreType = "JKS";
         private String trustStorePath;
@@ -256,8 +266,8 @@ public class CreateServerSSLContext implements OnlineCommand {
         private String trustStoreAlias;
         private String trustStoreRelativeTo;
         private Boolean trustStoreRequired;
-        private String trustStoreProvider;
-        private String trustStoreProviderLoader;
+        private String trustStoreProviders;
+        private String trustManagerProviders;
 
         // Multiple usage
         private String algorithm = "PKIX";  // keystore manager, truststore manager
@@ -387,13 +397,45 @@ public class CreateServerSSLContext implements OnlineCommand {
             return this;
         }
 
-        public Builder trustStoreProvider(String trustStoreProvider) {
-            this.trustStoreProvider = trustStoreProvider;
+        public Builder trustStoreProviders(String trustStoreProviders) {
+            this.trustStoreProviders = trustStoreProviders;
             return this;
         }
 
-        public Builder trustStoreProviderLoader(String trustStoreProviderLoader) {
-            this.trustStoreProviderLoader = trustStoreProviderLoader;
+        public Builder keyStoreProviders(String keyStoreProviders) {
+            this.keyStoreProviders = keyStoreProviders;
+            return this;
+        }
+
+        public Builder keyManagerProviders(String keyManagerProviders) {
+            this.keyManagerProviders = keyManagerProviders;
+            return this;
+        }
+
+        public Builder trustManagerProviders(String trustManagerProviders) {
+            this.trustManagerProviders = trustManagerProviders;
+            return this;
+        }
+
+        public Builder providers(String providers) {
+            this.providers = providers;
+            return this;
+        }
+
+        /**
+         * Set this providers to all server ssl context resources which can
+         * specify that (key-store, key-manager, trust-manager)
+         *
+         * @param providersAll
+         *            - providers to ser
+         * @return builder instance
+         */
+        public Builder providersAll(String providersAll) {
+            this.keyStoreProviders = providersAll;
+            this.trustStoreProviders = providersAll;
+            this.keyManagerProviders = providersAll;
+            this.trustManagerProviders = providersAll;
+            this.providers = providersAll;
             return this;
         }
 

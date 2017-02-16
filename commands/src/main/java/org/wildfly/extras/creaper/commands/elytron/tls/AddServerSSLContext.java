@@ -44,7 +44,9 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .andOptional("authentication-optional", authenticationOptional)
                 .andOptional("need-client-auth", needClientAuth)
                 .andOptional("want-client-auth", wantClientAuth)
-                .andOptional("security-domain", securityDomain));
+                .andOptional("security-domain", securityDomain)
+                .andOptional("providers", providers)
+                .andOptional("provider-name", providerName));
     }
 
     @Override
@@ -62,6 +64,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .parameter("atrNeedClientAuth", needClientAuth)
                 .parameter("atrWantClientAuth", wantClientAuth)
                 .parameter("atrSecurityDomain", securityDomain)
+                .parameter("atrProviders", providers)
+                .parameter("atrProviderName", providerName)
                 .parameter("atrReplaceExisting", replaceExisting)
                 .build());
     }

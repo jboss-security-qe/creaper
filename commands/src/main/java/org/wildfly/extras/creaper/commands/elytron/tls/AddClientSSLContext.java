@@ -44,6 +44,8 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
                 .parameter("atrKeyManagers", keyManagers)
                 .parameter("atrTrustManagers", trustManagers)
                 .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
+                .parameter("atrProviders", providers)
+                .parameter("atrProviderName", providerName)
                 .parameter("atrReplaceExisting", replaceExisting)
                 .build());
     }

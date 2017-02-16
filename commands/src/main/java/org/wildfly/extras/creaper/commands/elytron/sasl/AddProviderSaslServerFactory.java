@@ -10,12 +10,12 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 public final class AddProviderSaslServerFactory implements OnlineCommand {
 
     private final String name;
-    private final String providerLoader;
+    private final String providers;
     private final boolean replaceExisting;
 
     private AddProviderSaslServerFactory(Builder builder) {
         this.name = builder.name;
-        this.providerLoader = builder.providerLoader;
+        this.providers = builder.providers;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -30,13 +30,13 @@ public final class AddProviderSaslServerFactory implements OnlineCommand {
         }
 
         ops.add(factoryAddress, Values.empty()
-                .andOptional("provider-loader", providerLoader));
+                .andOptional("providers", providers));
     }
 
     public static final class Builder {
 
         private final String name;
-        private String providerLoader;
+        private String providers;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -49,8 +49,8 @@ public final class AddProviderSaslServerFactory implements OnlineCommand {
             this.name = name;
         }
 
-        public Builder providerLoader(String providerLoader) {
-            this.providerLoader = providerLoader;
+        public Builder providers(String providers) {
+            this.providers = providers;
             return this;
         }
 

@@ -12,8 +12,8 @@ public final class AddCredentialStore implements OnlineCommand {
 
     private final String name;
     private final String type;
-    private final String provider;
-    private final String providerLoader;
+    private final String providerName;
+    private final String providers;
     private final String relativeTo;
     private final String uri;
     private final CredentialRef credentialReference;
@@ -23,8 +23,8 @@ public final class AddCredentialStore implements OnlineCommand {
         this.name = builder.name;
         this.uri = builder.uri;
         this.type = builder.type;
-        this.provider = builder.provider;
-        this.providerLoader = builder.providerLoader;
+        this.providerName = builder.providerName;
+        this.providers = builder.providers;
         this.relativeTo = builder.relativeTo;
         this.credentialReference = builder.credentialReference;
         this.replaceExisting = builder.replaceExisting;
@@ -43,8 +43,8 @@ public final class AddCredentialStore implements OnlineCommand {
                 .and("uri", uri)
                 .andObject("credential-reference", credentialReference.toValues())
                 .andOptional("type", type)
-                .andOptional("provider", provider)
-                .andOptional("provider-loader", providerLoader)
+                .andOptional("provider-name", providerName)
+                .andOptional("providers", providers)
                 .andOptional("relative-to", relativeTo));
     }
 
@@ -52,8 +52,8 @@ public final class AddCredentialStore implements OnlineCommand {
 
         private final String name;
         private String type;
-        private String provider;
-        private String providerLoader;
+        private String providerName;
+        private String providers;
         private String relativeTo;
         private String uri;
         private CredentialRef credentialReference;
@@ -76,13 +76,13 @@ public final class AddCredentialStore implements OnlineCommand {
             return this;
         }
 
-        public Builder provider(String provider) {
-            this.provider = provider;
+        public Builder providerName(String providerName) {
+            this.providerName = providerName;
             return this;
         }
 
-        public Builder providerLoader(String providerLoader) {
-            this.providerLoader = providerLoader;
+        public Builder providers(String providers) {
+            this.providers = providers;
             return this;
         }
 

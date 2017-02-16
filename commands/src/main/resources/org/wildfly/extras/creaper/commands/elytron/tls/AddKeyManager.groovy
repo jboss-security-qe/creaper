@@ -1,8 +1,8 @@
 keyManagerAttrs = ['name': atrName]
 if (atrAlgorithm != null) keyManagerAttrs['algorithm'] = atrAlgorithm
 if (atrKeyStore != null) keyManagerAttrs['key-store'] = atrKeyStore
-if (atrProvider != null) keyManagerAttrs['provider'] = atrProvider
-if (atrProviderLoader != null) keyManagerAttrs['provider-loader'] = atrProviderLoader
+if (atrProviderName != null) keyManagerAttrs['provider-name'] = atrProviderName
+if (atrProviders != null) keyManagerAttrs['providers'] = atrProviders
 
 credentialReferenceAttrs = [:]
 if (atrCredentialRefAlias != null) credentialReferenceAttrs['alias'] = atrCredentialRefAlias

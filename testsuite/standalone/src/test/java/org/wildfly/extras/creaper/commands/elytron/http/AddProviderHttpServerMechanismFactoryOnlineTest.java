@@ -70,7 +70,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     public void addFullProviderHttpServerMechanismFactory() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         client.apply(addProviderHttpServerMechanismFactory);
@@ -78,7 +78,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
         assertTrue("Provider http server mechanism factory should be created",
                 ops.exists(TEST_SERVER_MECHANISM_FACTORY_ADDRESS));
 
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "provider-loader", PROVIDER_LOADER_NAME);
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "providers", PROVIDER_LOADER_NAME);
 
     }
 
@@ -87,12 +87,12 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     public void addExistProviderHttpServerMechanismFactoryNotAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory2
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME2)
+                .providers(PROVIDER_LOADER_NAME2)
                 .build();
 
         client.apply(addProviderHttpServerMechanismFactory);
@@ -107,12 +107,12 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     public void addExistProviderHttpServerMechanismFactoryAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME)
+                .providers(PROVIDER_LOADER_NAME)
                 .build();
 
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory2
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
-                .providerLoader(PROVIDER_LOADER_NAME2)
+                .providers(PROVIDER_LOADER_NAME2)
                 .replaceExisting()
                 .build();
 
@@ -123,7 +123,7 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
         assertTrue("Provider http server mechanism factory should be created",
                 ops.exists(TEST_SERVER_MECHANISM_FACTORY_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "provider-loader", PROVIDER_LOADER_NAME2);
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "providers", PROVIDER_LOADER_NAME2);
     }
 
     @Test(expected = IllegalArgumentException.class)

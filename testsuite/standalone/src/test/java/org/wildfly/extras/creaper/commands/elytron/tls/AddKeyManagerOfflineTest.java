@@ -2,9 +2,9 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import static org.junit.Assert.fail;
 import static org.wildfly.extras.creaper.XmlAssert.assertXmlIdentical;
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+
 import java.io.File;
+
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -15,6 +15,9 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineOptions;
+
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 
 public class AddKeyManagerOfflineTest {
 
@@ -103,7 +106,7 @@ public class AddKeyManagerOfflineTest {
             + "            <tls>\n"
             + "                <key-managers>\n"
             + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
-            + "                                provider=\"ksProvider\" provider-loader=\"ksProviderLoader\">\n"
+            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\">\n"
             + "                        <credential-reference alias=\"crAlias\" type=\"crType\" store=\"crStore\" clear-text=\"secret\" />\n"
             + "                    </key-manager>\n"
             + "                </key-managers>\n"
@@ -260,8 +263,8 @@ public class AddKeyManagerOfflineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
                 .algorithm("SunX509")
                 .keyStore("creaperKeyStore")
-                .provider("ksProvider")
-                .providerLoader("ksProviderLoader")
+                .providerName("ksProvider")
+                .providers("ksProviderLoader")
                 .credentialReference(new CredentialRefBuilder()
                         .alias("crAlias")
                         .type("crType")

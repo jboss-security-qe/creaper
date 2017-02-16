@@ -1,8 +1,8 @@
 trustManagerAttrs = ['name': atrName]
 if (atrAlgorithm != null) trustManagerAttrs['algorithm'] = atrAlgorithm
 if (atrKeyStore != null) trustManagerAttrs['key-store'] = atrKeyStore
-if (atrProvider != null) trustManagerAttrs['provider'] = atrProvider
-if (atrProviderLoader != null) trustManagerAttrs['provider-loader'] = atrProviderLoader
+if (atrProviderName != null) trustManagerAttrs['provider-name'] = atrProviderName
+if (atrProviders != null) trustManagerAttrs['providers'] = atrProviders
 
 def trustManagerDefinition = {
     'trust-manager'(trustManagerAttrs)
