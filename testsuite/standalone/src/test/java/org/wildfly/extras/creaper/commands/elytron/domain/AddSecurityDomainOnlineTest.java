@@ -127,11 +127,21 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                     .build())
             .build();
 
+    private static final String TEST_SECURITY_DOMAIN_NAME4 = "CreaperTestSecurityDomain4";
+    private static final Address TEST_SECURITY_DOMAIN_ADDRESS4 = SUBSYSTEM_ADDRESS
+            .and("security-domain", TEST_SECURITY_DOMAIN_NAME4);
+    private final AddSecurityDomain addSecurityDomain4 = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME4)
+            .defaultRealm(TEST_FILESYSTEM_REALM_NAME)
+            .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
+                    .build())
+            .build();
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS);
         ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS2);
         ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS3);
+        ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS4);
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS);
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS2);
         ops.removeIfExists(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS);
@@ -197,6 +207,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addSimpleRoleDecoder);
         client.apply(addSimpleRoleDecoder2);
         client.apply(addSecurityDomain3);
+        client.apply(addSecurityDomain4);
         AddSecurityDomain addSecurityDomain2 = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME2)
                 .defaultRealm(TEST_FILESYSTEM_REALM_NAME2)
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME2)
@@ -213,6 +224,8 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .realmMapper(TEST_SIMPLE_REGEX_REALM_MAPPER_NAME)
                 .roleMapper(TEST_CONSTANT_ROLE_MAPPER_NAME)
                 .trustedSecurityDomains(TEST_SECURITY_DOMAIN_NAME2, TEST_SECURITY_DOMAIN_NAME3)
+                .outflowAnonymous(true)
+                .outflowSecurityDomains(TEST_SECURITY_DOMAIN_NAME3, TEST_SECURITY_DOMAIN_NAME4)
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .principalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                         .roleDecoder(TEST_SIMPLE_ROLE_DECODER_NAME)
@@ -239,6 +252,9 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "role-mapper", TEST_CONSTANT_ROLE_MAPPER_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "trusted-security-domains[0]", TEST_SECURITY_DOMAIN_NAME2);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "trusted-security-domains[1]", TEST_SECURITY_DOMAIN_NAME3);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-anonymous", "true");
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-security-domains[0]", TEST_SECURITY_DOMAIN_NAME3);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-security-domains[1]", TEST_SECURITY_DOMAIN_NAME4);
 
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].realm", TEST_FILESYSTEM_REALM_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].principal-transformer",

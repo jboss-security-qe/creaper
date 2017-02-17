@@ -12,6 +12,7 @@ import org.wildfly.extras.creaper.commands.elytron.tls.AddServerSSLContext;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.authenticationclient.AddAuthenticationContext;
 
 @RunWith(Arquillian.class)
 public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
@@ -27,11 +28,16 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TEST_SERVER_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS
             .and("server-ssl-context", TEST_SERVER_SSL_CONTEXT);
 
+    private static final String TEST_AUTHENTICATION_CONTEXT_NAME = "CreaperTestAuthenticationContext";
+    private static final Address TEST_AUTHENTICATION_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("authentication-context", TEST_AUTHENTICATION_CONTEXT_NAME);
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_DIR_CONTEXT_ADDRESS);
         ops.removeIfExists(TEST_DIR_CONTEXT_ADDRESS2);
         ops.removeIfExists(TEST_SERVER_SSL_CONTEXT_ADDRESS);
+        ops.removeIfExists(TEST_AUTHENTICATION_CONTEXT_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -67,6 +73,10 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT)
                 .build();
         client.apply(addServerSSLContext);
+        AddAuthenticationContext addAuthenticationContext
+                = new AddAuthenticationContext.Builder(TEST_AUTHENTICATION_CONTEXT_NAME)
+                .build();
+        client.apply(addAuthenticationContext);
 
         AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
                 .url("localhost")
@@ -74,6 +84,9 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .enableConnectionPooling(false)
                 .principal("test-principal")
                 .referralMode(AddDirContext.ReferralMode.THROW)
+                .authenticationContext(TEST_AUTHENTICATION_CONTEXT_NAME)
+                .connectionTimeout(10)
+                .readTimeout(20)
                 .sslContext(TEST_SERVER_SSL_CONTEXT)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
@@ -90,6 +103,9 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "enable-connection-pooling", "false");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "principal", "test-principal");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "referral-mode", "THROW");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "authentication-context", TEST_AUTHENTICATION_CONTEXT_NAME);
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "connection-timeout", "10");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "read-timeout", "20");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential-reference.clear-text", "somePassword");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property1", "value1");

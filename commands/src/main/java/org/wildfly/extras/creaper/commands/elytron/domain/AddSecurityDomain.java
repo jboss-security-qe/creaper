@@ -22,6 +22,9 @@ public final class AddSecurityDomain implements OnlineCommand {
     private final String roleMapper;
     private final String permissionMapper;
     private final List<String> trustedSecurityDomains;
+    private final Boolean outflowAnonymous;
+    private final List<String> outflowSecurityDomains;
+    private final String securityEventListener;
     private final List<Realm> realms;
     private final boolean replaceExisting;
 
@@ -37,6 +40,9 @@ public final class AddSecurityDomain implements OnlineCommand {
         this.replaceExisting = builder.replaceExisting;
         this.realms = builder.realms;
         this.trustedSecurityDomains = builder.trustedSecurityDomains;
+        this.outflowAnonymous = builder.outflowAnonymous;
+        this.outflowSecurityDomains = builder.outflowSecurityDomains;
+        this.securityEventListener = builder.securityEventListener;
     }
 
     @Override
@@ -74,7 +80,9 @@ public final class AddSecurityDomain implements OnlineCommand {
                 .andOptional("realm-mapper", realmMapper)
                 .andOptional("role-mapper", roleMapper)
                 .andOptional("permission-mapper", permissionMapper)
-                .andListOptional(String.class, "trusted-security-domains", trustedSecurityDomains));
+                .andListOptional(String.class, "trusted-security-domains", trustedSecurityDomains)
+                .andOptional("outflow-anonymous", outflowAnonymous)
+                .andListOptional(String.class, "outflow-security-domains", outflowSecurityDomains));
     }
 
     public static final class Builder {
@@ -88,6 +96,9 @@ public final class AddSecurityDomain implements OnlineCommand {
         private String roleMapper;
         private String permissionMapper;
         private List<String> trustedSecurityDomains;
+        private Boolean outflowAnonymous;
+        private List<String> outflowSecurityDomains;
+        private String securityEventListener;
         private List<Realm> realms;
         private boolean replaceExisting;
 
@@ -144,6 +155,27 @@ public final class AddSecurityDomain implements OnlineCommand {
                 this.trustedSecurityDomains = new ArrayList<String>();
             }
             Collections.addAll(this.trustedSecurityDomains, trustedSecurityDomains);
+            return this;
+        }
+
+        public Builder outflowAnonymous(Boolean outflowAnonymous) {
+            this.outflowAnonymous = outflowAnonymous;
+            return this;
+        }
+
+        public Builder outflowSecurityDomains(String... outflowSecurityDomains) {
+            if (outflowSecurityDomains == null) {
+                throw new IllegalArgumentException("Outflow Security Domains added to security-domain must not be null");
+            }
+            if (this.outflowSecurityDomains == null) {
+                this.outflowSecurityDomains = new ArrayList<String>();
+            }
+            Collections.addAll(this.outflowSecurityDomains, outflowSecurityDomains);
+            return this;
+        }
+
+        public Builder securityEventListener(String securityEventListener) {
+            this.securityEventListener = securityEventListener;
             return this;
         }
 

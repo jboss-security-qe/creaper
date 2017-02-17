@@ -21,6 +21,9 @@ public final class AddDirContext implements OnlineCommand {
     private final Boolean enableConnectionPooling;
     private final String sslContext;
     private final ReferralMode referralMode;
+    private final String authenticationContext;
+    private final Integer connectionTimeout;
+    private final Integer readTimeout;
     private final List<Property> properties;
     private final CredentialRef credentialReference;
     private final boolean replaceExisting;
@@ -33,6 +36,9 @@ public final class AddDirContext implements OnlineCommand {
         this.enableConnectionPooling = builder.enableConnectionPooling;
         this.sslContext = builder.sslContext;
         this.referralMode = builder.referralMode;
+        this.authenticationContext = builder.authenticationContext;
+        this.connectionTimeout = builder.connectionTimeout;
+        this.readTimeout = builder.readTimeout;
         this.replaceExisting = builder.replaceExisting;
         this.properties = builder.properties;
         this.credentialReference = builder.credentialReference;
@@ -68,6 +74,9 @@ public final class AddDirContext implements OnlineCommand {
                 .andOptional("enable-connection-pooling", enableConnectionPooling)
                 .andOptional("ssl-context", sslContext)
                 .andOptional("referral-mode", referralModeValue)
+                .andOptional("authentication-context", authenticationContext)
+                .andOptional("connection-timeout", connectionTimeout)
+                .andOptional("read-timeout", readTimeout)
                 .andOptional("properties", propertiesNode)
                 .andObjectOptional("credential-reference", credentialReferenceValues));
     }
@@ -85,6 +94,9 @@ public final class AddDirContext implements OnlineCommand {
         private Boolean enableConnectionPooling;
         private String sslContext;
         private ReferralMode referralMode;
+        private String authenticationContext;
+        private Integer connectionTimeout;
+        private Integer readTimeout;
         private List<Property> properties = new ArrayList<Property>();
         private CredentialRef credentialReference;
         private boolean replaceExisting;
@@ -126,6 +138,21 @@ public final class AddDirContext implements OnlineCommand {
 
         public Builder referralMode(ReferralMode referralMode) {
             this.referralMode = referralMode;
+            return this;
+        }
+
+        public Builder authenticationContext(String authenticationContext) {
+            this.authenticationContext = authenticationContext;
+            return this;
+        }
+
+        public Builder connectionTimeout(Integer connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
+        public Builder readTimeout(Integer readTimeout) {
+            this.readTimeout = readTimeout;
             return this;
         }
 
