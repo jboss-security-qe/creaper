@@ -24,10 +24,10 @@ public class AddAggregateProvidersOnlineTest extends AbstractElytronOnlineTest {
 
     protected static final String TEST_PROVIDER_LOADER_NAME = "CreaperTestProviderLoader";
     protected static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("providers", TEST_PROVIDER_LOADER_NAME);
+            .and("provider-loader", TEST_PROVIDER_LOADER_NAME);
     protected static final String TEST_PROVIDER_LOADER_NAME2 = "CreaperTestProviderLoader2";
     protected static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS
-            .and("providers", TEST_PROVIDER_LOADER_NAME2);
+            .and("provider-loader", TEST_PROVIDER_LOADER_NAME2);
 
     @Before
     public void createProviderLoaders() throws Exception {

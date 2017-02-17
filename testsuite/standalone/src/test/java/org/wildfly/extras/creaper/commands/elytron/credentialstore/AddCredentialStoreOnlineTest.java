@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -8,9 +11,6 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
@@ -35,7 +35,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addSimpleCredentialStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -49,7 +49,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addFullCredentialStoreClearText() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 //                .provider("someProvider") TODO once AddProviderLoader is available
                 //                .providerLoader("someLoader") TODO once AddProviderLoader is available
                 .relativeTo("jboss.server.data.dir")
@@ -62,7 +62,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addCredentialStore);
         assertTrue("Credential store should be created", ops.exists(TEST_CREDENTIAL_STORE_ADDRESS));
 
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.testCs");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "relative-to", "jboss.server.data.dir");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "type", "KeyStoreCredentialStore");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "credential-reference.clear-text", TEST_PASSWORD);
@@ -71,23 +71,28 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addFullCredentialStoreAliasStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
+                .relativeTo("jboss.server.data.dir")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
                 .build();
 
-        client.apply(addCredentialStore);
+        AddCredentialStoreAlias addCredentialStoreAlias = new AddCredentialStoreAlias.Builder("alias")
+                .credentialStore(TEST_CREDENTIAL_STORE_NAME)
+                .secretValue("secret")
+                .build();
+        client.apply(addCredentialStore, addCredentialStoreAlias);
         assertTrue("Credential store should be created", ops.exists(TEST_CREDENTIAL_STORE_ADDRESS));
 
         addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME2)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 //                .provider("someProvider") TODO once AddProviderLoader is available
                 //                .providerLoader("someLoader") TODO once AddProviderLoader is available
                 .relativeTo("jboss.server.data.dir")
                 .type("KeyStoreCredentialStore")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
-                        .alias("someAlias")
+                        .alias("alias")
                         .store(TEST_CREDENTIAL_STORE_NAME)
                         .build())
                 .build();
@@ -95,24 +100,24 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addCredentialStore);
         assertTrue("Credential store should be created", ops.exists(TEST_CREDENTIAL_STORE_ADDRESS2));
 
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.testCs");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "relative-to", "jboss.server.data.dir");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "type", "KeyStoreCredentialStore");
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "credential-reference.alias", "someAlias");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "credential-reference.alias", "alias");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS2, "credential-reference.store", TEST_CREDENTIAL_STORE_NAME);
     }
 
     @Test
     public void addTwoCredentialStores() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
                 .build();
 
         AddCredentialStore addCredentialStore2 = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME2)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -128,14 +133,14 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = CommandFailedException.class)
     public void addExistCredentialStoreNotAllowed() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
                 .build();
 
         AddCredentialStore addCredentialStore2 = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -150,14 +155,14 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addExistCredentialStoreAllowed() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
                 .build();
 
         AddCredentialStore addCredentialStore2 = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.otherCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.otherCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -170,13 +175,13 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         assertTrue("Constant permission mapper should be created", ops.exists(TEST_CREDENTIAL_STORE_ADDRESS));
 
         // check whether it was really rewritten
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.otherCs");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "uri", CREDENTIAL_STORE_URI_PREFIX + "test.otherCs?create=true");
     }
 
     @Test(expected = CommandFailedException.class)
     public void addCredentialStore_uriWithoutCSPrefix() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri("test.testCs")
+                .uri("test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -189,7 +194,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCredentialStore_nullName() throws Exception {
         new AddCredentialStore.Builder(null)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -200,7 +205,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCredentialStore_emptyName() throws Exception {
         new AddCredentialStore.Builder("")
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
@@ -233,7 +238,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCredentialStore_nullCredentialReference() throws Exception {
         new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(null)
                 .build();
     }
@@ -241,7 +246,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addCredentialStore_insufficientCredentialReference() throws Exception {
         new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs")
+                .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .alias("someAlias")
                         .build())

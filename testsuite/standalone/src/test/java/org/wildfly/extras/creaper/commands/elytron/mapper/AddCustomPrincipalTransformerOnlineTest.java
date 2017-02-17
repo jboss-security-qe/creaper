@@ -15,6 +15,7 @@ import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -26,6 +27,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 
 @RunWith(Arquillian.class)
+@Ignore("https://issues.jboss.org/browse/WFLY-8152")
 public class AddCustomPrincipalTransformerOnlineTest extends AbstractElytronOnlineTest {
 
     private static final String TEST_ADD_CUSTOM_PRINCIPAL_TRANSFORMER_NAME = "CreaperTestAddCustomPrincipalTransformer";

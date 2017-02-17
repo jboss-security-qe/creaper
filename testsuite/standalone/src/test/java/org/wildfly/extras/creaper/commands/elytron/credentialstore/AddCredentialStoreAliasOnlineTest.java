@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Before;
@@ -18,9 +21,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest {
@@ -50,7 +50,7 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
     @Before
     public void createCredentialStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri("cr-store://test.testCs")
+                .uri("cr-store://test.testCs?create=true")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())

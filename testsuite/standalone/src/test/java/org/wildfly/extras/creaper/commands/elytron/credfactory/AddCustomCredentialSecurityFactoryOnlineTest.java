@@ -15,6 +15,7 @@ import org.jboss.dmr.Property;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -26,6 +27,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 
 @RunWith(Arquillian.class)
+@Ignore("https://issues.jboss.org/browse/WFLY-8151")
 public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytronOnlineTest {
 
     private static final String TEST_ADD_CUSTOM_CRED_SEC_FACTORY_NAME = "CreaperTestAddCustomCredentialSecurityFactory";
@@ -41,11 +43,11 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
         try (OnlineManagementClient client = createManagementClient()) {
             File testJar1 = createJar("testJar", AddCustomCredentialSecurityFactoryImpl.class);
             AddModule addModule = new AddModule.Builder(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
-                    .resource(testJar1)
-                    .resourceDelimiter(":")
+                .resource(testJar1)
+                .resourceDelimiter(":")
                 .dependency("org.wildfly.security.elytron")
                 .dependency("org.wildfly.extension.elytron")
-                    .build();
+                .build();
             client.apply(addModule);
         }
     }
@@ -69,10 +71,10 @@ public class AddCustomCredentialSecurityFactoryOnlineTest extends AbstractElytro
     public void addCustomCredentialSecurityFactory() throws Exception {
         AddCustomCredentialSecurityFactory addAddCustomCredentialSecurityFactory =
             new AddCustomCredentialSecurityFactory.Builder(TEST_ADD_CUSTOM_CRED_SEC_FACTORY_NAME)
-            .className(AddCustomCredentialSecurityFactoryImpl.class.getName())
-            .module(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
-            .addConfiguration("param", "parameterValue")
-            .build();
+                .className(AddCustomCredentialSecurityFactoryImpl.class.getName())
+                .module(CUSTOM_CRED_SEC_FACTORY_MODULE_NAME)
+                .addConfiguration("param", "parameterValue")
+                .build();
 
         client.apply(addAddCustomCredentialSecurityFactory);
 

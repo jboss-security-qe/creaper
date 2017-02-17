@@ -23,10 +23,10 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 public class AddProviderLoaderOnlineTest extends AbstractElytronOnlineTest {
 
     private static final String TEST_PROVIDER_LOADER_NAME = "CreaperTestProviderLoader";
-    private static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS.and("providers",
+    private static final Address TEST_PROVIDER_LOADER_ADDRESS = SUBSYSTEM_ADDRESS.and("provider-loader",
             TEST_PROVIDER_LOADER_NAME);
     private static final String TEST_PROVIDER_LOADER_NAME2 = "CreaperTestProviderLoader2";
-    private static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("providers",
+    private static final Address TEST_PROVIDER_LOADER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("provider-loader",
             TEST_PROVIDER_LOADER_NAME2);
 
     private static final String TEST_MODULE_NAME = "com.example.creaper-test-module";

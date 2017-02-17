@@ -1,10 +1,12 @@
 package org.wildfly.extras.creaper.commands.undertow;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -14,7 +16,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.domain.AddSecurityDomain;
 import org.wildfly.extras.creaper.commands.elytron.http.AddHttpAuthenticationFactory;
-import org.wildfly.extras.creaper.commands.elytron.http.AddProviderHttpServerMechanismFactory;
 import org.wildfly.extras.creaper.commands.elytron.realm.AddIdentityRealm;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
@@ -49,8 +50,6 @@ public class AddApplicationSecurityDomainOnlineTest extends AbstractElytronOnlin
                     .realms(new AddSecurityDomain.RealmBuilder(IDENTITY_REALM_NAME).build())
                     .build());
 
-            client.apply(new AddProviderHttpServerMechanismFactory.Builder(PROVIDER_HTTP_SERVER_MECH_FACTORY).build());
-
             client.apply(new AddHttpAuthenticationFactory.Builder(TEST_HTTP_AUTH_FACTORY)
                     .securityDomain(SECURITY_DOMAIN_NAME)
                     .httpServerMechanismFactory(PROVIDER_HTTP_SERVER_MECH_FACTORY)
@@ -64,8 +63,6 @@ public class AddApplicationSecurityDomainOnlineTest extends AbstractElytronOnlin
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("http-authentication-factory", TEST_HTTP_AUTH_FACTORY));
-            ops.removeIfExists(SUBSYSTEM_ADDRESS
-                    .and("provider-http-server-mechanism-factory", PROVIDER_HTTP_SERVER_MECH_FACTORY));
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("security-domain", SECURITY_DOMAIN_NAME));
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("identity-realm", IDENTITY_REALM_NAME));
             administration.reloadIfRequired();
