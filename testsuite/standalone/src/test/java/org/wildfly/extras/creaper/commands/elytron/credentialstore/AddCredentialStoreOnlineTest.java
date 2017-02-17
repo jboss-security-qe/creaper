@@ -50,8 +50,9 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     public void addFullCredentialStoreClearText() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
                 .uri(CREDENTIAL_STORE_URI_PREFIX + "test.testCs?create=true")
-                //                .provider("someProvider") TODO once AddProviderLoader is available
-                //                .providerLoader("someLoader") TODO once AddProviderLoader is available
+                .providers("elytron")
+                .providerName("WildFlyElytron")
+                .otherProviders("elytron")
                 .relativeTo("jboss.server.data.dir")
                 .type("KeyStoreCredentialStore")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
@@ -66,6 +67,9 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "relative-to", "jboss.server.data.dir");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "type", "KeyStoreCredentialStore");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "credential-reference.clear-text", TEST_PASSWORD);
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "providers", "elytron");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "provider-name", "WildFlyElytron");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "other-providers", "elytron");
     }
 
     @Test

@@ -14,6 +14,7 @@ public final class AddCredentialStore implements OnlineCommand {
     private final String type;
     private final String providerName;
     private final String providers;
+    private final String otherProviders;
     private final String relativeTo;
     private final String uri;
     private final CredentialRef credentialReference;
@@ -25,6 +26,7 @@ public final class AddCredentialStore implements OnlineCommand {
         this.type = builder.type;
         this.providerName = builder.providerName;
         this.providers = builder.providers;
+        this.otherProviders = builder.otherProviders;
         this.relativeTo = builder.relativeTo;
         this.credentialReference = builder.credentialReference;
         this.replaceExisting = builder.replaceExisting;
@@ -45,6 +47,7 @@ public final class AddCredentialStore implements OnlineCommand {
                 .andOptional("type", type)
                 .andOptional("provider-name", providerName)
                 .andOptional("providers", providers)
+                .andOptional("other-providers", otherProviders)
                 .andOptional("relative-to", relativeTo));
     }
 
@@ -54,6 +57,7 @@ public final class AddCredentialStore implements OnlineCommand {
         private String type;
         private String providerName;
         private String providers;
+        private String otherProviders;
         private String relativeTo;
         private String uri;
         private CredentialRef credentialReference;
@@ -83,6 +87,11 @@ public final class AddCredentialStore implements OnlineCommand {
 
         public Builder providers(String providers) {
             this.providers = providers;
+            return this;
+        }
+
+        public Builder otherProviders(String otherProviders) {
+            this.otherProviders = otherProviders;
             return this;
         }
 
