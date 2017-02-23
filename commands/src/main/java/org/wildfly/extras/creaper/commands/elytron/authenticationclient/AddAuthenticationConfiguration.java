@@ -225,9 +225,6 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         }
 
         public AddAuthenticationConfiguration build() {
-            if (credentialReference == null) {
-                throw new IllegalArgumentException("credential-reference may not be null");
-            }
             if (allowAllMechanisms != null && (allowSaslMechanisms != null && !allowSaslMechanisms.isEmpty())) {
                 throw new IllegalArgumentException("Only one of allow-all-mechanisms and allow-sasl-mechanisms can be set.");
             }
