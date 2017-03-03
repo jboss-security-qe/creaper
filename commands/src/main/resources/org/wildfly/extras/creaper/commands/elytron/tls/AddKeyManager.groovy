@@ -1,5 +1,6 @@
 keyManagerAttrs = ['name': atrName]
 if (atrAlgorithm != null) keyManagerAttrs['algorithm'] = atrAlgorithm
+if (atrAliasFilter != null) keyManagerAttrs['alias-filter'] = atrAliasFilter
 if (atrKeyStore != null) keyManagerAttrs['key-store'] = atrKeyStore
 if (atrProviderName != null) keyManagerAttrs['provider-name'] = atrProviderName
 if (atrProviders != null) keyManagerAttrs['providers'] = atrProviders

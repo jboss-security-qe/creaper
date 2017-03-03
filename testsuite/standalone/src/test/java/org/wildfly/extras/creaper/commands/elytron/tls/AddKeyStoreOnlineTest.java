@@ -120,14 +120,13 @@ public class AddKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullKeyStore() throws Exception {
-
         AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
-            .type(TEST_KEY_STORE_TYPE)
-            .aliasFilter("server-alias")
-            .credentialReference(new CredentialRef.CredentialRefBuilder()
-                    .clearText(TEST_KEY_STORE_PASSWORD)
-                    .build())
-            .build();
+                .type(TEST_KEY_STORE_TYPE)
+                .aliasFilter("server-alias")
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
+                .build();
         client.apply(addKeyStore);
         assertTrue("Key store should be created", ops.exists(TEST_KEY_STORE_ADDRESS));
 

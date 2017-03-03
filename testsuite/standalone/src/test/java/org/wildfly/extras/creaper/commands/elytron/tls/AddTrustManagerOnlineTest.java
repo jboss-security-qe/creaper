@@ -149,12 +149,14 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addFullTrustManager() throws Exception {
         AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
                 .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
+                .aliasFilter("server-alias")
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         client.apply(addTrustManager);
         assertTrue("Trust manager should be created", ops.exists(TRUST_MNGR_ADDRESS));
 
         checkAttribute("algorithm", TEST_TRUST_MANAGER_ALGORITHM);
+        checkAttribute("alias-filter", "server-alias");
         checkAttribute("key-store", TEST_KEY_STORE_NAME);
     }
 

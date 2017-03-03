@@ -106,7 +106,7 @@ public class AddKeyManagerOfflineTest {
             + "            <tls>\n"
             + "                <key-managers>\n"
             + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
-            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\">\n"
+            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\">\n"
             + "                        <credential-reference alias=\"crAlias\" type=\"crType\" store=\"crStore\" clear-text=\"secret\" />\n"
             + "                    </key-manager>\n"
             + "                </key-managers>\n"
@@ -262,6 +262,7 @@ public class AddKeyManagerOfflineTest {
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
                 .algorithm("SunX509")
+                .aliasFilter("aliasInFilter")
                 .keyStore("creaperKeyStore")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")

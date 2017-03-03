@@ -97,7 +97,7 @@ public class AddTrustManagerOfflineTest {
             + "            <tls>\n"
             + "                <trust-managers>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
-            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
+            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\"/>\n"
             + "                </trust-managers>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -245,6 +245,7 @@ public class AddTrustManagerOfflineTest {
 
         AddTrustManager addTrustManager = new AddTrustManager.Builder("creaperTrustManager")
                 .algorithm("SunX509")
+                .aliasFilter("aliasInFilter")
                 .keyStore("creaperKeyStore")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")

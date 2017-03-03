@@ -1,5 +1,6 @@
 trustManagerAttrs = ['name': atrName]
 if (atrAlgorithm != null) trustManagerAttrs['algorithm'] = atrAlgorithm
+if (atrAliasFilter != null) trustManagerAttrs['alias-filter'] = atrAliasFilter
 if (atrKeyStore != null) trustManagerAttrs['key-store'] = atrKeyStore
 if (atrProviderName != null) trustManagerAttrs['provider-name'] = atrProviderName
 if (atrProviders != null) trustManagerAttrs['providers'] = atrProviders

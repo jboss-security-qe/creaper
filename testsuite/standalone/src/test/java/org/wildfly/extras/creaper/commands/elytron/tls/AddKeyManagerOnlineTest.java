@@ -175,6 +175,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     public void addFullKeyManager() throws Exception {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
                 .algorithm(TEST_KEY_MANAGER_ALGORITHM)
+                .aliasFilter("server-alias")
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
@@ -184,6 +185,7 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
         assertTrue("Key manager should be created", ops.exists(TEST_KEY_MNGR_ADDRESS));
 
         checkAttribute("algorithm", TEST_KEY_MANAGER_ALGORITHM);
+        checkAttribute("alias-filter", "server-alias");
         checkAttribute("key-store", TEST_KEY_STORE_NAME);
         checkAttributeObject(TEST_KEY_MNGR_ADDRESS, "credential-reference", "clear-text", TEST_KEY_PASSWORD);
     }

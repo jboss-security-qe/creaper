@@ -14,13 +14,12 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 /**
  * credential-reference is mandatory! https://issues.jboss.org/browse/JBEAP-6757
- *
- *
  */
 public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String algorithm;
+    private final String aliasFilter;
     private final String keyStore;
     private final CredentialRef credentialReference;
     private final String providerName;
@@ -30,6 +29,7 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
     private AddKeyManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
+        this.aliasFilter = builder.aliasFilter;
         this.keyStore = builder.keyStore;
         this.providerName = builder.providerName;
         this.providers = builder.providers;
@@ -48,12 +48,13 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
         }
 
         ops.add(keyManagerAddress, Values.empty()
-            .and("name", name)
-            .and("algorithm", algorithm)
-            .and("key-store", keyStore)
-            .andObject("credential-reference", credentialReference.toValues())
-            .andOptional("provider-name", providerName)
-            .andOptional("providers", providers));
+                .and("name", name)
+                .and("algorithm", algorithm)
+                .and("key-store", keyStore)
+                .andObject("credential-reference", credentialReference.toValues())
+                .andOptional("alias-filter", aliasFilter)
+                .andOptional("provider-name", providerName)
+                .andOptional("providers", providers));
     }
 
     @Override
@@ -62,6 +63,7 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
                 .parameter("atrAlgorithm", algorithm)
+                .parameter("atrAliasFilter", aliasFilter)
                 .parameter("atrKeyStore", keyStore)
                 .parameters(credentialReference.toParameters())
                 .parameter("atrProviderName", providerName)
@@ -74,6 +76,7 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
         private final String name;
         private String algorithm;
+        private String aliasFilter;
         private String keyStore;
         private CredentialRef credentialReference;
         private String providerName;
@@ -89,6 +92,11 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
         public Builder algorithm(String algorithm) {
             this.algorithm = algorithm;
+            return this;
+        }
+
+        public Builder aliasFilter(String aliasFilter) {
+            this.aliasFilter = aliasFilter;
             return this;
         }
 

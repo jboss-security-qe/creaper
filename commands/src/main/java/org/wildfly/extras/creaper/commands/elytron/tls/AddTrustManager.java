@@ -15,6 +15,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
 
     private final String name;
     private final String algorithm;
+    private final String aliasFilter;
     private final String keyStore;
     private final String providerName;
     private final String providers;
@@ -23,6 +24,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
     private AddTrustManager(Builder builder) {
         this.name = builder.name;
         this.algorithm = builder.algorithm;
+        this.aliasFilter = builder.aliasFilter;
         this.keyStore = builder.keyStore;
         this.providerName = builder.providerName;
         this.providers = builder.providers;
@@ -39,11 +41,12 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
         }
 
         ops.add(trustManagerAddress, Values.empty()
-            .and("name", name)
-            .and("algorithm", algorithm)
-            .and("key-store", keyStore)
-            .andOptional("provider-name", providerName)
-            .andOptional("providers", providers));
+                .and("name", name)
+                .and("algorithm", algorithm)
+                .and("key-store", keyStore)
+                .andOptional("alias-filter", aliasFilter)
+                .andOptional("provider-name", providerName)
+                .andOptional("providers", providers));
     }
 
     @Override
@@ -52,6 +55,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
                 .parameter("atrAlgorithm", algorithm)
+                .parameter("atrAliasFilter", aliasFilter)
                 .parameter("atrKeyStore", keyStore)
                 .parameter("atrProviderName", providerName)
                 .parameter("atrProviders", providers)
@@ -63,6 +67,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
 
         private final String name;
         private String algorithm;
+        private String aliasFilter;
         private String keyStore;
         private String providerName;
         private String providers;
@@ -77,6 +82,11 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
 
         public Builder algorithm(String algorithm) {
             this.algorithm = algorithm;
+            return this;
+        }
+
+        public Builder aliasFilter(String aliasFilter) {
+            this.aliasFilter = aliasFilter;
             return this;
         }
 
