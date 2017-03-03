@@ -1,5 +1,7 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
 import org.wildfly.extras.creaper.core.offline.OfflineCommand;
@@ -19,6 +21,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
     private final String keyStore;
     private final String providerName;
     private final String providers;
+    private final CertificateRevocationList certificateRevocationList;
     private final boolean replaceExisting;
 
     private AddTrustManager(Builder builder) {
@@ -28,6 +31,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
         this.keyStore = builder.keyStore;
         this.providerName = builder.providerName;
         this.providers = builder.providers;
+        this.certificateRevocationList = builder.certificateRevocationList;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -46,7 +50,9 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
                 .and("key-store", keyStore)
                 .andOptional("alias-filter", aliasFilter)
                 .andOptional("provider-name", providerName)
-                .andOptional("providers", providers));
+                .andOptional("providers", providers)
+                .andObjectOptional("certificate-revocation-list",
+                        certificateRevocationList != null ? certificateRevocationList.toValues() : null));
     }
 
     @Override
@@ -59,6 +65,8 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
                 .parameter("atrKeyStore", keyStore)
                 .parameter("atrProviderName", providerName)
                 .parameter("atrProviders", providers)
+                .parameters(certificateRevocationList != null
+                        ? certificateRevocationList.toParameters() : CertificateRevocationList.EMPTY_PARAMETERS)
                 .parameter("atrReplaceExisting", replaceExisting)
                 .build());
     }
@@ -71,6 +79,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
         private String keyStore;
         private String providerName;
         private String providers;
+        private CertificateRevocationList certificateRevocationList;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -105,6 +114,11 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
             return this;
         }
 
+        public Builder certificateRevocationList(CertificateRevocationList certificateRevocationList) {
+            this.certificateRevocationList = certificateRevocationList;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
@@ -116,5 +130,84 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
             }
             return new AddTrustManager(this);
         }
+    }
+
+    public static final class CertificateRevocationList {
+
+        static final Map<String, Object> EMPTY_PARAMETERS = new HashMap<String, Object>();
+
+        static {
+            EMPTY_PARAMETERS.put("atrCrl", false);
+            EMPTY_PARAMETERS.put("atrCrlPath", null);
+            EMPTY_PARAMETERS.put("atrCrlRelativeTo", null);
+            EMPTY_PARAMETERS.put("atrCrlMaximumCertPath", null);
+        }
+
+        private final String path;
+        private final String relativeTo;
+        private final Integer maximumCertPath;
+
+        private CertificateRevocationList(CertificateRevocationListBuilder builder) {
+            this.path = builder.path;
+            this.relativeTo = builder.relativeTo;
+            this.maximumCertPath = builder.maximumCertPath;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public String getRelativeTo() {
+            return relativeTo;
+        }
+
+        public Integer getMaximumCertPath() {
+            return maximumCertPath;
+        }
+
+        public Values toValues() {
+            return Values.empty()
+                    .andOptional("path", path)
+                    .andOptional("relative-to", relativeTo)
+                    .andOptional("maximum-cert-path", maximumCertPath);
+        }
+
+        public Map<String, Object> toParameters() {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            parameters.put("atrCrl", true);
+            parameters.put("atrCrlPath", path);
+            parameters.put("atrCrlRelativeTo", relativeTo);
+            parameters.put("atrCrlMaximumCertPath", maximumCertPath);
+            return parameters;
+        }
+    }
+
+    public static final class CertificateRevocationListBuilder {
+        private String path;
+        private String relativeTo;
+        private Integer maximumCertPath;
+
+        public CertificateRevocationListBuilder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public CertificateRevocationListBuilder relativeTo(String relativeTo) {
+            this.relativeTo = relativeTo;
+            return this;
+        }
+
+        public CertificateRevocationListBuilder maximumCertPath(int maximumCertPath) {
+            this.maximumCertPath = maximumCertPath;
+            return this;
+        }
+
+        public CertificateRevocationList build() {
+            if (relativeTo != null && path == null) {
+                throw new IllegalArgumentException("relativeTo requires path to be set");
+            }
+            return new CertificateRevocationList(this);
+        }
+
     }
 }

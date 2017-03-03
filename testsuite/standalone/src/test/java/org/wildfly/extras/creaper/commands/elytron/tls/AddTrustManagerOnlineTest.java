@@ -5,9 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
-
 import javax.net.ssl.TrustManagerFactory;
-
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -22,6 +20,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
+// Test for certificate-revocation-list is blocked
 @RunWith(Arquillian.class)
 public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
 
@@ -36,6 +35,17 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME);
     private static final Address TRUST_MANAGER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME2);
     private static final String TEST_TRUST_MANAGER_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
+
+//    @ClassRule
+//    public static TemporaryFolder tmp = new TemporaryFolder();
+//
+//    private static File certificateRevocationList;
+//
+//
+//    @BeforeClass
+//    public static void createUsersProperties() throws Exception {
+//        certificateRevocationList = tmp.newFile();
+//    }
 
     @BeforeClass
     public static void addKeyStores() throws Exception {
@@ -151,6 +161,10 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
                 .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .aliasFilter("server-alias")
                 .keyStore(TEST_KEY_STORE_NAME)
+//                .certificateRevocationList(new CertificateRevocationListBuilder()
+//                        .path(certificateRevocationList.getPath())
+//                        .maximumCertPath(3)
+//                        .build())
                 .build();
         client.apply(addTrustManager);
         assertTrue("Trust manager should be created", ops.exists(TRUST_MNGR_ADDRESS));
@@ -158,6 +172,8 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("algorithm", TEST_TRUST_MANAGER_ALGORITHM);
         checkAttribute("alias-filter", "server-alias");
         checkAttribute("key-store", TEST_KEY_STORE_NAME);
+//        checkAttribute("certificate-revocation-list.path", certificateRevocationList.getPath());
+//        checkAttribute("certificate-revocation-list.maximum-cert-path", "3");
     }
 
     @Test(expected = IllegalArgumentException.class)

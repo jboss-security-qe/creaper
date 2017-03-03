@@ -17,6 +17,7 @@ import org.wildfly.extras.creaper.core.offline.OfflineOptions;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddTrustManager.CertificateRevocationListBuilder;
 
 public class AddTrustManagerOfflineTest {
 
@@ -97,7 +98,9 @@ public class AddTrustManagerOfflineTest {
             + "            <tls>\n"
             + "                <trust-managers>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
-            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\"/>\n"
+            + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\">\n"
+            + "                        <certificate-revocation-list path=\"path\" relative-to=\"relativeTo\" maximum-cert-path=\"3\"/>\n"
+            + "                    </trust-manager>\n"
             + "                </trust-managers>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -249,6 +252,11 @@ public class AddTrustManagerOfflineTest {
                 .keyStore("creaperKeyStore")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")
+                .certificateRevocationList(new CertificateRevocationListBuilder()
+                        .path("path")
+                        .relativeTo("relativeTo")
+                        .maximumCertPath(3)
+                        .build())
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_EMPTY, Files.toString(cfg, Charsets.UTF_8));

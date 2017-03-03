@@ -5,8 +5,19 @@ if (atrKeyStore != null) trustManagerAttrs['key-store'] = atrKeyStore
 if (atrProviderName != null) trustManagerAttrs['provider-name'] = atrProviderName
 if (atrProviders != null) trustManagerAttrs['providers'] = atrProviders
 
+if (atrCrl) {
+    crlAttrs = [:]
+    if (atrCrlPath != null) crlAttrs['path'] = atrCrlPath
+    if (atrCrlRelativeTo != null) crlAttrs['relative-to'] = atrCrlRelativeTo
+    if (atrCrlMaximumCertPath != null) crlAttrs['maximum-cert-path'] = atrCrlMaximumCertPath
+}
+
 def trustManagerDefinition = {
-    'trust-manager'(trustManagerAttrs)
+    if (atrCrl) {
+        'trust-manager'(trustManagerAttrs) { 'certificate-revocation-list'(crlAttrs) }
+    } else {
+        'trust-manager'(trustManagerAttrs)
+    }
 }
 
 def isExistingTls = elytronSubsystem.'tls'.any { it.name() == 'tls' }
