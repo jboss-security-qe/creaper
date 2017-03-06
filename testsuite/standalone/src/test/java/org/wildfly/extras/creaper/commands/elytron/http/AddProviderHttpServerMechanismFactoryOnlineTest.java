@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -24,8 +23,8 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     private static final Address TEST_SERVER_MECHANISM_FACTORY_ADDRESS2 = SUBSYSTEM_ADDRESS
             .and("provider-http-server-mechanism-factory", TEST_SERVER_MECHANISM_FACTORY_NAME2);
 
-    private static final String PROVIDER_LOADER_NAME = "someProviderLoader";
-    private static final String PROVIDER_LOADER_NAME2 = "someProviderLoader2";
+    private static final String PROVIDER_LOADER_NAME = "elytron";
+    private static final String PROVIDER_LOADER_NAME2 = "combined-providers";
 
     @After
     public void cleanup() throws Exception {
@@ -66,7 +65,6 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     }
 
     @Test
-    @Ignore("missing command for adding provider-loader")
     public void addFullProviderHttpServerMechanismFactory() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
@@ -83,7 +81,6 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     }
 
     @Test(expected = CommandFailedException.class)
-    @Ignore("missing command for adding provider-loader")
     public void addExistProviderHttpServerMechanismFactoryNotAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
@@ -103,7 +100,6 @@ public class AddProviderHttpServerMechanismFactoryOnlineTest extends AbstractEly
     }
 
     @Test
-    @Ignore("missing command for adding provider-loader")
     public void addExistProviderHttpServerMechanismFactoryAllowed() throws Exception {
         AddProviderHttpServerMechanismFactory addProviderHttpServerMechanismFactory
                 = new AddProviderHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)

@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -22,8 +21,8 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     private static final Address TEST_SERVER_FACTORY_ADDRESS2 = SUBSYSTEM_ADDRESS
             .and("provider-sasl-server-factory", TEST_SERVER_FACTORY_NAME2);
 
-    private static final String PROVIDER_LOADER_NAME = "someProviderLoader";
-    private static final String PROVIDER_LOADER_NAME2 = "someProviderLoader2";
+    private static final String PROVIDER_LOADER_NAME = "elytron";
+    private static final String PROVIDER_LOADER_NAME2 = "combined-providers";
 
     @After
     public void cleanup() throws Exception {
@@ -61,7 +60,6 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    @Ignore("missing command for adding provider-loader")
     public void addFullProviderSaslServerFactory() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
@@ -77,7 +75,6 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test(expected = CommandFailedException.class)
-    @Ignore("missing command for adding provider-loader")
     public void addExistProviderSaslServerFactoryNotAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
@@ -96,7 +93,6 @@ public class AddProviderSaslServerFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    @Ignore("missing command for adding provider-loader")
     public void addExistProviderSaslServerFactoryAllowed() throws Exception {
         AddProviderSaslServerFactory addProviderSaslServerFactory
                 = new AddProviderSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
