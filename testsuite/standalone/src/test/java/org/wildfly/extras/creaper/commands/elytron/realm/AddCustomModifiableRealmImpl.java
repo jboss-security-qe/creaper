@@ -25,37 +25,25 @@ package org.wildfly.extras.creaper.commands.elytron.realm;
 import java.util.Map;
 
 import org.wildfly.extension.elytron.Configurable;
+import org.wildfly.security.auth.SupportLevel;
 import org.wildfly.security.auth.server.CloseableIterator;
-import org.wildfly.security.auth.server.IdentityLocator;
 import org.wildfly.security.auth.server.ModifiableRealmIdentity;
 import org.wildfly.security.auth.server.ModifiableSecurityRealm;
-import org.wildfly.security.auth.server.RealmIdentity;
 import org.wildfly.security.auth.server.RealmUnavailableException;
-import org.wildfly.security.auth.server.SupportLevel;
 import org.wildfly.security.credential.Credential;
 import org.wildfly.security.evidence.Evidence;
 
 public class AddCustomModifiableRealmImpl implements ModifiableSecurityRealm, Configurable {
 
     @Override
-    public RealmIdentity getRealmIdentity(IdentityLocator locator) throws RealmUnavailableException {
-        return null;
-    }
-
-    @Override
     public SupportLevel getCredentialAcquireSupport(Class<? extends Credential> credentialType, String algorithmName)
-        throws RealmUnavailableException {
+            throws RealmUnavailableException {
         return null;
     }
 
     @Override
     public SupportLevel getEvidenceVerifySupport(Class<? extends Evidence> evidenceType, String algorithmName)
-        throws RealmUnavailableException {
-        return null;
-    }
-
-    @Override
-    public ModifiableRealmIdentity getRealmIdentityForUpdate(IdentityLocator locator) throws RealmUnavailableException {
+            throws RealmUnavailableException {
         return null;
     }
 

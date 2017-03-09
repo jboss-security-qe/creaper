@@ -32,7 +32,7 @@ import org.wildfly.security.evidence.Evidence;
 public class AddCustomRealmMapperImpl implements RealmMapper, Configurable {
 
     @Override
-    public String getRealmMapping(String name, Principal principal, Evidence evidence) {
+    public String getRealmMapping(Principal principal, Evidence evidence) {
         return "anyRealm";
     }
 
