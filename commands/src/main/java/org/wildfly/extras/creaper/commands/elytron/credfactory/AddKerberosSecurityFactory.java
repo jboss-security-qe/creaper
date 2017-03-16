@@ -1,7 +1,9 @@
 package org.wildfly.extras.creaper.commands.elytron.credfactory;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -22,6 +24,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
     private final Boolean server;
     private final Boolean debug;
     private final Boolean obtainKerberosTicket;
+    private final Map<String, String> options;
     private final boolean replaceExisting;
 
     private AddKerberosSecurityFactory(Builder builder) {
@@ -35,6 +38,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         this.server = builder.server;
         this.debug = builder.debug;
         this.obtainKerberosTicket = builder.obtainKerberosTicket;
+        this.options = builder.options;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
     }
@@ -58,7 +62,8 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
             .andOptional("request-lifetime", requestLifetime)
             .andOptional("server", server)
             .andOptional("debug", debug)
-            .andOptional("obtain-kerberos-ticket", obtainKerberosTicket));
+            .andOptional("obtain-kerberos-ticket", obtainKerberosTicket)
+            .andObjectOptional("options", Values.fromMap(options)));
     }
 
     public static final class Builder {
@@ -73,6 +78,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         private Boolean server;
         private Boolean debug;
         private Boolean obtainKerberosTicket;
+        private Map<String, String> options = new HashMap<String, String>();
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -126,6 +132,11 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
 
         public Builder obtainKerberosTicket(Boolean obtainKerberosTicket) {
             this.obtainKerberosTicket = obtainKerberosTicket;
+            return this;
+        }
+
+        public Builder addOption(String name, String value) {
+            options.put(name, value);
             return this;
         }
 

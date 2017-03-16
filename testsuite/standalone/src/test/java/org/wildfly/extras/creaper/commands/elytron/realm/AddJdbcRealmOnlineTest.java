@@ -81,33 +81,13 @@ public class AddJdbcRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test
-    public void addFullJdbcRealm() throws Exception {
+    public void addFullJdbcRealmClearPasswordMapper() throws Exception {
         AddJdbcRealm addJdbcRealm = new AddJdbcRealm.Builder(TEST_JDBC_REALM_NAME)
                 .principalQueries(new PrincipalQueryBuilder()
                     .sql(TEST_SQL)
                     .dataSource(TEST_DS)
                     .clearPasswordMapper(new ClearPasswordMapperBuilder()
                         .passwordIndex(TEST_PASSWORD_INDEX)
-                        .build())
-                    .bcryptMapper(new BcryptMapperBuilder()
-                        .passwordIndex(TEST_PASSWORD_INDEX)
-                        .saltIndex(TEST_SALT_INDEX)
-                        .iterationCountIndex(TEST_ITERATION_COUNT_INDEX)
-                        .build())
-                    .simpleDigestMapper(new SimpleDigestMapperBuilder()
-                        .passwordIndex(TEST_PASSWORD_INDEX)
-                        .algorithm(TEST_DIGEST_ALGORITHM)
-                        .build())
-                    .saltedSimpleDigestMapper(new SaltedSimpleDigestMapperBuilder()
-                        .passwordIndex(TEST_PASSWORD_INDEX)
-                        .saltIndex(TEST_SALT_INDEX)
-                        .algorithm(TEST_SALT_DIGEST_MD5)
-                        .build())
-                    .scramMapper(new ScramMapperBuilder()
-                        .passwordIndex(TEST_PASSWORD_INDEX)
-                        .saltIndex(TEST_SALT_INDEX)
-                        .iterationCountIndex(TEST_ITERATION_COUNT_INDEX)
-                        .algorithm(TEST_SCRAM_ALGORITHM)
                         .build())
                     .attributeMapping(new AttributeMappingBuilder()
                         .index(1)
@@ -126,22 +106,106 @@ public class AddJdbcRealmOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].clear-password-mapper.password-index",
                 TEST_PASSWORD_INDEX.toString());
+        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[0].index", "1");
+        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[0].to", "groups");
+        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[1].index", "2");
+        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[1].to", "roles");
+    }
+
+    @Test
+    public void addBcryptMapper() throws Exception {
+        AddJdbcRealm addJdbcRealm = new AddJdbcRealm.Builder(TEST_JDBC_REALM_NAME)
+                .principalQueries(new PrincipalQueryBuilder()
+                    .sql(TEST_SQL)
+                    .dataSource(TEST_DS)
+                    .bcryptMapper(new BcryptMapperBuilder()
+                        .passwordIndex(TEST_PASSWORD_INDEX)
+                        .saltIndex(TEST_SALT_INDEX)
+                        .iterationCountIndex(TEST_ITERATION_COUNT_INDEX)
+                        .build())
+                    .build())
+                .build();
+
+        client.apply(addJdbcRealm);
+
+        assertTrue("Jdbc realm should be created", ops.exists(TEST_JDBC_REALM_ADDRESS));
+
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].bcrypt-mapper.password-index",
                 TEST_PASSWORD_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].bcrypt-mapper.salt-index",
                 TEST_SALT_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].bcrypt-mapper.iteration-count-index",
                 TEST_ITERATION_COUNT_INDEX.toString());
+    }
+
+    @Test
+    public void addSimpleDigestMapper() throws Exception {
+        AddJdbcRealm addJdbcRealm = new AddJdbcRealm.Builder(TEST_JDBC_REALM_NAME)
+                .principalQueries(new PrincipalQueryBuilder()
+                    .sql(TEST_SQL)
+                    .dataSource(TEST_DS)
+                    .simpleDigestMapper(new SimpleDigestMapperBuilder()
+                        .passwordIndex(TEST_PASSWORD_INDEX)
+                        .algorithm(TEST_DIGEST_ALGORITHM)
+                        .build())
+                    .build())
+                .build();
+
+        client.apply(addJdbcRealm);
+
+        assertTrue("Jdbc realm should be created", ops.exists(TEST_JDBC_REALM_ADDRESS));
+
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].simple-digest-mapper.password-index",
                 TEST_PASSWORD_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].simple-digest-mapper.algorithm",
                 TEST_DIGEST_ALGORITHM);
+    }
+
+    @Test
+    public void addSaltedSimpleDigestMapper() throws Exception {
+        AddJdbcRealm addJdbcRealm = new AddJdbcRealm.Builder(TEST_JDBC_REALM_NAME)
+                .principalQueries(new PrincipalQueryBuilder()
+                    .sql(TEST_SQL)
+                    .dataSource(TEST_DS)
+                    .saltedSimpleDigestMapper(new SaltedSimpleDigestMapperBuilder()
+                        .passwordIndex(TEST_PASSWORD_INDEX)
+                        .saltIndex(TEST_SALT_INDEX)
+                        .algorithm(TEST_SALT_DIGEST_MD5)
+                        .build())
+                    .build())
+                .build();
+
+        client.apply(addJdbcRealm);
+
+        assertTrue("Jdbc realm should be created", ops.exists(TEST_JDBC_REALM_ADDRESS));
+
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].salted-simple-digest-mapper.password-index",
                 TEST_PASSWORD_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].salted-simple-digest-mapper.salt-index",
                 TEST_SALT_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].salted-simple-digest-mapper.algorithm",
                 TEST_SALT_DIGEST_MD5);
+    }
+
+    @Test
+    public void addFullJdbcRealmScramMapper() throws Exception {
+        AddJdbcRealm addJdbcRealm = new AddJdbcRealm.Builder(TEST_JDBC_REALM_NAME)
+                .principalQueries(new PrincipalQueryBuilder()
+                    .sql(TEST_SQL)
+                    .dataSource(TEST_DS)
+                    .scramMapper(new ScramMapperBuilder()
+                        .passwordIndex(TEST_PASSWORD_INDEX)
+                        .saltIndex(TEST_SALT_INDEX)
+                        .iterationCountIndex(TEST_ITERATION_COUNT_INDEX)
+                        .algorithm(TEST_SCRAM_ALGORITHM)
+                        .build())
+                    .build())
+                .build();
+
+        client.apply(addJdbcRealm);
+
+        assertTrue("Jdbc realm should be created", ops.exists(TEST_JDBC_REALM_ADDRESS));
+
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].scram-mapper.password-index",
                 TEST_PASSWORD_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].scram-mapper.salt-index",
@@ -150,10 +214,6 @@ public class AddJdbcRealmOnlineTest extends AbstractElytronOnlineTest {
                 TEST_ITERATION_COUNT_INDEX.toString());
         checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].scram-mapper.algorithm",
                 TEST_SCRAM_ALGORITHM);
-        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[0].index", "1");
-        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[0].to", "groups");
-        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[1].index", "2");
-        checkAttribute(TEST_JDBC_REALM_ADDRESS, "principal-query[0].attribute-mapping[1].to", "roles");
     }
 
     @Test(expected = CommandFailedException.class)
