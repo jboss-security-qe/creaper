@@ -24,6 +24,7 @@ public final class AddDirContext implements OnlineCommand {
     private final String authenticationContext;
     private final Integer connectionTimeout;
     private final Integer readTimeout;
+    private final String module;
     private final List<Property> properties;
     private final CredentialRef credentialReference;
     private final boolean replaceExisting;
@@ -39,6 +40,7 @@ public final class AddDirContext implements OnlineCommand {
         this.authenticationContext = builder.authenticationContext;
         this.connectionTimeout = builder.connectionTimeout;
         this.readTimeout = builder.readTimeout;
+        this.module = builder.module;
         this.replaceExisting = builder.replaceExisting;
         this.properties = builder.properties;
         this.credentialReference = builder.credentialReference;
@@ -77,6 +79,7 @@ public final class AddDirContext implements OnlineCommand {
                 .andOptional("authentication-context", authenticationContext)
                 .andOptional("connection-timeout", connectionTimeout)
                 .andOptional("read-timeout", readTimeout)
+                .andOptional("module", module)
                 .andOptional("properties", propertiesNode)
                 .andObjectOptional("credential-reference", credentialReferenceValues));
     }
@@ -97,6 +100,7 @@ public final class AddDirContext implements OnlineCommand {
         private String authenticationContext;
         private Integer connectionTimeout;
         private Integer readTimeout;
+        private String module;
         private List<Property> properties = new ArrayList<Property>();
         private CredentialRef credentialReference;
         private boolean replaceExisting;
@@ -153,6 +157,11 @@ public final class AddDirContext implements OnlineCommand {
 
         public Builder readTimeout(Integer readTimeout) {
             this.readTimeout = readTimeout;
+            return this;
+        }
+
+        public Builder module(String module) {
+            this.module = module;
             return this;
         }
 

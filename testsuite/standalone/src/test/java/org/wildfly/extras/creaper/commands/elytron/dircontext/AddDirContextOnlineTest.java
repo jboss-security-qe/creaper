@@ -87,6 +87,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .authenticationContext(TEST_AUTHENTICATION_CONTEXT_NAME)
                 .connectionTimeout(10)
                 .readTimeout(20)
+                .module("org.wildfly.security.elytron-private")
                 .sslContext(TEST_SERVER_SSL_CONTEXT)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
@@ -106,6 +107,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "authentication-context", TEST_AUTHENTICATION_CONTEXT_NAME);
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "connection-timeout", "10");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "read-timeout", "20");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "module", "org.wildfly.security.elytron-private");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential-reference.clear-text", "somePassword");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property1", "value1");
