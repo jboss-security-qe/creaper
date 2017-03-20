@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.realm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -41,6 +42,8 @@ public final class AddTokenRealm implements OnlineCommand {
                 .andListOptional(String.class, "issuer", jwt.getIssuer())
                 .andListOptional(String.class, "audience", jwt.getAudience())
                 .andOptional("public-key", jwt.getPublicKey())
+                .andOptional("key-store", jwt.getKeyStore())
+                .andOptional("certificate", jwt.getCertificate())
                 : null;
 
         Values oauth2IntrospectionProperties = oauth2Introspection != null
@@ -122,11 +125,15 @@ public final class AddTokenRealm implements OnlineCommand {
         private final List<String> issuer;
         private final List<String> audience;
         private final String publicKey;
+        private final String keyStore;
+        private final String certificate;
 
         public Jwt(JwtBuilder builder) {
             this.issuer = builder.issuer;
             this.audience = builder.audience;
             this.publicKey = builder.publicKey;
+            this.keyStore = builder.keyStore;
+            this.certificate = builder.certificate;
         }
 
         public List<String> getIssuer() {
@@ -141,6 +148,14 @@ public final class AddTokenRealm implements OnlineCommand {
             return publicKey;
         }
 
+        public String getKeyStore() {
+            return keyStore;
+        }
+
+        public String getCertificate() {
+            return certificate;
+        }
+
     }
 
     public static final class JwtBuilder {
@@ -148,6 +163,8 @@ public final class AddTokenRealm implements OnlineCommand {
         private List<String> issuer;
         private List<String> audience;
         private String publicKey;
+        private String keyStore;
+        private String certificate;
 
         public JwtBuilder addIssuer(String... issuer) {
             if (issuer == null) {
@@ -174,10 +191,17 @@ public final class AddTokenRealm implements OnlineCommand {
         }
 
         public JwtBuilder publicKey(String publicKey) {
-            if (publicKey == null || publicKey.isEmpty()) {
-                throw new IllegalArgumentException("Public-key must not be null and must have a minimum length of 1 character");
-            }
             this.publicKey = publicKey;
+            return this;
+        }
+
+        public JwtBuilder keyStore(String keyStore) {
+            this.keyStore = keyStore;
+            return this;
+        }
+
+        public JwtBuilder certificate(String certificate) {
+            this.certificate = certificate;
             return this;
         }
 
