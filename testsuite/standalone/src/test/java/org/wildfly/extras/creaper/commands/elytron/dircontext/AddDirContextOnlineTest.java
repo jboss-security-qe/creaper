@@ -92,7 +92,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())
-                .addMechanismProperties(new AddDirContext.Property("property1", "value1"),
+                .addProperties(new AddDirContext.Property("property1", "value1"),
                         new AddDirContext.Property("property2", "value2"))
                 .build();
 

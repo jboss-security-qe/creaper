@@ -165,9 +165,9 @@ public final class AddDirContext implements OnlineCommand {
             return this;
         }
 
-        public Builder addMechanismProperties(Property... properties) {
+        public Builder addProperties(Property... properties) {
             if (properties == null) {
-                throw new IllegalArgumentException("Properties added to authentication-configuration must not be null");
+                throw new IllegalArgumentException("Properties added to dir-context must not be null");
             }
             Collections.addAll(this.properties, properties);
             return this;
