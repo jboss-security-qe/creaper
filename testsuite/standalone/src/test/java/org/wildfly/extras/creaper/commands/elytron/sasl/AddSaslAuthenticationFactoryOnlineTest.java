@@ -110,8 +110,6 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
             .principal("principal1")
             .path("/path/to/keytab")
             .mechanismOIDs("1.2.840.113554.1.2.2")
-            // https://issues.jboss.org/browse/WFCORE-2549
-            .addOption("a", "b")
             .build();
 
     private static final String TEST_KERBEROS_SECURITY_FACTORY_NAME2 = "CreaperTestKerberosSecurityFactory2";
@@ -122,8 +120,6 @@ public class AddSaslAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
             .principal("principal2")
             .path("/path/to/keytab")
             .mechanismOIDs("1.2.840.113554.1.2.2")
-            // https://issues.jboss.org/browse/WFCORE-2549
-            .addOption("a", "b")
             .build();
 
     @After

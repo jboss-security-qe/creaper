@@ -19,7 +19,7 @@ public final class AddTokenRealm implements OnlineCommand {
     private final String principalClaim;
     private final boolean replaceExisting;
 
-    public AddTokenRealm(Builder builder) {
+    private AddTokenRealm(Builder builder) {
         this.name = builder.name;
         this.principalClaim = builder.principalClaim;
         this.jwt = builder.jwt;

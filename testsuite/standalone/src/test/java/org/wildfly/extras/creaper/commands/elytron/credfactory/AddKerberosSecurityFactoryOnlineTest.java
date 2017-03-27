@@ -39,8 +39,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         assertFalse("The kerberos security factory should not exist", ops.exists(KRB_ADDRESS));
         client.apply(addKerberosSecurityFactory);
@@ -53,15 +51,11 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME2)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
 
         assertFalse("The kerberos security factory should not exist", ops.exists(KRB_ADDRESS));
@@ -80,15 +74,11 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
 
         client.apply(addKerberosSecurityFactory);
@@ -104,15 +94,11 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL2)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .replaceExisting()
                 .build();
 
@@ -138,6 +124,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .server(false)
                 .obtainKerberosTicket(true)
                 .addOption("a", "b")
+                .addOption("debug", "false")
                 .build();
         client.apply(addKerberosSecurityFactory);
         assertTrue("Kerberos security factory should be created", ops.exists(KRB_ADDRESS));
@@ -151,7 +138,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         checkAttribute(KRB_ADDRESS, "debug", "true");
         checkAttribute(KRB_ADDRESS, "server", "false");
         checkAttribute(KRB_ADDRESS, "obtain-kerberos-ticket", "true");
-        checkAttributeObject(KRB_ADDRESS, "options", "a", "b");
+        checkAttributeObject(KRB_ADDRESS, "options", "debug", "false");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -160,8 +147,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with null kerberos security factory name should throw exception");
     }
@@ -172,8 +157,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with empty kerberos security factory name should throw exception");
     }
@@ -184,8 +167,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(null)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with null kerberos security factory path should throw exception");
     }
@@ -196,8 +177,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path("")
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with empty kerberos security factory path should throw exception");
     }
@@ -208,8 +187,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(null)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with null kerberos security factory principal should throw exception");
     }
@@ -220,8 +197,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal("")
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with empty kerberos security factory principal should throw exception");
     }
@@ -232,8 +207,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(null)
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with null kerberos security factory mechanism OIDs should throw exception");
     }
@@ -244,8 +217,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs()
-                // https://issues.jboss.org/browse/WFCORE-2549
-                .addOption("a", "b")
                 .build();
         fail("Creating command with empty kerberos security factory mechanism OIDs should throw exception");
     }
