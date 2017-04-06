@@ -27,8 +27,8 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @After
     public void cleanup() throws Exception {
-        ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS2);
+        ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         administration.reloadIfRequired();
     }
 
