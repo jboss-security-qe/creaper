@@ -17,6 +17,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
     private final String name;
     private final String principal;
     private final List<String> mechanismOIDs;
+    private final List<String> mechanismNames;
     private final String path;
     private final String relativeTo;
     private final Integer minimumRemainingLifetime;
@@ -31,6 +32,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         this.name = builder.name;
         this.principal = builder.principal;
         this.mechanismOIDs = builder.mechanismOIDs;
+        this.mechanismNames = builder.mechanismNames;
         this.path = builder.path;
         this.relativeTo = builder.relativeTo;
         this.minimumRemainingLifetime = builder.minimumRemainingLifetime;
@@ -55,8 +57,9 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         ops.add(kerberosSecurityFactoryAddress, Values.empty()
             .and("name", name)
             .and("principal", principal)
-            .andList(String.class, "mechanism-oids", mechanismOIDs)
             .and("path", path)
+            .andListOptional(String.class, "mechanism-oids", mechanismOIDs)
+            .andListOptional(String.class, "mechanism-names", mechanismNames)
             .andOptional("relative-to", relativeTo)
             .andOptional("minimum-remaining-lifetime", minimumRemainingLifetime)
             .andOptional("request-lifetime", requestLifetime)
@@ -71,6 +74,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         private final String name;
         private String principal;
         private List<String> mechanismOIDs;
+        private List<String> mechanismNames;
         private String path;
         private String relativeTo;
         private Integer minimumRemainingLifetime;
@@ -96,6 +100,13 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         public Builder mechanismOIDs(String... mechanismOIDs) {
             if (mechanismOIDs != null && mechanismOIDs.length > 0) {
                 this.mechanismOIDs = Arrays.asList(mechanismOIDs);
+            }
+            return this;
+        }
+
+        public Builder mechanismNames(String... mechanismNames) {
+            if (mechanismNames != null && mechanismNames.length > 0) {
+                this.mechanismNames = Arrays.asList(mechanismNames);
             }
             return this;
         }
@@ -148,9 +159,6 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         public AddKerberosSecurityFactory build() {
             if (principal == null || principal.isEmpty()) {
                 throw new IllegalArgumentException("Principal of the kerberos-security-factory must be specified as non empty value");
-            }
-            if (mechanismOIDs == null || mechanismOIDs.isEmpty()) {
-                throw new IllegalArgumentException("Mechanism OID of the kerberos-security-factory must be specified as non empty value");
             }
             if (path == null || path.isEmpty()) {
                 throw new IllegalArgumentException("Path of the kerberos-security-factory must be specified as non empty value");

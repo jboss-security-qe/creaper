@@ -38,7 +38,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         assertFalse("The kerberos security factory should not exist", ops.exists(KRB_ADDRESS));
         client.apply(addKerberosSecurityFactory);
@@ -50,12 +49,10 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME2)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
 
         assertFalse("The kerberos security factory should not exist", ops.exists(KRB_ADDRESS));
@@ -73,12 +70,10 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
 
         client.apply(addKerberosSecurityFactory);
@@ -93,12 +88,10 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         AddKerberosSecurityFactory addKerberosSecurityFactory2 = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL2)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .replaceExisting()
                 .build();
 
@@ -117,6 +110,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
                 .mechanismOIDs(KRB_OIDS, "1.2.840.48018.1.2.2", "1.3.6.1.5.5.2")
+                .mechanismNames("KRB5", "SPNEGO")
                 .minimumRemainingLifetime(1)
                 .relativeTo("jboss.server.config.dir")
                 .requestLifetime(2)
@@ -132,6 +126,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         checkAttribute(KRB_ADDRESS, "principal", KRB_PRINCIPAL);
         checkAttribute(KRB_ADDRESS, "path", KRB_PATH);
         checkAttribute(KRB_ADDRESS, "mechanism-oids", Arrays.asList(KRB_OIDS, "1.2.840.48018.1.2.2", "1.3.6.1.5.5.2"));
+        checkAttribute(KRB_ADDRESS, "mechanism-names", Arrays.asList("KRB5", "SPNEGO"));
         checkAttribute(KRB_ADDRESS, "minimum-remaining-lifetime", "1");
         checkAttribute(KRB_ADDRESS, "relative-to", "jboss.server.config.dir");
         checkAttribute(KRB_ADDRESS, "request-lifetime", "2");
@@ -146,7 +141,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(null)
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with null kerberos security factory name should throw exception");
     }
@@ -156,7 +150,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder("")
                 .principal(KRB_PRINCIPAL)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with empty kerberos security factory name should throw exception");
     }
@@ -166,7 +159,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path(null)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with null kerberos security factory path should throw exception");
     }
@@ -176,7 +168,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
                 .path("")
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with empty kerberos security factory path should throw exception");
     }
@@ -186,7 +177,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(null)
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with null kerberos security factory principal should throw exception");
     }
@@ -196,28 +186,8 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal("")
                 .path(KRB_PATH)
-                .mechanismOIDs(KRB_OIDS)
                 .build();
         fail("Creating command with empty kerberos security factory principal should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void addKerberosSecurityFactory_nullMechanismOIDs() throws Exception {
-        AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
-                .principal(KRB_PRINCIPAL)
-                .path(KRB_PATH)
-                .mechanismOIDs(null)
-                .build();
-        fail("Creating command with null kerberos security factory mechanism OIDs should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addKerberosSecurityFactory_emptyMechanismOIDs() throws Exception {
-        AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
-                .principal(KRB_PRINCIPAL)
-                .path(KRB_PATH)
-                .mechanismOIDs()
-                .build();
-        fail("Creating command with empty kerberos security factory mechanism OIDs should throw exception");
-    }
 }
