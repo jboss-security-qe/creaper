@@ -160,15 +160,6 @@ public class AddRegexPrincipalTransformerOnlineTest extends AbstractElytronOnlin
         fail("Creating command with null replacement should throw exception");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void addRegexPrincipalTransformer_emptyReplacement() throws Exception {
-        new AddRegexPrincipalTransformer.Builder(TEST_REGEX_PRINCIPAL_TRANSFORMER_NAME)
-                .pattern("test-pattern")
-                .replacement("")
-                .build();
-        fail("Creating command with empty replacement should throw exception");
-    }
-
     private void checkRegexPrincipalTransformerAttribute(String attr, String expected) throws IOException {
         checkAttribute(TEST_REGEX_PRINCIPAL_TRANSFORMER_ADDRESS, attr, expected);
     }

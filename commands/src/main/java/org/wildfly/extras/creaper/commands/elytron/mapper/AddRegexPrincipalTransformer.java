@@ -81,8 +81,8 @@ public final class AddRegexPrincipalTransformer implements OnlineCommand {
             if (pattern == null || pattern.isEmpty()) {
                 throw new IllegalArgumentException("Pattern must not be null and must have a minimum length of 1 character");
             }
-            if (replacement == null || replacement.isEmpty()) {
-                throw new IllegalArgumentException("Replacement must not be null and must have a minimum length of 1 character");
+            if (replacement == null) {
+                throw new IllegalArgumentException("Replacement must not be null");
             }
             return new AddRegexPrincipalTransformer(this);
         }
