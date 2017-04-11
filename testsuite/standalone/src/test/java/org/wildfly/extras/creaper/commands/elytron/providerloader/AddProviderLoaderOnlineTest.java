@@ -114,6 +114,52 @@ public class AddProviderLoaderOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "relative-to", "jboss.server.config.dir");
     }
 
+    @Test
+    public void addProviderLoaderArgument() throws Exception {
+        File testJar1 = createJar("testJar", AddProviderLoaderImpl.class);
+
+        AddModule addModule = new AddModule.Builder(TEST_MODULE_NAME)
+                .resource(testJar1)
+                .build();
+        client.apply(addModule);
+
+        AddProviderLoader addProviderLoader = new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
+                .module(TEST_MODULE_NAME)
+                .classNames(AddProviderLoaderImpl.class.getCanonicalName())
+                .argument("constructor_argument")
+                .build();
+
+        client.apply(addProviderLoader);
+
+        assertTrue("Provider loader should be created", ops.exists(TEST_PROVIDER_LOADER_ADDRESS));
+        checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "module", TEST_MODULE_NAME);
+        checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "class-names[0]", AddProviderLoaderImpl.class.getCanonicalName());
+        checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "argument", "constructor_argument");
+    }
+
+    @Test
+    public void addProviderLoaderConfiguration() throws Exception {
+        File testJar1 = createJar("testJar", AddProviderLoaderImpl.class);
+
+        AddModule addModule = new AddModule.Builder(TEST_MODULE_NAME)
+                .resource(testJar1)
+                .build();
+        client.apply(addModule);
+
+        AddProviderLoader addProviderLoader = new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
+                .module(TEST_MODULE_NAME)
+                .classNames(AddProviderLoaderImpl.class.getCanonicalName())
+                .addConfiguration("key", "value")
+                .build();
+
+        client.apply(addProviderLoader);
+
+        assertTrue("Provider loader should be created", ops.exists(TEST_PROVIDER_LOADER_ADDRESS));
+        checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "module", TEST_MODULE_NAME);
+        checkAttribute(TEST_PROVIDER_LOADER_ADDRESS, "class-names[0]", AddProviderLoaderImpl.class.getCanonicalName());
+        checkAttributeObject(TEST_PROVIDER_LOADER_ADDRESS, "configuration", "key", "value");
+    }
+
     @Test(expected = CommandFailedException.class)
     public void addExistProviderLoaderNotAllowed() throws Exception {
         AddProviderLoader addProviderLoader = new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
@@ -149,6 +195,22 @@ public class AddProviderLoaderOnlineTest extends AbstractElytronOnlineTest {
         new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
                 .addConfiguration("configurationName", "configurationValue")
                 .path("application-users.properties")
+                .build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addProviderLoader_configurationAndArgument() throws Exception {
+        new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
+                .addConfiguration("configurationName", "configurationValue")
+                .argument("argument")
+                .build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addProviderLoader_pathAndArgument() throws Exception {
+        new AddProviderLoader.Builder(TEST_PROVIDER_LOADER_NAME)
+                .path("path")
+                .argument("argument")
                 .build();
     }
 

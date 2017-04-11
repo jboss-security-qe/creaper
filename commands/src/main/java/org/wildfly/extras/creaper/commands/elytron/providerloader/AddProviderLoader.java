@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -20,6 +21,7 @@ public class AddProviderLoader implements OnlineCommand {
     private final String module;
     private final String path;
     private final String relativeTo;
+    private final String argument;
     private final boolean replaceExisting;
 
     private AddProviderLoader(Builder builder) {
@@ -29,6 +31,7 @@ public class AddProviderLoader implements OnlineCommand {
         this.module = builder.module;
         this.path = builder.path;
         this.relativeTo = builder.relativeTo;
+        this.argument = builder.argument;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -46,7 +49,8 @@ public class AddProviderLoader implements OnlineCommand {
                 .andObjectOptional("configuration", Values.fromMap(configuration))
                 .andOptional("module", module)
                 .andOptional("path", path)
-                .andOptional("relative-to", relativeTo));
+                .andOptional("relative-to", relativeTo)
+                .andOptional("argument", argument));
     }
 
     public static final class Builder {
@@ -57,6 +61,7 @@ public class AddProviderLoader implements OnlineCommand {
         private String module;
         private String path;
         private String relativeTo;
+        private String argument;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -107,18 +112,29 @@ public class AddProviderLoader implements OnlineCommand {
             return this;
         }
 
+        public Builder argument(String argument) {
+            this.argument = argument;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
         }
 
         public AddProviderLoader build() {
-            if (configuration != null && !configuration.isEmpty() && path != null && !path.isEmpty()) {
-                throw new IllegalArgumentException("Provider-loader must not have configured both path and configuration");
+            boolean isConfiguration = configuration != null && !configuration.isEmpty();
+            boolean isPath = path != null && !path.isEmpty();
+            boolean isArgument = argument != null && !argument.isEmpty();
+
+            if ((isArgument && isPath) || (isArgument && isConfiguration) || (isPath && isConfiguration)) {
+                throw new IllegalArgumentException("There must be most one configuration approach chosen from [ argument, path, configuration ] ");
             }
 
             return new AddProviderLoader(this);
         }
+
+
     }
 
 }
