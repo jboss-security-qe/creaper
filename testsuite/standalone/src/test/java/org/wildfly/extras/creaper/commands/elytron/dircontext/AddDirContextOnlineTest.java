@@ -89,9 +89,6 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .readTimeout(20)
                 .module("org.wildfly.security.elytron-private")
                 .sslContext(TEST_SERVER_SSL_CONTEXT)
-                .credentialReference(new CredentialRef.CredentialRefBuilder()
-                        .clearText("somePassword")
-                        .build())
                 .addProperties(new AddDirContext.Property("property1", "value1"),
                         new AddDirContext.Property("property2", "value2"))
                 .build();
@@ -109,9 +106,23 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "read-timeout", "20");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "module", "org.wildfly.security.elytron-private");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
-        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential-reference.clear-text", "somePassword");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property1", "value1");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property2", "value2");
+    }
+
+    @Test
+    public void addDirContextWithCredentialReference() throws Exception {
+        AddDirContext addDirContext = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
+                .url("localhost")
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .build();
+
+        client.apply(addDirContext);
+        assertTrue("Dir context should be created", ops.exists(TEST_DIR_CONTEXT_ADDRESS));
+
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "credential-reference.clear-text", "somePassword");
     }
 
     @Test(expected = CommandFailedException.class)
@@ -179,6 +190,18 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url("")
                 .build();
         fail("Creating command with empty url should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addDirContext_authenticationContextAndCredentialReference() throws Exception {
+        new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME)
+                .url("localhost")
+                .authenticationContext(TEST_AUTHENTICATION_CONTEXT_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .build();
+        fail("Creating command with both authenticationContext and credentialReference should throw exception");
     }
 
 }

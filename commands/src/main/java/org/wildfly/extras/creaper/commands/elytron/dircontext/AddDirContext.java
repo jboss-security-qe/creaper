@@ -187,6 +187,9 @@ public final class AddDirContext implements OnlineCommand {
             if (url == null || url.isEmpty()) {
                 throw new IllegalArgumentException("url must not be null or empty");
             }
+            if (authenticationContext != null && credentialReference != null) {
+                throw new IllegalArgumentException("Only one of authentication-context and credential-reference can be set.");
+            }
             return new AddDirContext(this);
         }
     }
