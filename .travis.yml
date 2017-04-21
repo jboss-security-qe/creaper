@@ -8,7 +8,7 @@ jdk:
 install: echo LOL
 
 script:
-    - wget --user=guest --password=guest https://ci.wildfly.org/httpAuth/repository/downloadAll/WF_Nightly/.lastSuccessful/artifacts.zip
+    - wget --user=guest --password=guest https://ci.wildfly.org/httpAuth/repository/downloadAll/WF_Nightly/35564:id/artifacts.zip
     - unzip -q artifacts.zip
     - export WILDFLY_DIST_ZIP=$(ls wildfly-*-SNAPSHOT.zip)
     - mvn install:install-file -DgroupId=org.wildfly -DartifactId=wildfly-dist -Dversion=11.0.0.elytron-SNAPSHOT -Dfile=$WILDFLY_DIST_ZIP -DgeneratePom=true -Dpackaging=zip
