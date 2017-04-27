@@ -29,7 +29,7 @@ public class RemoveCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void removeCredentialStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri("cr-store://testUri?create=true")
+                .create(true)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())

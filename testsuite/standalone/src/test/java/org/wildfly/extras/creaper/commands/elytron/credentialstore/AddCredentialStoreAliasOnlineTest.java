@@ -5,10 +5,10 @@ import static org.junit.Assert.fail;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -36,6 +36,11 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
     private static final Address TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2 = TEST_CREDENTIAL_STORE_ADDRESS
             .and("alias", TEST_CREDENTIAL_STORE_ALIAS_NAME2);
 
+    private static final String PATH = "path";
+    private static final String TMP = "tmp";
+    private static final Address TEST_PATH_TMP_ADDRESS = Address.root()
+            .and(PATH, TMP);
+
     @ClassRule
     public static TemporaryFolder tmp = new TemporaryFolder();
 
@@ -50,7 +55,7 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
     @Before
     public void createCredentialStore() throws Exception {
         AddCredentialStore addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
-                .uri("cr-store://test.testCs?create=true")
+                .create(true)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())
@@ -68,6 +73,14 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
         administration.reloadIfRequired();
     }
 
+    @AfterClass
+    public static void removeTmpPath() throws Exception {
+        try (OnlineManagementClient client = createManagementClient()) {
+            Operations operations = new Operations(client);
+            operations.removeIfExists(TEST_PATH_TMP_ADDRESS);
+        }
+    }
+
     @Test
     public void addSimpleCredentialStoreAlias() throws Exception {
         AddCredentialStoreAlias addCredentialStoreAlias
@@ -81,7 +94,6 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
         assertTrue("Credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
     }
 
-    @Ignore("https://issues.jboss.org/browse/JBEAP-6611")
     @Test
     public void addFullCredentialStoreAlias() throws Exception {
         AddCredentialStoreAlias addCredentialStoreAlias
@@ -136,7 +148,6 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
         fail("Credential store alias creapertestcredentialstorealias already exists in configuration, exception should be thrown");
     }
 
-    @Ignore("https://issues.jboss.org/browse/JBEAP-6630")
     @Test
     public void addExistCredentialStoreAliasAllowed() throws Exception {
         AddCredentialStoreAlias addCredentialStoreAlias
@@ -224,10 +235,10 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
         public void apply(OnlineCommandContext ctx) throws Exception {
             Operations ops = new Operations(ctx.client);
             Address pathAddress = Address.root()
-                    .and("path", "tmp");
+                    .and(PATH, TMP);
 
             ops.add(pathAddress, Values.empty()
-                    .and("path", tmp.getRoot().getAbsolutePath()));
+                    .and(PATH, tmp.getRoot().getAbsolutePath()));
         }
     }
 

@@ -1,5 +1,7 @@
 package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -16,19 +18,27 @@ public final class AddCredentialStore implements OnlineCommand {
     private final String providers;
     private final String otherProviders;
     private final String relativeTo;
-    private final String uri;
     private final CredentialRef credentialReference;
+    private final Boolean caseSensitive;
+    private final Boolean create;
+    private final Map<String, String> implementationProperties;
+    private final String location;
+    private final Boolean modifiable;
     private final boolean replaceExisting;
 
     private AddCredentialStore(Builder builder) {
         this.name = builder.name;
-        this.uri = builder.uri;
         this.type = builder.type;
         this.providerName = builder.providerName;
         this.providers = builder.providers;
         this.otherProviders = builder.otherProviders;
         this.relativeTo = builder.relativeTo;
         this.credentialReference = builder.credentialReference;
+        this.caseSensitive = builder.caseSensitive;
+        this.create = builder.create;
+        this.implementationProperties = builder.implementationProperties;
+        this.location = builder.location;
+        this.modifiable = builder.modifiable;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -42,13 +52,17 @@ public final class AddCredentialStore implements OnlineCommand {
         }
 
         ops.add(credentialStoreAddress, Values.empty()
-                .and("uri", uri)
                 .andObject("credential-reference", credentialReference.toValues())
                 .andOptional("type", type)
                 .andOptional("provider-name", providerName)
                 .andOptional("providers", providers)
                 .andOptional("other-providers", otherProviders)
-                .andOptional("relative-to", relativeTo));
+                .andOptional("relative-to", relativeTo)
+                .andOptional("case-sensitive", caseSensitive)
+                .andOptional("create", create)
+                .andOptional("location", location)
+                .andOptional("modifiable", modifiable)
+                .andObjectOptional("implementation-properties", Values.fromMap(implementationProperties)));
     }
 
     public static final class Builder {
@@ -59,20 +73,19 @@ public final class AddCredentialStore implements OnlineCommand {
         private String providers;
         private String otherProviders;
         private String relativeTo;
-        private String uri;
         private CredentialRef credentialReference;
+        private Boolean caseSensitive;
+        private Boolean create;
+        private final Map<String, String> implementationProperties = new HashMap<String, String>();
+        private String location;
+        private Boolean modifiable;
         private boolean replaceExisting;
 
         public Builder(String name) {
             if (name == null || name.isEmpty()) {
-                throw new IllegalArgumentException("Name of the kerberos-security-factory must be specified as non empty value");
+                throw new IllegalArgumentException("Name of the credential-store must be specified as non empty value");
             }
             this.name = name;
-        }
-
-        public Builder uri(String uri) {
-            this.uri = uri;
-            return this;
         }
 
         public Builder type(String type) {
@@ -105,15 +118,43 @@ public final class AddCredentialStore implements OnlineCommand {
             return this;
         }
 
+        public Builder caseSensitive(boolean caseSensitive) {
+            this.caseSensitive = caseSensitive;
+            return this;
+        }
+
+        public Builder create(boolean create) {
+            this.create = create;
+            return this;
+        }
+
+        public Builder addImplementationProperties(String name, String value) {
+            if (name == null || name.isEmpty()) {
+                throw new IllegalArgumentException("Name of the implementation-property of the credential-store must not be null");
+            }
+            if (value == null || value.isEmpty()) {
+                throw new IllegalArgumentException("Value of the implementation-property of the credential-store must not be null");
+            }
+            implementationProperties.put(name, value);
+            return this;
+        }
+
+        public Builder location(String location) {
+            this.location = location;
+            return this;
+        }
+
+        public Builder modifiable(boolean modifiable) {
+            this.modifiable = modifiable;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
         }
 
         public AddCredentialStore build() {
-            if (uri == null || uri.isEmpty()) {
-                throw new IllegalArgumentException("URI of the credential-store must be specified as non empty value");
-            }
             if (credentialReference == null) {
                 throw new IllegalArgumentException("Credential-reference of the credential-store must be specified");
             }
