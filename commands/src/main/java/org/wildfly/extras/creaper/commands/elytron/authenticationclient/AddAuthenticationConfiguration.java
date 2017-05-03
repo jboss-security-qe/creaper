@@ -29,6 +29,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
     private final String protocol;
     private final String realm;
     private final String securityDomain;
+    private final String kerberosSecurityFactory;
     private final boolean replaceExisting;
 
     private AddAuthenticationConfiguration(Builder builder) {
@@ -47,6 +48,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         this.protocol = builder.protocol;
         this.realm = builder.realm;
         this.securityDomain = builder.securityDomain;
+        this.kerberosSecurityFactory = builder.kerberosSecurityFactory;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -82,27 +84,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
                 .andOptional("security-domain", securityDomain)
                 .andOptional("allow-all-mechanisms", allowAllMechanisms)
                 .andOptional("mechanism-properties", mechanismPropertiesNode)
+                .andOptional("kerberos-security-factory", kerberosSecurityFactory)
                 .andObjectOptional("credential-reference", credentialReferenceValues)
                 .andListOptional(String.class, "allow-sasl-mechanisms", allowSaslMechanisms)
                 .andListOptional(String.class, "forbid-sasl-mechanisms", forbidSaslMechanisms));
-    }
-
-    private void addOptional(ModelNode node, String name, String value) {
-        if (value != null && !value.isEmpty()) {
-            node.add(name, value);
-        }
-    }
-
-    private void addOptional(ModelNode node, String name, Boolean value) {
-        if (value != null) {
-            node.add(name, value);
-        }
-    }
-
-    private void addOptional(ModelNode node, String name, Integer value) {
-        if (value != null) {
-            node.add(name, value);
-        }
     }
 
     public static final class Builder {
@@ -122,6 +107,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         private String protocol;
         private String realm;
         private String securityDomain;
+        private String kerberosSecurityFactory;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -219,6 +205,11 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
             return this;
         }
 
+        public Builder kerberosSecurityFactory(String kerberosSecurityFactory) {
+            this.kerberosSecurityFactory = kerberosSecurityFactory;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
@@ -228,10 +219,22 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
             if (allowAllMechanisms != null && (allowSaslMechanisms != null && !allowSaslMechanisms.isEmpty())) {
                 throw new IllegalArgumentException("Only one of allow-all-mechanisms and allow-sasl-mechanisms can be set.");
             }
-            if ((authenticationName != null && anonymous != null)
-                    || (authenticationName != null && securityDomain != null)
-                    || (anonymous != null && securityDomain != null)) {
-                throw new IllegalArgumentException("Only one of authentication-name, anonymous and security-domain can be set.");
+
+            int authCounter = 0;
+            if (authenticationName != null) {
+                authCounter++;
+            }
+            if (anonymous != null) {
+                authCounter++;
+            }
+            if (securityDomain != null) {
+                authCounter++;
+            }
+            if (kerberosSecurityFactory != null) {
+                authCounter++;
+            }
+            if (authCounter > 1) {
+                throw new IllegalArgumentException("Only one of authentication-name, anonymous, security-domain and kerberos-security-factory can be set.");
             }
             return new AddAuthenticationConfiguration(this);
         }

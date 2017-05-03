@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.credfactory.AddKerberosSecurityFactory;
 import org.wildfly.extras.creaper.commands.elytron.domain.AddSecurityDomain;
 import org.wildfly.extras.creaper.commands.elytron.realm.AddFilesystemRealm;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -35,12 +36,22 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
             .path("/path/to/filesystem")
             .build();
 
+    private static final String TEST_KRB_FACTORY_NAME = "CreaperTestFilesystemRealm";
+    private static final Address TEST_KRB_FACTORY_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("kerberos-security-factory", TEST_KRB_FACTORY_NAME);
+    private final AddKerberosSecurityFactory addKerberosSecurityFactory
+            = new AddKerberosSecurityFactory.Builder(TEST_KRB_FACTORY_NAME)
+            .principal("somePrincipal")
+            .path("/some/path")
+            .build();
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS);
         ops.removeIfExists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS2);
         ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS);
         ops.removeIfExists(TEST_FILESYSTEM_REALM_ADDRESS);
+        ops.removeIfExists(TEST_KRB_FACTORY_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -192,6 +203,26 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
         checkAttribute("security-domain", TEST_SECURITY_DOMAIN_NAME);
     }
 
+    @Test
+    public void addAuthenticationConfiguration_kerberosSecurityFactory() throws Exception {
+        client.apply(addFilesystemRealm);
+        client.apply(addKerberosSecurityFactory);
+
+        AddAuthenticationConfiguration addAuthenticationConfiguration
+                = new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .kerberosSecurityFactory(TEST_KRB_FACTORY_NAME)
+                .build();
+        client.apply(addAuthenticationConfiguration);
+
+        assertTrue("Authentication Configuration should be created",
+                ops.exists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS));
+
+        checkAttribute("kerberos-security-factory", TEST_KRB_FACTORY_NAME);
+    }
+
     @Test(expected = CommandFailedException.class)
     public void addExistAuthenticationConfigurationNotAllowed() throws Exception {
         AddAuthenticationConfiguration addAuthenticationConfiguration
@@ -312,6 +343,42 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                 .securityDomain("someSecurityDomain")
                 .build();
         fail("Creating command with both anonymous and securityDomain should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addAuthenticationConfiguration_anonymousAndKerberosSecurityFactory() throws Exception {
+        new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .anonymous(true)
+                .kerberosSecurityFactory("someKerberosSecurityFactory")
+                .build();
+        fail("Creating command with both anonymous and kerberosSecurityFactory should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addAuthenticationConfiguration_authenticationNameAndKerberosSecurityFactory() throws Exception {
+        new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .authenticationName("someAuthenticationName")
+                .kerberosSecurityFactory("someKerberosSecurityFactory")
+                .build();
+        fail("Creating command with both authenticationName and kerberosSecurityFactory should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addAuthenticationConfiguration_securityDomainAndKerberosSecurityFactory() throws Exception {
+        new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .securityDomain("someSecurityDomain")
+                .kerberosSecurityFactory("someKerberosSecurityFactory")
+                .build();
+        fail("Creating command with both securityDomain and kerberosSecurityFactory should throw exception");
     }
 
     private void checkAttribute(String attribute, String expectedValue) throws IOException {
