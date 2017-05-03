@@ -103,6 +103,9 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
 
         @Override
         public AddServerSSLContext build() {
+            if (keyManagers == null || keyManagers.isEmpty()) {
+                throw new IllegalArgumentException("Key-manager must be specified as non empty value");
+            }
             return new AddServerSSLContext(this);
         }
 

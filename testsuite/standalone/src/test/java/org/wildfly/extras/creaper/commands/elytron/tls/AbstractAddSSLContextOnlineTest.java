@@ -14,7 +14,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnlineTest {
 
-    private static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
+    protected static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
     private static final String TEST_KEY_STORE_NAME2 = "CreaperTestKeyStore2";
     private static final Address TEST_KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME);
     private static final Address TEST_KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store", TEST_KEY_STORE_NAME2);
