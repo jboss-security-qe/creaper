@@ -25,6 +25,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
     private final Boolean server;
     private final Boolean debug;
     private final Boolean obtainKerberosTicket;
+    private final Boolean wrapGssCredential;
     private final Map<String, String> options;
     private final boolean replaceExisting;
 
@@ -40,6 +41,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         this.server = builder.server;
         this.debug = builder.debug;
         this.obtainKerberosTicket = builder.obtainKerberosTicket;
+        this.wrapGssCredential = builder.wrapGssCredential;
         this.options = builder.options;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
@@ -66,6 +68,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
             .andOptional("server", server)
             .andOptional("debug", debug)
             .andOptional("obtain-kerberos-ticket", obtainKerberosTicket)
+            .andOptional("wrap-gss-credential", wrapGssCredential)
             .andObjectOptional("options", Values.fromMap(options)));
     }
 
@@ -82,6 +85,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         private Boolean server;
         private Boolean debug;
         private Boolean obtainKerberosTicket;
+        private Boolean wrapGssCredential;
         private Map<String, String> options = new HashMap<String, String>();
         private boolean replaceExisting;
 
@@ -143,6 +147,11 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
 
         public Builder obtainKerberosTicket(Boolean obtainKerberosTicket) {
             this.obtainKerberosTicket = obtainKerberosTicket;
+            return this;
+        }
+
+        public Builder wrapGssCredential(Boolean wrapGssCredential) {
+            this.wrapGssCredential = wrapGssCredential;
             return this;
         }
 

@@ -117,6 +117,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .debug(true)
                 .server(false)
                 .obtainKerberosTicket(true)
+                .wrapGssCredential(true)
                 .addOption("a", "b")
                 .addOption("debug", "false")
                 .build();
@@ -133,6 +134,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         checkAttribute(KRB_ADDRESS, "debug", "true");
         checkAttribute(KRB_ADDRESS, "server", "false");
         checkAttribute(KRB_ADDRESS, "obtain-kerberos-ticket", "true");
+        checkAttribute(KRB_ADDRESS, "wrap-gss-credential", "true");
         checkAttributeObject(KRB_ADDRESS, "options", "debug", "false");
     }
 
