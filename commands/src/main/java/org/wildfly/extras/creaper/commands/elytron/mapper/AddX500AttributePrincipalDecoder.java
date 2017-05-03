@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.mapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -14,21 +15,25 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
 
     private final String name;
     private final String oid;
+    private final String attributeName;
     private final String joiner;
     private final Integer startSegment;
     private final Integer maximumSegments;
     private final Boolean reverse;
     private final List<String> requiredOids;
+    private final List<String> requiredAttributes;
     private final boolean replaceExisting;
 
     private AddX500AttributePrincipalDecoder(Builder builder) {
         this.name = builder.name;
         this.oid = builder.oid;
+        this.attributeName = builder.attributeName;
         this.joiner = builder.joiner;
         this.startSegment = builder.startSegment;
         this.maximumSegments = builder.maximumSegments;
         this.reverse = builder.reverse;
         this.requiredOids = builder.requiredOids;
+        this.requiredAttributes = builder.requiredAttributes;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -43,12 +48,14 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
         }
 
         ops.add(x500AttributePrincipalDecoderAddress, Values.empty()
-                .and("oid", oid)
+                .andOptional("oid", oid)
+                .andOptional("attribute-name", attributeName)
                 .andOptional("joiner", joiner)
                 .andOptional("start-segment", startSegment)
                 .andOptional("maximum-segments", maximumSegments)
                 .andOptional("reverse", reverse)
-                .andListOptional(String.class, "required-oids", requiredOids));
+                .andListOptional(String.class, "required-oids", requiredOids)
+                .andListOptional(String.class, "required-attributes", requiredAttributes));
 
     }
 
@@ -56,11 +63,13 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
 
         private final String name;
         private String oid;
+        private String attributeName;
         private String joiner;
         private Integer startSegment;
         private Integer maximumSegments;
         private Boolean reverse;
         private List<String> requiredOids;
+        private List<String> requiredAttributes;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -75,6 +84,11 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
 
         public Builder oid(String oid) {
             this.oid = oid;
+            return this;
+        }
+
+        public Builder attributeName(String attributeName) {
+            this.attributeName = attributeName;
             return this;
         }
 
@@ -110,14 +124,29 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
             return this;
         }
 
+        public Builder addRequiredAttributes(String... requiredAttributes) {
+            if (requiredAttributes == null) {
+                throw new IllegalArgumentException("Required attributes added to x500-attribute-principal-decoder must not be null");
+            }
+            if (this.requiredAttributes == null) {
+                this.requiredAttributes = new ArrayList<String>();
+            }
+
+            Collections.addAll(this.requiredAttributes, requiredAttributes);
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
         }
 
         public AddX500AttributePrincipalDecoder build() {
-            if (oid == null || oid.isEmpty()) {
-                throw new IllegalArgumentException("Oid must not be null and must have a minimum length of 1 character");
+            boolean isOidEmpty = oid == null || oid.isEmpty();
+            boolean isAttributeNameEmpty = attributeName == null || attributeName.isEmpty();
+
+            if ((isOidEmpty && isAttributeNameEmpty) || (!isOidEmpty && !isAttributeNameEmpty)) {
+                throw new IllegalArgumentException("Exactly one of [oid, attribute-name] must be configured.");
             }
 
             return new AddX500AttributePrincipalDecoder(this);

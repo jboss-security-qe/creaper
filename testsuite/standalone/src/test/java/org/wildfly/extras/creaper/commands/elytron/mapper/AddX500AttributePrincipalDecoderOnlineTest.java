@@ -1,8 +1,12 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -10,9 +14,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class AddX500AttributePrincipalDecoderOnlineTest extends AbstractElytronOnlineTest {
@@ -145,17 +146,17 @@ public class AddX500AttributePrincipalDecoderOnlineTest extends AbstractElytronO
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addX500AttributePrincipalDecoder_nullOid() throws Exception {
+    public void addX500AttributePrincipalDecoder_NoOidAttributeName() throws Exception {
         new AddX500AttributePrincipalDecoder.Builder(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_NAME)
-                .oid(null)
                 .build();
-        fail("Creating command with null oid should throw exception");
+        fail("Creating command with none oid or attribute-name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addX500AttributePrincipalDecoder_emptyOid() throws Exception {
+    public void addX500AttributePrincipalDecoder_bothOidAttributeName() throws Exception {
         new AddX500AttributePrincipalDecoder.Builder(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_NAME)
-                .oid("")
+                .oid("2.5.4.3")
+                .attributeName("dc")
                 .build();
         fail("Creating command with empty oid should throw exception");
     }
