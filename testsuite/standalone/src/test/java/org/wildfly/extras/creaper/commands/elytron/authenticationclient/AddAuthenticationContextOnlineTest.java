@@ -4,12 +4,15 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyManager;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyStore;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddServerSSLContext;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -32,12 +35,24 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
     private static final Address TEST_SERVER_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS
             .and("server-ssl-context", TEST_SERVER_SSL_CONTEXT_NAME);
 
+    private static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
+    private static final Address TEST_KEY_STORE_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-store", TEST_KEY_STORE_NAME);
+    private static final String TEST_KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
+    private static final String TEST_KEY_PASSWORD = "password";
+    private static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
+    private static final Address TEST_KEY_MNGR_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-managers", TEST_KEY_MNGR_NAME);
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_AUTHENTICATION_CONTEXT_ADDRESS);
         ops.removeIfExists(TEST_AUTHENTICATION_CONTEXT_ADDRESS2);
         ops.removeIfExists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS);
         ops.removeIfExists(TEST_SERVER_SSL_CONTEXT_ADDRESS);
+        ops.removeIfExists(TEST_KEY_MNGR_NAME_ADDRESS);
+        ops.removeIfExists(TEST_KEY_STORE_NAME_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -85,7 +100,23 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
                 .build();
         client.apply(addAuthenticationContext2);
 
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
+                .build();
+        client.apply(addKeyStore);
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
+        client.apply(addKeyManager);
+
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT_NAME)
+                .keyManagers(TEST_KEY_MNGR_NAME)
                 .build();
         client.apply(addServerSSLContext);
 
@@ -105,7 +136,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
                         .matchProtocol("someProtocol1")
                         .matchPurpose("somePurpose1")
                         .matchUrn("someUrn1")
-                        .matchUser("someUser1")
                         .build(),
                         new AddAuthenticationContext.MatchRuleBuilder()
                         .authenticationConfiguration(TEST_AUTHENTICATION_CONFIGURATION_NAME)
@@ -114,7 +144,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
                         .matchAbstractTypeAuthority("someAbstractTypeAuthority2")
                         .matchHost("someHost2")
                         .matchLocalSecurityDomain("someLocalSecurityDomain2")
-                        .matchNoUser(false)
                         .matchPath("somePath2")
                         .matchPort(12346)
                         .matchProtocol("someProtocol2")
@@ -140,14 +169,12 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
         checkAttribute("match-rules[0].match-protocol", "someProtocol1");
         checkAttribute("match-rules[0].match-purpose", "somePurpose1");
         checkAttribute("match-rules[0].match-urn", "someUrn1");
-        checkAttribute("match-rules[0].match-user", "someUser1");
         checkAttribute("match-rules[1].authentication-configuration", TEST_AUTHENTICATION_CONFIGURATION_NAME);
         checkAttribute("match-rules[1].ssl-context", TEST_SERVER_SSL_CONTEXT_NAME);
         checkAttribute("match-rules[1].match-abstract-type", "someAbstractType2");
         checkAttribute("match-rules[1].match-abstract-type-authority", "someAbstractTypeAuthority2");
         checkAttribute("match-rules[1].match-host", "someHost2");
         checkAttribute("match-rules[1].match-local-security-domain", "someLocalSecurityDomain2");
-        checkAttribute("match-rules[1].match-no-user", "false");
         checkAttribute("match-rules[1].match-path", "somePath2");
         checkAttribute("match-rules[1].match-port", "12346");
         checkAttribute("match-rules[1].match-protocol", "someProtocol2");

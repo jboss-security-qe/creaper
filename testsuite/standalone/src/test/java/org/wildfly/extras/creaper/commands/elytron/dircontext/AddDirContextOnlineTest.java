@@ -8,11 +8,13 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.authenticationclient.AddAuthenticationContext;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyManager;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyStore;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddServerSSLContext;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
-import org.wildfly.extras.creaper.commands.elytron.authenticationclient.AddAuthenticationContext;
 
 @RunWith(Arquillian.class)
 public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
@@ -32,11 +34,23 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TEST_AUTHENTICATION_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS
             .and("authentication-context", TEST_AUTHENTICATION_CONTEXT_NAME);
 
+    private static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
+    private static final Address TEST_KEY_STORE_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-store", TEST_KEY_STORE_NAME);
+    private static final String TEST_KEY_STORE_TYPE = "JKS";
+    private static final String TEST_KEY_STORE_PASSWORD = "password";
+    private static final String TEST_KEY_PASSWORD = "password";
+    private static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
+    private static final Address TEST_KEY_MNGR_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-managers", TEST_KEY_MNGR_NAME);
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_DIR_CONTEXT_ADDRESS);
         ops.removeIfExists(TEST_DIR_CONTEXT_ADDRESS2);
         ops.removeIfExists(TEST_SERVER_SSL_CONTEXT_ADDRESS);
+        ops.removeIfExists(TEST_KEY_MNGR_NAME_ADDRESS);
+        ops.removeIfExists(TEST_KEY_STORE_NAME_ADDRESS);
         ops.removeIfExists(TEST_AUTHENTICATION_CONTEXT_ADDRESS);
         administration.reloadIfRequired();
     }
@@ -70,7 +84,22 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullDirContext() throws Exception {
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type(TEST_KEY_STORE_TYPE)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_STORE_PASSWORD)
+                        .build())
+                .build();
+        client.apply(addKeyStore);
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
+        client.apply(addKeyManager);
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT)
+                .keyManagers(TEST_KEY_MNGR_NAME)
                 .build();
         client.apply(addServerSSLContext);
         AddAuthenticationContext addAuthenticationContext

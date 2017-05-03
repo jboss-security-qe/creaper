@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.http;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -33,7 +34,7 @@ public final class AddAggregateHttpServerMechanismFactory implements OnlineComma
         }
 
         ops.add(factoryAddress, Values.empty()
-                .andList(String.class, "http-server-factories", httpServerMechanismFactories));
+                .andList(String.class, "http-server-mechanism-factories", httpServerMechanismFactories));
     }
 
     public static final class Builder {

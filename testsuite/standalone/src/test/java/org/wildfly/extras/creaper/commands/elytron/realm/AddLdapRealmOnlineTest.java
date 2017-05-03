@@ -4,6 +4,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -98,10 +99,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                         .addAttributeMappings(new AddLdapRealm.AttributeMappingBuilder()
                                 .from("someAttributeFrom")
                                 .to("someAttributeTo")
-                                .filter("someAttributeFilter")
-                                .filterBaseDn("someAttributeFilterBaseDn")
                                 .extractRdn("someAttributeAsRdn")
-                                .searchRecursive(true)
                                 .roleRecursion(0)
                                 .roleRecursionName("someRoleRecursionName1")
                                 .reference("someReference1")
@@ -115,7 +113,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
                                 .searchRecursive(false)
                                 .roleRecursion(5)
                                 .roleRecursionName("someRoleRecursionName2")
-                                .reference("someReference2")
                                 .build())
                         .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
                                 .from("someUserPasswordFrom")
@@ -162,10 +159,7 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
 
         checkAttribute("identity-mapping.attribute-mapping[0].from", "someAttributeFrom");
         checkAttribute("identity-mapping.attribute-mapping[0].to", "someAttributeTo");
-        checkAttribute("identity-mapping.attribute-mapping[0].filter", "someAttributeFilter");
-        checkAttribute("identity-mapping.attribute-mapping[0].filter-base-dn", "someAttributeFilterBaseDn");
         checkAttribute("identity-mapping.attribute-mapping[0].extract-rdn", "someAttributeAsRdn");
-        checkAttribute("identity-mapping.attribute-mapping[0].search-recursive", "true");
         checkAttribute("identity-mapping.attribute-mapping[0].role-recursion", "0");
         checkAttribute("identity-mapping.attribute-mapping[0].role-recursion-name", "someRoleRecursionName1");
         checkAttribute("identity-mapping.attribute-mapping[0].reference", "someReference1");
@@ -177,7 +171,6 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute("identity-mapping.attribute-mapping[1].search-recursive", "false");
         checkAttribute("identity-mapping.attribute-mapping[1].role-recursion", "5");
         checkAttribute("identity-mapping.attribute-mapping[1].role-recursion-name", "someRoleRecursionName2");
-        checkAttribute("identity-mapping.attribute-mapping[1].reference", "someReference2");
 
         checkAttribute("identity-mapping.user-password-mapper.from", "someUserPasswordFrom");
         checkAttribute("identity-mapping.user-password-mapper.writable", "true");

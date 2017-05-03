@@ -115,11 +115,11 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
         assertTrue("Aggregate http server mechanism factory should be created",
                 ops.exists(TEST_SERVER_MECHANISM_FACTORY_ADDRESS));
 
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-factories[0]",
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-mechanism-factories[0]",
                 TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME);
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-factories[1]",
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-mechanism-factories[1]",
                 TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME2);
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-factories[2]",
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-mechanism-factories[2]",
                 TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME3);
     }
 
@@ -173,7 +173,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
         assertTrue("Aggregate http server mechanism factory should be created",
                 ops.exists(TEST_SERVER_MECHANISM_FACTORY_ADDRESS));
         // check whether it was really rewritten
-        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-factories[1]",
+        checkAttribute(TEST_SERVER_MECHANISM_FACTORY_ADDRESS, "http-server-mechanism-factories[1]",
                 TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME3);
     }
 
@@ -200,7 +200,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
         new AddAggregateHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .addHttpServerMechanismFactories(null)
                 .build();
-        fail("Creating command with null http-server-factories should throw exception");
+        fail("Creating command with null http-server-mechanism-factories should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -208,7 +208,7 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
         new AddAggregateHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .addHttpServerMechanismFactories("")
                 .build();
-        fail("Creating command with empty http-server-factories should throw exception");
+        fail("Creating command with empty http-server-mechanism-factories should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -216,6 +216,6 @@ public class AddAggregateHttpServerMechanismFactoryOnlineTest extends AbstractEl
         new AddAggregateHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .addHttpServerMechanismFactories(TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME)
                 .build();
-        fail("Creating command with only one http-server-factories should throw exception");
+        fail("Creating command with only one http-server-mechanism-factories should throw exception");
     }
 }
