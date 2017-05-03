@@ -5,7 +5,9 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
 import javax.net.ssl.TrustManagerFactory;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -89,7 +91,6 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addSimpleTrustManager() throws Exception {
         AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         assertFalse("The trust manager should not exist", ops.exists(TRUST_MNGR_ADDRESS));
@@ -100,11 +101,9 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addTwoSimpleTrustManagers() throws Exception {
         AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         AddTrustManager addTrustManager2 = new AddTrustManager.Builder(TRUST_MNGR_NAME2)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME2)
                 .build();
 
@@ -121,11 +120,9 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = CommandFailedException.class)
     public void addDuplicateTrustManagersNotAllowed() throws Exception {
         AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         AddTrustManager addTrustManager2 = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
 
@@ -139,11 +136,9 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addDuplicateTrustManagerAllowed() throws Exception {
         AddTrustManager addTrustManager = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .build();
         AddTrustManager addTrustManager2 = new AddTrustManager.Builder(TRUST_MNGR_NAME)
-                .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .replaceExisting()
                 .build();
@@ -179,7 +174,6 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addTrustManager_nullName() throws Exception {
         new AddTrustManager.Builder(null)
-            .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
             .build();
         fail("Creating command with null trust manager name should throw exception");
     }
@@ -187,25 +181,8 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addTrustManager_emptyName() throws Exception {
         new AddTrustManager.Builder("")
-            .algorithm(TEST_TRUST_MANAGER_ALGORITHM)
             .build();
         fail("Creating command with empty trust manager name should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addTrustManager_nullAlgorithm() throws Exception {
-        new AddTrustManager.Builder(TRUST_MNGR_NAME)
-            .algorithm(null)
-            .build();
-        fail("Creating command with null trust manager algorithm should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addTrustManager_emptyAlgorithm() throws Exception {
-        new AddTrustManager.Builder(TRUST_MNGR_NAME)
-            .algorithm("")
-            .build();
-        fail("Creating command with empty trust manager algorithm should throw exception");
     }
 
     private void checkAttribute(String attribute, String expectedValue) throws IOException {

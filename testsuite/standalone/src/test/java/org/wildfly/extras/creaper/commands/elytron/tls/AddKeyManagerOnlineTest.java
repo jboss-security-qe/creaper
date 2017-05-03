@@ -81,7 +81,6 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addSimpleKeyManager() throws Exception {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
@@ -95,14 +94,12 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addTwoSimpleKeyManagers() throws Exception {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME2)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME2)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
@@ -122,14 +119,12 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = CommandFailedException.class)
     public void addDuplicateKeyManagersNotAllowed() throws Exception {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
@@ -146,14 +141,12 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test
     public void addDuplicateKeyManagerAllowed() throws Exception {
         AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_KEY_PASSWORD)
                         .build())
                 .build();
         AddKeyManager addKeyManager2 = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-                .algorithm(TEST_KEY_MANAGER_ALGORITHM)
                 .keyStore(TEST_KEY_STORE_NAME)
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("test-Password")
@@ -193,7 +186,6 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullName() throws Exception {
         new AddKeyManager.Builder(null)
-            .algorithm(TEST_KEY_MANAGER_ALGORITHM)
             .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
@@ -204,7 +196,6 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_emptyName() throws Exception {
         new AddKeyManager.Builder("")
-            .algorithm(TEST_KEY_MANAGER_ALGORITHM)
             .credentialReference(new CredentialRef.CredentialRefBuilder()
                     .clearText(TEST_KEY_PASSWORD)
                     .build())
@@ -213,31 +204,8 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addKeyManager_nullAlgorithm() throws Exception {
-        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-            .algorithm(null)
-            .credentialReference(new CredentialRef.CredentialRefBuilder()
-                    .clearText(TEST_KEY_PASSWORD)
-                    .build())
-            .build();
-        fail("Creating command with null key manager algorithm should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addKeyManager_emptyAlgorithm() throws Exception {
-        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-            .algorithm("")
-            .credentialReference(new CredentialRef.CredentialRefBuilder()
-                    .clearText(TEST_KEY_PASSWORD)
-                    .build())
-            .build();
-        fail("Creating command with empty key manager algorithm should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullKeyPassword() throws Exception {
         new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-            .algorithm(TEST_KEY_MANAGER_ALGORITHM)
             .credentialReference(null)
             .build();
         fail("Creating command with null key password name should throw exception");

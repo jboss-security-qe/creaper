@@ -49,9 +49,9 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
         ops.add(keyManagerAddress, Values.empty()
                 .and("name", name)
-                .and("algorithm", algorithm)
                 .and("key-store", keyStore)
                 .andObject("credential-reference", credentialReference.toValues())
+                .andOptional("algorithm", algorithm)
                 .andOptional("alias-filter", aliasFilter)
                 .andOptional("provider-name", providerName)
                 .andOptional("providers", providers));
@@ -126,9 +126,6 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
         }
 
         public AddKeyManager build() {
-            if (algorithm == null || algorithm.isEmpty()) {
-                throw new IllegalArgumentException("Algorithm of the key-manager must be specified as non empty value");
-            }
             if (credentialReference == null) {
                 throw new IllegalArgumentException("Credential reference of the key-manager must be specified");
             }

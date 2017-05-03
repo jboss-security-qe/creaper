@@ -268,9 +268,8 @@ public class CreateServerSSLContext implements OnlineCommand {
         private Boolean trustStoreRequired;
         private String trustStoreProviders;
         private String trustManagerProviders;
-
         // Multiple usage
-        private String algorithm = "PKIX";  // keystore manager, truststore manager
+        private String algorithm;  // keystore manager, truststore manager
 
 //        TODO
 //        private boolean replaceExisting;

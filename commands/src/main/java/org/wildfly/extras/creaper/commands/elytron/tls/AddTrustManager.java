@@ -2,6 +2,7 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
 import org.wildfly.extras.creaper.core.offline.OfflineCommand;
@@ -46,8 +47,8 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
 
         ops.add(trustManagerAddress, Values.empty()
                 .and("name", name)
-                .and("algorithm", algorithm)
                 .and("key-store", keyStore)
+                .andOptional("algorithm", algorithm)
                 .andOptional("alias-filter", aliasFilter)
                 .andOptional("provider-name", providerName)
                 .andOptional("providers", providers)
@@ -125,9 +126,6 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
         }
 
         public AddTrustManager build() {
-            if (algorithm == null || algorithm.isEmpty()) {
-                throw new IllegalArgumentException("Algorithm of the trust-manager must be specified as non empty value");
-            }
             return new AddTrustManager(this);
         }
     }
