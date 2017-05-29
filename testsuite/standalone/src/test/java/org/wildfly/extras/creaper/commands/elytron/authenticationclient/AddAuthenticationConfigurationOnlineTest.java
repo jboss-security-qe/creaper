@@ -4,8 +4,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -120,7 +122,8 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                 .port(12345)
                 .realm("someRealm")
                 .allowAllMechanisms(true)
-                .addForbidSaslMechanisms("someSaslMechanism1", "someSaslMechanism2")
+                // JBEAP-10698
+                // .addForbidSaslMechanisms("someSaslMechanism1", "someSaslMechanism2")
                 .build();
         client.apply(addAuthenticationConfiguration);
 
@@ -135,8 +138,8 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
         checkAttribute("port", "12345");
         checkAttribute("realm", "someRealm");
         checkAttribute("allow-all-mechanisms", "true");
-        checkAttribute("forbid-sasl-mechanisms[0]", "someSaslMechanism1");
-        checkAttribute("forbid-sasl-mechanisms[1]", "someSaslMechanism2");
+//        checkAttribute("forbid-sasl-mechanisms[0]", "someSaslMechanism1");
+//        checkAttribute("forbid-sasl-mechanisms[1]", "someSaslMechanism2");
         checkAttribute("credential-reference.clear-text", "somePassword");
         checkAttribute("mechanism-properties.property1", "value1");
         checkAttribute("mechanism-properties.property2", "value2");
@@ -204,6 +207,7 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
     }
 
     @Test
+    @Ignore("JBEAP-10653")
     public void addAuthenticationConfiguration_kerberosSecurityFactory() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addKerberosSecurityFactory);
