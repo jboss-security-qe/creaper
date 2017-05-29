@@ -1,7 +1,5 @@
 sslContextAttrs = ['name': atrName]
 if (atrCipherSuiteFilter != null) sslContextAttrs['cipher-suite-filter'] = atrCipherSuiteFilter
-if (atrMaximumSessionCacheSize != null) sslContextAttrs['maximum-session-cache-size'] = atrMaximumSessionCacheSize
-if (atrSessionTimeout != null) sslContextAttrs['session-timeout'] = atrSessionTimeout
 if (atrKeyManager != null) sslContextAttrs['key-manager'] = atrKeyManager
 if (atrTrustManager != null) sslContextAttrs['trust-manager'] = atrTrustManager
 if (atrProtocols != null) sslContextAttrs['protocols'] = atrProtocols

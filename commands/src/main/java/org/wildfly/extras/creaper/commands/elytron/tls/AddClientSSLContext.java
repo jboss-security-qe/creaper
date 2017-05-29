@@ -26,8 +26,6 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
 
         ops.add(clientSSLContextAddress, Values.empty()
                 .andOptional("cipher-suite-filter", cipherSuiteFilter)
-                .andOptional("maximum-session-cache-size", maximumSessionCacheSize)
-                .andOptional("session-timeout", sessionTimeout)
                 .andOptional("key-manager", keyManager)
                 .andOptional("trust-manager", trustManager)
                 .andListOptional(String.class, "protocols", protocols));
@@ -39,8 +37,6 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
                 .parameter("atrCipherSuiteFilter", cipherSuiteFilter)
-                .parameter("atrMaximumSessionCacheSize", maximumSessionCacheSize)
-                .parameter("atrSessionTimeout", sessionTimeout)
                 .parameter("atrKeyManager", keyManager)
                 .parameter("atrTrustManager", trustManager)
                 .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
