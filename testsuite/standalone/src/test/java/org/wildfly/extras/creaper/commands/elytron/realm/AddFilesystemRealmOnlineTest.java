@@ -62,6 +62,7 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
                 .path("filesystem")
                 .relativeTo("jboss.server.config.dir")
                 .levels(5)
+                .encoded(false)
                 .build();
 
         client.apply(addFilesystemRealm);
@@ -71,6 +72,7 @@ public class AddFilesystemRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "path", "filesystem");
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "relative-to", "jboss.server.config.dir");
         checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "levels", "5");
+        checkAttribute(TEST_FILESYSTEM_REALM_ADDRESS, "encoded", "false");
     }
 
     @Test(expected = CommandFailedException.class)

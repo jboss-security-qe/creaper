@@ -13,6 +13,7 @@ public final class AddFilesystemRealm implements OnlineCommand {
     private final Integer levels;
     private final String path;
     private final String relativeTo;
+    private final Boolean encoded;
     private final boolean replaceExisting;
 
     private AddFilesystemRealm(Builder builder) {
@@ -20,6 +21,7 @@ public final class AddFilesystemRealm implements OnlineCommand {
         this.levels = builder.levels;
         this.path = builder.path;
         this.relativeTo = builder.relativeTo;
+        this.encoded = builder.encoded;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -34,6 +36,7 @@ public final class AddFilesystemRealm implements OnlineCommand {
 
         ops.add(securityRealmAddress, Values.empty()
                 .and("path", path)
+                .andOptional("encoded", encoded)
                 .andOptional("levels", levels)
                 .andOptional("relative-to", relativeTo));
 
@@ -47,6 +50,7 @@ public final class AddFilesystemRealm implements OnlineCommand {
         private Integer levels;
         private String path;
         private String relativeTo;
+        private Boolean encoded;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -71,6 +75,11 @@ public final class AddFilesystemRealm implements OnlineCommand {
 
         public Builder relativeTo(String relativeTo) {
             this.relativeTo = relativeTo;
+            return this;
+        }
+
+        public Builder encoded(Boolean encoded) {
+            this.encoded = encoded;
             return this;
         }
 
