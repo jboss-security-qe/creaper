@@ -19,23 +19,23 @@ def keyManagerDefinition = {
 
 def isExistingTls = elytronSubsystem.'tls'.any { it.name() == 'tls' }
 if (! isExistingTls) {
-    elytronSubsystem.appendNode { 'tls' { 'key-managers' keyManagerDefinition } }
+    elytronSubsystem.appendNode { 'tls' { 'key-manager' keyManagerDefinition } }
     return
 }
 
-def isExistingKeyManagers = elytronSubsystem.'tls'.'key-managers'.any { it.name() == 'key-managers' }
-if (! isExistingKeyManagers) {
-    elytronSubsystem.'tls'.appendNode { 'key-managers' keyManagerDefinition }
+def isExistingKeyManager = elytronSubsystem.'tls'.'key-manager'.any { it.name() == 'key-manager' }
+if (! isExistingKeyManager) {
+    elytronSubsystem.'tls'.appendNode { 'key-manager' keyManagerDefinition }
     return
 }
 
-def existingKeyManager = elytronSubsystem.'tls'.'key-managers'.'key-manager'.find { it.'@name' == atrName }
+def existingKeyManager = elytronSubsystem.'tls'.'key-manager'.'key-manager'.find { it.'@name' == atrName }
 if (existingKeyManager && !atrReplaceExisting) {
     throw new IllegalStateException("KeyManager with name $atrName already exists in configuration. Use different name.")
 } else {
     if (existingKeyManager) {
         existingKeyManager.replaceNode keyManagerDefinition
     } else {
-        elytronSubsystem.'tls'.'key-managers'.appendNode keyManagerDefinition
+        elytronSubsystem.'tls'.'key-manager'.appendNode keyManagerDefinition
     }
 }

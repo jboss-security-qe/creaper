@@ -22,23 +22,23 @@ def trustManagerDefinition = {
 
 def isExistingTls = elytronSubsystem.'tls'.any { it.name() == 'tls' }
 if (! isExistingTls) {
-    elytronSubsystem.appendNode { 'tls' { 'trust-managers' trustManagerDefinition } }
+    elytronSubsystem.appendNode { 'tls' { 'trust-manager' trustManagerDefinition } }
     return
 }
 
-def isExistingTrustManagers = elytronSubsystem.'tls'.'trust-managers'.any { it.name() == 'trust-managers' }
-if (! isExistingTrustManagers) {
-    elytronSubsystem.'tls'.appendNode { 'trust-managers' trustManagerDefinition }
+def isExistingTrustManager = elytronSubsystem.'tls'.'trust-manager'.any { it.name() == 'trust-manager' }
+if (! isExistingTrustManager) {
+    elytronSubsystem.'tls'.appendNode { 'trust-manager' trustManagerDefinition }
     return
 }
 
-def existingTrustManager = elytronSubsystem.'tls'.'trust-managers'.'trust-manager'.find { it.'@name' == atrName }
+def existingTrustManager = elytronSubsystem.'tls'.'trust-manager'.'trust-manager'.find { it.'@name' == atrName }
 if (existingTrustManager && !atrReplaceExisting) {
     throw new IllegalStateException("TrustManager with name $atrName already exists in configuration. Use different name.")
 } else {
     if (existingTrustManager) {
         existingTrustManager.replaceNode trustManagerDefinition
     } else {
-        elytronSubsystem.'tls'.'trust-managers'.appendNode trustManagerDefinition
+        elytronSubsystem.'tls'.'trust-manager'.appendNode trustManagerDefinition
     }
 }

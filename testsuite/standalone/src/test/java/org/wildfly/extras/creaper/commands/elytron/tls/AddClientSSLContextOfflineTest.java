@@ -98,7 +98,7 @@ public class AddClientSSLContextOfflineTest {
             + "                <client-ssl-contexts>\n"
             + "                    <client-ssl-context name=\"clientSslContext\" cipher-suite-filter=\"ALL\" "
             + "                                        maximum-session-cache-size=\"40\" session-timeout=\"30\" "
-            + "                                        key-managers=\"keyManagers\" trust-managers=\"trustManagers\""
+            + "                                        key-manager=\"keyManager\" trust-manager=\"trustManager\""
             + "                                        protocols=\"TLSv1.2 TLSv1.1\" provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
             + "                </client-ssl-contexts>\n"
             + "            </tls>\n"
@@ -239,8 +239,8 @@ public class AddClientSSLContextOfflineTest {
                 .cipherSuiteFilter("ALL")
                 .maximumSessionCacheSize(40)
                 .sessionTimeout(30)
-                .keyManagers("keyManagers")
-                .trustManagers("trustManagers")
+                .keyManager("keyManager")
+                .trustManager("trustManager")
                 .protocols("TLSv1.2", "TLSv1.1")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")

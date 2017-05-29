@@ -39,7 +39,7 @@ public final class AddTrustManager implements OnlineCommand, OfflineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address trustManagerAddress = Address.subsystem("elytron").and("trust-managers", name);
+        Address trustManagerAddress = Address.subsystem("elytron").and("trust-manager", name);
         if (replaceExisting) {
             ops.removeIfExists(trustManagerAddress);
             new Administration(ctx.client).reloadIfRequired();

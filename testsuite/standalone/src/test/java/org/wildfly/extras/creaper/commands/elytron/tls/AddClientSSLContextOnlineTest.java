@@ -96,8 +96,8 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     public void addFullClientSSLContext() throws Exception {
         AddClientSSLContext addClientSSLContext = new AddClientSSLContext.Builder(CLIENT_SSL_CONTEXT_NAME)
                 .cipherSuiteFilter("ALL")
-                .keyManagers(TEST_KEY_MNGR_NAME)
-                .trustManagers(TRUST_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
+                .trustManager(TRUST_MNGR_NAME)
                 .maximumSessionCacheSize(0)
                 .sessionTimeout(0)
                 .protocols(CLIENT_SSL_CONTEXT_PROTOCOL)
@@ -106,8 +106,8 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         assertTrue("The client ssl context should be created", ops.exists(CLIENT_SSL_CONTEXT_ADDRESS));
 
         checkAttribute("cipher-suite-filter", "ALL");
-        checkAttribute("key-managers", TEST_KEY_MNGR_NAME);
-        checkAttribute("trust-managers", TRUST_MNGR_NAME);
+        checkAttribute("key-manager", TEST_KEY_MNGR_NAME);
+        checkAttribute("trust-manager", TRUST_MNGR_NAME);
         checkAttribute("maximum-session-cache-size", "0");
         checkAttribute("session-timeout", "0");
         checkAttribute("protocols", Arrays.asList(CLIENT_SSL_CONTEXT_PROTOCOL));

@@ -152,11 +152,11 @@ public class CreateServerSSLContext implements OnlineCommand {
                 .authenticationOptional(authenticationOptional)
                 .wantClientAuth(wantClientAuth)
                 .providers(providers)
-                .keyManagers(getUniqueName(KEY_MANAGER_NAME));
+                .keyManager(getUniqueName(KEY_MANAGER_NAME));
 
         if (isTrustStoreConfigured()) {
             sslServerContextBuilder
-                .trustManagers(getUniqueName(TRUST_MANAGER_NAME));
+                .trustManager(getUniqueName(TRUST_MANAGER_NAME));
         }
 
         ctx.client.apply(addKeyStore);

@@ -34,8 +34,8 @@ public class AddTrustManagerOnlineTest extends AbstractElytronOnlineTest {
     private static final String TEST_KEY_STORE_PASSWORD = "password";
     private static final String TRUST_MNGR_NAME = "CreaperTestTrustManager";
     private static final String TRUST_MNGR_NAME2 = "CreaperTestTrustManager2";
-    private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME);
-    private static final Address TRUST_MANAGER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME2);
+    private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-manager", TRUST_MNGR_NAME);
+    private static final Address TRUST_MANAGER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("trust-manager", TRUST_MNGR_NAME2);
     private static final String TEST_TRUST_MANAGER_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
 
 //    @ClassRule

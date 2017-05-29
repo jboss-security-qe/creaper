@@ -56,7 +56,7 @@ public class AddServerSSLContextOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <server-ssl-contexts>\n"
-            + "                    <server-ssl-context name=\"serverSslContext\" key-managers=\"keyManagers\"/>\n"
+            + "                    <server-ssl-context name=\"serverSslContext\" key-manager=\"keyManager\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -69,7 +69,7 @@ public class AddServerSSLContextOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <server-ssl-contexts>\n"
-            + "                    <server-ssl-context name=\"serverSslContext\" key-managers=\"keyManagers\" cipher-suite-filter=\"ALL\"/>\n"
+            + "                    <server-ssl-context name=\"serverSslContext\" key-manager=\"keyManager\" cipher-suite-filter=\"ALL\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -82,8 +82,8 @@ public class AddServerSSLContextOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <server-ssl-contexts>\n"
-            + "                    <server-ssl-context name=\"serverSslContext\" key-managers=\"keyManagers\"/>\n"
-            + "                    <server-ssl-context name=\"serverSslContext2\" key-managers=\"keyManagers\"/>\n"
+            + "                    <server-ssl-context name=\"serverSslContext\" key-manager=\"keyManager\"/>\n"
+            + "                    <server-ssl-context name=\"serverSslContext2\" key-manager=\"keyManager\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -98,7 +98,7 @@ public class AddServerSSLContextOfflineTest {
             + "                <server-ssl-contexts>\n"
             + "                    <server-ssl-context name=\"serverSslContext\" cipher-suite-filter=\"ALL\" "
             + "                                        maximum-session-cache-size=\"40\" session-timeout=\"30\" "
-            + "                                        key-managers=\"keyManagers\" trust-managers=\"trustManagers\" "
+            + "                                        key-manager=\"keyManager\" trust-manager=\"trustManager\" "
             + "                                        protocols=\"TLSv1.2 TLSv1.1\" authentication-optional=\"true\" "
             + "                                        need-client-auth=\"false\" want-client-auth=\"true\" "
             + "                                        security-domain=\"securityDomain\" provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
@@ -125,7 +125,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_EMPTY, Files.toString(cfg, Charsets.UTF_8));
@@ -142,7 +142,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_TLS_EMPTY, Files.toString(cfg, Charsets.UTF_8));
@@ -159,7 +159,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_SERVER_SSL_CONTEXTS_EMPTY, Files.toString(cfg, Charsets.UTF_8));
@@ -176,7 +176,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_SIMPLE, Files.toString(cfg, Charsets.UTF_8));
@@ -194,7 +194,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .cipherSuiteFilter("ALL")
                 .replaceExisting()
                 .build();
@@ -213,7 +213,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext2")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .replaceExisting()
                 .build();
 
@@ -231,7 +231,7 @@ public class AddServerSSLContextOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddServerSSLContext addServerSslContext = new AddServerSSLContext.Builder("serverSslContext2")
-                .keyManagers("keyManagers")
+                .keyManager("keyManager")
                 .replaceExisting()
                 .build();
 
@@ -252,8 +252,8 @@ public class AddServerSSLContextOfflineTest {
                 .cipherSuiteFilter("ALL")
                 .maximumSessionCacheSize(40)
                 .sessionTimeout(30)
-                .keyManagers("keyManagers")
-                .trustManagers("trustManagers")
+                .keyManager("keyManager")
+                .trustManager("trustManager")
                 .protocols("TLSv1.2", "TLSv1.1")
                 .authenticationOptional(true)
                 .needClientAuth(false)

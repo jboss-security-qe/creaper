@@ -43,7 +43,7 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
     private static final String TEST_KEY_PASSWORD = "password";
     private static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
     private static final Address TEST_KEY_MNGR_NAME_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("key-managers", TEST_KEY_MNGR_NAME);
+            .and("key-manager", TEST_KEY_MNGR_NAME);
 
     @After
     public void cleanup() throws Exception {
@@ -116,7 +116,7 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
         client.apply(addKeyManager);
 
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         client.apply(addServerSSLContext);
 

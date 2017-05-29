@@ -24,11 +24,11 @@ public class CreateServerSSLContextOnlineTest extends AbstractAddSSLContextOnlin
             SERVER_SSL_CONTEXT_NAME);
     private static final Address KEY_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store",
             "key-store-name_" + SERVER_SSL_CONTEXT_NAME);
-    private static final Address KEY_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and("key-managers",
+    private static final Address KEY_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and("key-manager",
             "key-manager-name_" + SERVER_SSL_CONTEXT_NAME);
     private static final Address TRUST_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("key-store",
             "trust-store-name_" + SERVER_SSL_CONTEXT_NAME);
-    private static final Address TRUST_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-managers",
+    private static final Address TRUST_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-manager",
             "trust-manager-name_" + SERVER_SSL_CONTEXT_NAME);
 
 
@@ -37,7 +37,7 @@ public class CreateServerSSLContextOnlineTest extends AbstractAddSSLContextOnlin
             SERVER_SSL_CONTEXT_NAME2);
     private static final Address KEY_STORE_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-store",
             "key-store-name_" + SERVER_SSL_CONTEXT_NAME2);
-    private static final Address KEY_MANAGER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-managers",
+    private static final Address KEY_MANAGER_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-manager",
             "key-manager-name_" + SERVER_SSL_CONTEXT_NAME2);
 
     @After

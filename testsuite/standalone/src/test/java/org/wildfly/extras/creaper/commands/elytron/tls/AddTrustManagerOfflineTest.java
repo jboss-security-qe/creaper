@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddTrustManager.CertificateRevocationListBuilder;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineManagementClient;
@@ -17,7 +18,6 @@ import org.wildfly.extras.creaper.core.offline.OfflineOptions;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import org.wildfly.extras.creaper.commands.elytron.tls.AddTrustManager.CertificateRevocationListBuilder;
 
 public class AddTrustManagerOfflineTest {
 
@@ -44,8 +44,8 @@ public class AddTrustManagerOfflineTest {
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
-            + "                <trust-managers>\n"
-            + "                </trust-managers>\n"
+            + "                <trust-manager>\n"
+            + "                </trust-manager>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
             + "    </profile>\n"
@@ -56,9 +56,9 @@ public class AddTrustManagerOfflineTest {
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
-            + "                <trust-managers>\n"
+            + "                <trust-manager>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509\"/>\n"
-            + "                </trust-managers>\n"
+            + "                </trust-manager>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
             + "    </profile>\n"
@@ -69,9 +69,9 @@ public class AddTrustManagerOfflineTest {
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
-            + "                <trust-managers>\n"
+            + "                <trust-manager>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509-2\"/>\n"
-            + "                </trust-managers>\n"
+            + "                </trust-manager>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
             + "    </profile>\n"
@@ -82,10 +82,10 @@ public class AddTrustManagerOfflineTest {
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
-            + "                <trust-managers>\n"
+            + "                <trust-manager>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509\"/>\n"
             + "                    <trust-manager name=\"creaperTrustManager2\" algorithm=\"SunX509\"/>\n"
-            + "                </trust-managers>\n"
+            + "                </trust-manager>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
             + "    </profile>\n"
@@ -96,12 +96,12 @@ public class AddTrustManagerOfflineTest {
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
-            + "                <trust-managers>\n"
+            + "                <trust-manager>\n"
             + "                    <trust-manager name=\"creaperTrustManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
             + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\">\n"
             + "                        <certificate-revocation-list path=\"path\" relative-to=\"relativeTo\" maximum-cert-path=\"3\"/>\n"
             + "                    </trust-manager>\n"
-            + "                </trust-managers>\n"
+            + "                </trust-manager>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
             + "    </profile>\n"
@@ -150,7 +150,7 @@ public class AddTrustManagerOfflineTest {
     }
 
     @Test
-    public void addSimpleToTrustManagersEmpty() throws Exception {
+    public void addSimpleToTrustManagerEmpty() throws Exception {
         File cfg = tmp.newFile("xmlTransform.xml");
         Files.write(SUBSYSTEM_TRUST_MANAGERS_EMPTY, cfg, Charsets.UTF_8);
 

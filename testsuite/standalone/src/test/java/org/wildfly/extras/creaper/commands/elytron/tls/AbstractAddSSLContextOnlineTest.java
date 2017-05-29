@@ -24,14 +24,14 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
 
     protected static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
     private static final String TEST_KEY_MNGR_NAME2 = "CreaperTestKeyManager2";
-    private static final Address TEST_KEY_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("key-managers", TEST_KEY_MNGR_NAME);
-    private static final Address TEST_KEY_MNGR_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-managers", TEST_KEY_MNGR_NAME2);
+    private static final Address TEST_KEY_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("key-manager", TEST_KEY_MNGR_NAME);
+    private static final Address TEST_KEY_MNGR_ADDRESS2 = SUBSYSTEM_ADDRESS.and("key-manager", TEST_KEY_MNGR_NAME2);
     private static final String TEST_KEY_MANAGER_ALGORITHM = KeyManagerFactory.getDefaultAlgorithm();
 
     protected static final String TRUST_MNGR_NAME = "CreaperTestTrustManager";
     private static final String TRUST_MNGR_NAME2 = "CreaperTestTrustManager2";
-    private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME);
-    private static final Address TRUST_MNGR_ADDRESS2 = SUBSYSTEM_ADDRESS.and("trust-managers", TRUST_MNGR_NAME2);
+    private static final Address TRUST_MNGR_ADDRESS = SUBSYSTEM_ADDRESS.and("trust-manager", TRUST_MNGR_NAME);
+    private static final Address TRUST_MNGR_ADDRESS2 = SUBSYSTEM_ADDRESS.and("trust-manager", TRUST_MNGR_NAME2);
     private static final String TRUST_MANAGER_ALGORITHM = TrustManagerFactory.getDefaultAlgorithm();
 
 

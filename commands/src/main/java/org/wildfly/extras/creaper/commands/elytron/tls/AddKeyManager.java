@@ -41,7 +41,7 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address keyManagerAddress = Address.subsystem("elytron").and("key-managers", name);
+        Address keyManagerAddress = Address.subsystem("elytron").and("key-manager", name);
         if (replaceExisting) {
             ops.removeIfExists(keyManagerAddress);
             new Administration(ctx.client).reloadIfRequired();

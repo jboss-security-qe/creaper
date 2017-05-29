@@ -13,8 +13,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
     protected final List<String> protocols;
     protected final Integer maximumSessionCacheSize;
     protected final Integer sessionTimeout;
-    protected final String keyManagers;
-    protected final String trustManagers;
+    protected final String keyManager;
+    protected final String trustManager;
     protected final String providers;
     protected final String providerName;
     protected final boolean replaceExisting;
@@ -25,8 +25,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         this.protocols = builder.protocols;
         this.maximumSessionCacheSize = builder.maximumSessionCacheSize;
         this.sessionTimeout = builder.sessionTimeout;
-        this.keyManagers = builder.keyManagers;
-        this.trustManagers = builder.trustManagers;
+        this.keyManager = builder.keyManager;
+        this.trustManager = builder.trustManager;
         this.providers = builder.providers;
         this.providerName = builder.providerName;
         this.replaceExisting = builder.replaceExisting;
@@ -39,8 +39,8 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         protected List<String> protocols;
         protected Integer maximumSessionCacheSize;
         protected Integer sessionTimeout;
-        protected String keyManagers;
-        protected String trustManagers;
+        protected String keyManager;
+        protected String trustManager;
         private boolean replaceExisting;
         protected String providers;
         protected String providerName;
@@ -77,13 +77,13 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
             return (THIS) this;
         }
 
-        public final THIS keyManagers(String keyManagers) {
-            this.keyManagers = keyManagers;
+        public final THIS keyManager(String keyManager) {
+            this.keyManager = keyManager;
             return (THIS) this;
         }
 
-        public final THIS trustManagers(String trustManagers) {
-            this.trustManagers = trustManagers;
+        public final THIS trustManager(String trustManager) {
+            this.trustManager = trustManager;
             return (THIS) this;
         }
 

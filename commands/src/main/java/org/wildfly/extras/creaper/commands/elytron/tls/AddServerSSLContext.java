@@ -38,8 +38,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .andOptional("cipher-suite-filter", cipherSuiteFilter)
                 .andOptional("maximum-session-cache-size", maximumSessionCacheSize)
                 .andOptional("session-timeout", sessionTimeout)
-                .andOptional("key-managers", keyManagers)
-                .andOptional("trust-managers", trustManagers)
+                .andOptional("key-manager", keyManager)
+                .andOptional("trust-manager", trustManager)
                 .andListOptional(String.class, "protocols", protocols)
                 .andOptional("authentication-optional", authenticationOptional)
                 .andOptional("need-client-auth", needClientAuth)
@@ -57,8 +57,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .parameter("atrCipherSuiteFilter", cipherSuiteFilter)
                 .parameter("atrMaximumSessionCacheSize", maximumSessionCacheSize)
                 .parameter("atrSessionTimeout", sessionTimeout)
-                .parameter("atrKeyManagers", keyManagers)
-                .parameter("atrTrustManagers", trustManagers)
+                .parameter("atrKeyManager", keyManager)
+                .parameter("atrTrustManager", trustManager)
                 .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
                 .parameter("atrAuthenticationOptional", authenticationOptional)
                 .parameter("atrNeedClientAuth", needClientAuth)
@@ -103,7 +103,7 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
 
         @Override
         public AddServerSSLContext build() {
-            if (keyManagers == null || keyManagers.isEmpty()) {
+            if (keyManager == null || keyManager.isEmpty()) {
                 throw new IllegalArgumentException("Key-manager must be specified as non empty value");
             }
             return new AddServerSSLContext(this);

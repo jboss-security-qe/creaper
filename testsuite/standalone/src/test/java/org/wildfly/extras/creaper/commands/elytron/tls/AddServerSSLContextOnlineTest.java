@@ -36,7 +36,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test
     public void addSimpleServerSSLContext() throws Exception {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         assertFalse("The server ssl context should not exist", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
         client.apply(addServerSSLContext);
@@ -46,10 +46,10 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test
     public void addTwoSimpleServerSSLContexts() throws Exception {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         AddServerSSLContext addServerSSLContext2 = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME2)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
 
         assertFalse("The server ssl context should not exist", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
@@ -65,10 +65,10 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test(expected = CommandFailedException.class)
     public void addDuplicateServerSSLContextNotAllowed() throws Exception {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         AddServerSSLContext addServerSSLContext2 = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
 
         client.apply(addServerSSLContext);
@@ -81,10 +81,10 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test
     public void addDuplicateKeyManagerAllowed() throws Exception {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         AddServerSSLContext addServerSSLContext2 = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .sessionTimeout(5)
                 .replaceExisting()
                 .build();
@@ -102,8 +102,8 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     public void addFullServerSSLContext() throws Exception {
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
                 .cipherSuiteFilter("ALL")
-                .keyManagers(TEST_KEY_MNGR_NAME)
-                .trustManagers(TRUST_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
+                .trustManager(TRUST_MNGR_NAME)
                 .maximumSessionCacheSize(0)
                 .sessionTimeout(0)
                 .protocols(SERVER_SSL_CONTEXT_PROTOCOL)
@@ -116,8 +116,8 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         assertTrue("The server ssl context should be created", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
 
         checkAttribute("cipher-suite-filter", "ALL");
-        checkAttribute("key-managers", TEST_KEY_MNGR_NAME);
-        checkAttribute("trust-managers", TRUST_MNGR_NAME);
+        checkAttribute("key-manager", TEST_KEY_MNGR_NAME);
+        checkAttribute("trust-manager", TRUST_MNGR_NAME);
         checkAttribute("maximum-session-cache-size", "0");
         checkAttribute("session-timeout", "0");
         checkAttribute("protocols", Arrays.asList(SERVER_SSL_CONTEXT_PROTOCOL));
@@ -129,7 +129,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addServerSSLContext_nullName() throws Exception {
         new AddServerSSLContext.Builder(null)
-            .keyManagers(TEST_KEY_MNGR_NAME)
+            .keyManager(TEST_KEY_MNGR_NAME)
             .build();
         fail("Creating command with null server SSL context name should throw exception");
     }
@@ -137,15 +137,15 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addServerSSLContext_emptyName() throws Exception {
         new AddServerSSLContext.Builder("")
-            .keyManagers(TEST_KEY_MNGR_NAME)
+            .keyManager(TEST_KEY_MNGR_NAME)
             .build();
         fail("Creating command with empty server ssl context name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void addKeyManager_nullKeyManagers() throws Exception {
+    public void addKeyManager_nullKeyManager() throws Exception {
         new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-            .keyManagers(null)
+            .keyManager(null)
             .build();
         fail("Creating command with null key manager should throw exception");
     }
@@ -153,7 +153,7 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_emptyAlgorithm() throws Exception {
         new AddServerSSLContext.Builder(SERVER_SSL_CONTEXT_NAME)
-            .keyManagers("")
+            .keyManager("")
             .build();
         fail("Creating command with empty key manager should throw exception");
     }
