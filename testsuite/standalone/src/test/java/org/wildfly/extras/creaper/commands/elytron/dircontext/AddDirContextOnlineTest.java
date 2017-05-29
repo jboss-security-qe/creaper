@@ -42,7 +42,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
     private static final String TEST_KEY_PASSWORD = "password";
     private static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
     private static final Address TEST_KEY_MNGR_NAME_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("key-managers", TEST_KEY_MNGR_NAME);
+            .and("key-manager", TEST_KEY_MNGR_NAME);
 
     @After
     public void cleanup() throws Exception {
@@ -99,7 +99,7 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .build();
         client.apply(addKeyManager);
         AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT)
-                .keyManagers(TEST_KEY_MNGR_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
                 .build();
         client.apply(addServerSSLContext);
         AddAuthenticationContext addAuthenticationContext
@@ -111,9 +111,23 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                 .url("localhost")
                 .authenticationLevel(AddDirContext.AuthenticationLevel.STRONG)
                 .enableConnectionPooling(false)
-                .principal("test-principal")
+//                .principal("test-principal")
                 .referralMode(AddDirContext.ReferralMode.THROW)
                 .authenticationContext(TEST_AUTHENTICATION_CONTEXT_NAME)
+                .connectionTimeout(10)
+                .readTimeout(20)
+                .module("org.wildfly.security.elytron-private")
+//                .sslContext(TEST_SERVER_SSL_CONTEXT)
+                .addProperties(new AddDirContext.Property("property1", "value1"),
+                        new AddDirContext.Property("property2", "value2"))
+                .build();
+
+        AddDirContext addDirContext2 = new AddDirContext.Builder(TEST_DIR_CONTEXT_NAME2)
+                .url("localhost")
+                .authenticationLevel(AddDirContext.AuthenticationLevel.STRONG)
+                .enableConnectionPooling(false)
+                .principal("test-principal")
+                .referralMode(AddDirContext.ReferralMode.THROW)
                 .connectionTimeout(10)
                 .readTimeout(20)
                 .module("org.wildfly.security.elytron-private")
@@ -122,21 +136,34 @@ public class AddDirContextOnlineTest extends AbstractElytronOnlineTest {
                         new AddDirContext.Property("property2", "value2"))
                 .build();
 
-        client.apply(addDirContext);
+        client.apply(addDirContext, addDirContext2);
         assertTrue("Dir context should be created", ops.exists(TEST_DIR_CONTEXT_ADDRESS));
 
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "url", "localhost");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "authentication-level", "STRONG");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "enable-connection-pooling", "false");
-        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "principal", "test-principal");
+//        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "principal", "test-principal");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "referral-mode", "THROW");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "authentication-context", TEST_AUTHENTICATION_CONTEXT_NAME);
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "connection-timeout", "10");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "read-timeout", "20");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "module", "org.wildfly.security.elytron-private");
-        checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
+        //checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT);
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property1", "value1");
         checkAttribute(TEST_DIR_CONTEXT_ADDRESS, "properties.property2", "value2");
+
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "url", "localhost");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "authentication-level", "STRONG");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "enable-connection-pooling", "false");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "principal", "test-principal");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "referral-mode", "THROW");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "connection-timeout", "10");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "read-timeout", "20");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "module", "org.wildfly.security.elytron-private");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "ssl-context", TEST_SERVER_SSL_CONTEXT);
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "properties.property1", "value1");
+        checkAttribute(TEST_DIR_CONTEXT_ADDRESS2, "properties.property2", "value2");
+
     }
 
     @Test
