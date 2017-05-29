@@ -1,5 +1,10 @@
 package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -9,14 +14,14 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 public final class AddCredentialStoreAlias implements OnlineCommand {
 
-    private final String name;
+    private final String alias;
     private final String credentialStore;
     private final EntryType entryType;
     private final String secretValue;
     private final boolean replaceExisting;
 
     private AddCredentialStoreAlias(Builder builder) {
-        this.name = builder.name;
+        this.alias = builder.alias;
         this.credentialStore = builder.credentialStore;
         this.entryType = builder.entryType;
         this.secretValue = builder.secretValue;
@@ -26,32 +31,50 @@ public final class AddCredentialStoreAlias implements OnlineCommand {
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
         Operations ops = new Operations(ctx.client);
-        Address credentialStoreAliasAddress = Address.subsystem("elytron")
-                .and("credential-store", credentialStore)
-                .and("alias", name);
+        Address credentialStoreAddress = Address.subsystem("elytron")
+                .and("credential-store", credentialStore);
         if (replaceExisting) {
-            ops.removeIfExists(credentialStoreAliasAddress);
+            if (aliasExists(ops, credentialStoreAddress, alias)) {
+                ops.invoke("remove-alias", credentialStoreAddress, Values.empty().and("alias", alias));
+            }
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        ops.add(credentialStoreAliasAddress, Values.empty()
+        ops.invoke("add-alias", credentialStoreAddress, Values.empty()
                 .and("secret-value", secretValue)
+                .and("alias", alias)
                 .andOptional("entry-type", entryType == null ? null : entryType.getEntryType()));
+    }
+
+    private boolean aliasExists(Operations ops, Address credentialStore, String alias) throws IOException {
+        ModelNodeResult result = ops.invoke("read-aliases", credentialStore);
+        ModelNode modelNode = result != null ? result.value() : null;
+        if (result == null || !result.isSuccess() || modelNode.asList().isEmpty()) {
+            return false;
+        }
+        List<ModelNode> aliasList = modelNode.asList();
+        for (ModelNode aliasName : aliasList) {
+            if (alias.equals(aliasName.asString())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static final class Builder {
 
-        private final String name;
+        private final String alias;
         private String credentialStore;
         private EntryType entryType;
         private String secretValue;
         private boolean replaceExisting;
 
-        public Builder(String name) {
-            if (name == null || name.isEmpty()) {
+        public Builder(String alias) {
+            if (alias == null || alias.isEmpty()) {
                 throw new IllegalArgumentException("Name of the kerberos-security-factory must be specified as non empty value");
             }
-            this.name = name;
+            this.alias = alias;
         }
 
         public Builder credentialStore(String credentialStore) {

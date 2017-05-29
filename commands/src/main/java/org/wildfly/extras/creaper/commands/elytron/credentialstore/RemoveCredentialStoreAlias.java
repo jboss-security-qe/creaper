@@ -4,6 +4,7 @@ import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 public final class RemoveCredentialStoreAlias implements OnlineCommand {
 
@@ -30,12 +31,12 @@ public final class RemoveCredentialStoreAlias implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
-        Address credentialStoreAliasAddress = Address.subsystem("elytron")
-                .and("credential-store", credentialStoreName)
-                .and("alias", credentialStoreAlias);
+        Address credentialStoreAddress = Address.subsystem("elytron")
+                .and("credential-store", credentialStoreName);
 
         Operations ops = new Operations(ctx.client);
-        ops.remove(credentialStoreAliasAddress);
+        ops.invoke("remove-alias", credentialStoreAddress, Values.empty()
+                .and("alias", credentialStoreAlias));
     }
 
 }

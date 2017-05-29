@@ -10,10 +10,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -24,14 +24,12 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 @RunWith(Arquillian.class)
-public class RemoveCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest {
+public class RemoveCredentialStoreAliasOnlineTest extends AbstractCredentialStoreOnlineTest {
 
     private static final String TEST_CREDENTIAL_STORE_NAME = "CreaperTestCredentialStore";
-    private static final Address TEST_CREDENTIAL_STORE_ADDRESS = SUBSYSTEM_ADDRESS
-            .and("credential-store", TEST_CREDENTIAL_STORE_NAME);
+    private static final Address TEST_CREDENTIAL_STORE_ADDRESS = SUBSYSTEM_ADDRESS.and("credential-store",
+        TEST_CREDENTIAL_STORE_NAME);
     private static final String TEST_CREDENTIAL_STORE_ALIAS_NAME = "creapertestcredentialstorealias";
-    private static final Address TEST_CREDENTIAL_STORE_ALIAS_ADDRESS = TEST_CREDENTIAL_STORE_ADDRESS
-            .and("alias", TEST_CREDENTIAL_STORE_ALIAS_NAME);
 
     private static final String PATH = "path";
     private static final String TMP = "tmp";
@@ -64,7 +62,6 @@ public class RemoveCredentialStoreAliasOnlineTest extends AbstractElytronOnlineT
 
     @After
     public void cleanup() throws Exception {
-        ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS);
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         administration.reloadIfRequired();
     }
@@ -85,16 +82,19 @@ public class RemoveCredentialStoreAliasOnlineTest extends AbstractElytronOnlineT
                 .secretValue("someSecretValue")
                 .build();
         client.apply(addCredentialStoreAlias);
-        assertTrue("Credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
+        assertTrue("Credential store alias should be created",
+            aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME));
 
         RemoveCredentialStoreAlias removeCredentialStoreAlias
                 = new RemoveCredentialStoreAlias(TEST_CREDENTIAL_STORE_NAME, TEST_CREDENTIAL_STORE_ALIAS_NAME);
 
         client.apply(removeCredentialStoreAlias);
-        assertFalse("Credential store alias should be removed", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
+        assertFalse("Credential store alias should be removed",
+            aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME));
     }
 
     @Test(expected = CommandFailedException.class)
+    @Ignore("https://issues.jboss.org/browse/JBEAP-11189")
     public void removeNonExistingCredentialStore() throws Exception {
         RemoveCredentialStoreAlias removeCredentialStoreAlias
                 = new RemoveCredentialStoreAlias(TEST_CREDENTIAL_STORE_NAME, TEST_CREDENTIAL_STORE_ALIAS_NAME);

@@ -12,7 +12,6 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -23,18 +22,14 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 @RunWith(Arquillian.class)
-public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest {
+public class AddCredentialStoreAliasOnlineTest extends AbstractCredentialStoreOnlineTest {
 
     private static final String TEST_CREDENTIAL_STORE_NAME = "CreaperTestCredentialStore";
     private static final Address TEST_CREDENTIAL_STORE_ADDRESS = SUBSYSTEM_ADDRESS
             .and("credential-store", TEST_CREDENTIAL_STORE_NAME);
 
     private static final String TEST_CREDENTIAL_STORE_ALIAS_NAME = "creapertestcredentialstorealias";
-    private static final Address TEST_CREDENTIAL_STORE_ALIAS_ADDRESS = TEST_CREDENTIAL_STORE_ADDRESS
-            .and("alias", TEST_CREDENTIAL_STORE_ALIAS_NAME);
     private static final String TEST_CREDENTIAL_STORE_ALIAS_NAME2 = "creapertestcredentialstorealias2";
-    private static final Address TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2 = TEST_CREDENTIAL_STORE_ADDRESS
-            .and("alias", TEST_CREDENTIAL_STORE_ALIAS_NAME2);
 
     private static final String PATH = "path";
     private static final String TMP = "tmp";
@@ -67,8 +62,8 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
 
     @After
     public void cleanup() throws Exception {
-        ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS);
-        ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2);
+        // ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS);
+        // ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2);
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         administration.reloadIfRequired();
     }
@@ -87,11 +82,13 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
                 = new AddCredentialStoreAlias.Builder(TEST_CREDENTIAL_STORE_ALIAS_NAME)
                 .credentialStore(TEST_CREDENTIAL_STORE_NAME)
                 .secretValue("someSecretValue")
+                .replaceExisting()
                 .build();
 
         client.apply(addCredentialStoreAlias);
 
-        assertTrue("Credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
+        assertTrue("Credential store alias should be created",
+                aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME));
     }
 
     @Test
@@ -101,10 +98,12 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
                 .credentialStore(TEST_CREDENTIAL_STORE_NAME)
                 .secretValue("someSecretValue")
                 .entryType(AddCredentialStoreAlias.EntryType.PASSWORD_CREDENTIAL)
+                .replaceExisting()
                 .build();
 
         client.apply(addCredentialStoreAlias);
-        assertTrue("Credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
+        assertTrue("Credential store alias should be created",
+            aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME));
     }
 
     @Test
@@ -113,19 +112,23 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
                 = new AddCredentialStoreAlias.Builder(TEST_CREDENTIAL_STORE_ALIAS_NAME)
                 .credentialStore(TEST_CREDENTIAL_STORE_NAME)
                 .secretValue("someSecretValue")
+                .replaceExisting()
                 .build();
 
         AddCredentialStoreAlias addCredentialStoreAlias2
                 = new AddCredentialStoreAlias.Builder(TEST_CREDENTIAL_STORE_ALIAS_NAME2)
                 .credentialStore(TEST_CREDENTIAL_STORE_NAME)
                 .secretValue("someOtherValue")
+                .replaceExisting()
                 .build();
 
         client.apply(addCredentialStoreAlias);
         client.apply(addCredentialStoreAlias2);
 
-        assertTrue("Credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS));
-        assertTrue("Second credential store alias should be created", ops.exists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2));
+        assertTrue("Credential store alias should be created",
+            aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME));
+        assertTrue("Credential store alias should be created",
+            aliasExists(TEST_CREDENTIAL_STORE_ADDRESS, TEST_CREDENTIAL_STORE_ALIAS_NAME2));
     }
 
     @Test(expected = CommandFailedException.class)
@@ -241,5 +244,4 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractElytronOnlineTest
                     .and(PATH, tmp.getRoot().getAbsolutePath()));
         }
     }
-
 }
