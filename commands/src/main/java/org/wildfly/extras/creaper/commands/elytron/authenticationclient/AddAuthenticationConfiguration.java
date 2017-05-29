@@ -29,6 +29,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
     private final String protocol;
     private final String realm;
     private final String securityDomain;
+    private final String saslMechanismSelector;
     private final String kerberosSecurityFactory;
     private final boolean replaceExisting;
 
@@ -48,6 +49,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         this.protocol = builder.protocol;
         this.realm = builder.realm;
         this.securityDomain = builder.securityDomain;
+        this.saslMechanismSelector = builder.saslMechanismSelector;
         this.kerberosSecurityFactory = builder.kerberosSecurityFactory;
         this.replaceExisting = builder.replaceExisting;
     }
@@ -84,6 +86,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
                 .andOptional("security-domain", securityDomain)
                 .andOptional("allow-all-mechanisms", allowAllMechanisms)
                 .andOptional("mechanism-properties", mechanismPropertiesNode)
+                .andOptional("sasl-mechanism-selector", saslMechanismSelector)
                 .andOptional("kerberos-security-factory", kerberosSecurityFactory)
                 .andObjectOptional("credential-reference", credentialReferenceValues)
                 .andListOptional(String.class, "allow-sasl-mechanisms", allowSaslMechanisms)
@@ -107,6 +110,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         private String protocol;
         private String realm;
         private String securityDomain;
+        private String saslMechanismSelector;
         private String kerberosSecurityFactory;
         private boolean replaceExisting;
 
@@ -202,6 +206,11 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
 
         public Builder securityDomain(String securityDomain) {
             this.securityDomain = securityDomain;
+            return this;
+        }
+
+        public Builder saslMechanismSelector(String saslMechanismSelector) {
+            this.saslMechanismSelector = saslMechanismSelector;
             return this;
         }
 

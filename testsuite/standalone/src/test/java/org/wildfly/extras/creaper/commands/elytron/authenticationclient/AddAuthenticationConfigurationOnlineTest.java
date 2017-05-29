@@ -164,6 +164,23 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
     }
 
     @Test
+    public void addAuthenticationConfiguration_saslMechanismSelector() throws Exception {
+        AddAuthenticationConfiguration addAuthenticationConfiguration
+                = new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("somePassword")
+                        .build())
+                .saslMechanismSelector("#FAMILY(DIGEST)")
+                .build();
+        client.apply(addAuthenticationConfiguration);
+
+        assertTrue("Authentication Configuration should be created",
+                ops.exists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS));
+
+        checkAttribute("sasl-mechanism-selector", "#FAMILY(DIGEST)");
+    }
+
+    @Test
     public void addAuthenticationConfiguration_anonymous() throws Exception {
         AddAuthenticationConfiguration addAuthenticationConfiguration
                 = new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
