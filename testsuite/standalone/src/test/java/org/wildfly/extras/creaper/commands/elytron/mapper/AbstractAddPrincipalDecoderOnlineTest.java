@@ -2,12 +2,14 @@ package org.wildfly.extras.creaper.commands.elytron.mapper;
 
 import java.util.Arrays;
 import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 public class AbstractAddPrincipalDecoderOnlineTest extends AbstractElytronOnlineTest {
 
@@ -54,6 +56,7 @@ public class AbstractAddPrincipalDecoderOnlineTest extends AbstractElytronOnline
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS);
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS2);
             ops.removeIfExists(TEST_DIFFERENT_PRINCIPAL_DECODER_ADDRESS);
+            new Administration(client).reloadIfRequired();
         }
     }
 }
