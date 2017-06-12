@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.authenticationclient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.jboss.dmr.ModelNode;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -17,13 +18,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
     private final String name;
     private final List<Property> mechanismProperties;
     private final CredentialRef credentialReference;
-    private final Boolean allowAllMechanisms;
-    private final List<String> allowSaslMechanisms;
     private final Boolean anonymous;
     private final String authenticationName;
     private final String authorizationName;
     private final String extend;
-    private final List<String> forbidSaslMechanisms;
     private final String host;
     private final Integer port;
     private final String protocol;
@@ -37,13 +35,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         this.name = builder.name;
         this.mechanismProperties = builder.mechanismProperties;
         this.credentialReference = builder.credentialReference;
-        this.allowAllMechanisms = builder.allowAllMechanisms;
-        this.allowSaslMechanisms = builder.allowSaslMechanisms;
         this.anonymous = builder.anonymous;
         this.authenticationName = builder.authenticationName;
         this.authorizationName = builder.authorizationName;
         this.extend = builder.extend;
-        this.forbidSaslMechanisms = builder.forbidSaslMechanisms;
         this.host = builder.host;
         this.port = builder.port;
         this.protocol = builder.protocol;
@@ -84,13 +79,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
                 .andOptional("port", port)
                 .andOptional("realm", realm)
                 .andOptional("security-domain", securityDomain)
-                .andOptional("allow-all-mechanisms", allowAllMechanisms)
                 .andOptional("mechanism-properties", mechanismPropertiesNode)
                 .andOptional("sasl-mechanism-selector", saslMechanismSelector)
                 .andOptional("kerberos-security-factory", kerberosSecurityFactory)
-                .andObjectOptional("credential-reference", credentialReferenceValues)
-                .andListOptional(String.class, "allow-sasl-mechanisms", allowSaslMechanisms)
-                .andListOptional(String.class, "forbid-sasl-mechanisms", forbidSaslMechanisms));
+                .andObjectOptional("credential-reference", credentialReferenceValues));
     }
 
     public static final class Builder {
@@ -98,13 +90,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         private String name;
         private List<Property> mechanismProperties = new ArrayList<Property>();
         private CredentialRef credentialReference;
-        private Boolean allowAllMechanisms;
-        private List<String> allowSaslMechanisms;
         private Boolean anonymous;
         private String authenticationName;
         private String authorizationName;
         private String extend;
-        private List<String> forbidSaslMechanisms;
         private String host;
         private Integer port;
         private String protocol;
@@ -137,22 +126,6 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
             return this;
         }
 
-        public Builder allowAllMechanisms(Boolean allowAllMechanisms) {
-            this.allowAllMechanisms = allowAllMechanisms;
-            return this;
-        }
-
-        public Builder addAllowSaslMechanisms(String... allowSaslMechanisms) {
-            if (allowSaslMechanisms == null) {
-                throw new IllegalArgumentException("AllowSaslMechanisms added to authentication-configuration must not be null");
-            }
-            if (this.allowSaslMechanisms == null) {
-                this.allowSaslMechanisms = new ArrayList<String>();
-            }
-            Collections.addAll(this.allowSaslMechanisms, allowSaslMechanisms);
-            return this;
-        }
-
         public Builder anonymous(Boolean anonymous) {
             this.anonymous = anonymous;
             return this;
@@ -170,17 +143,6 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
 
         public Builder extend(String extend) {
             this.extend = extend;
-            return this;
-        }
-
-        public Builder addForbidSaslMechanisms(String... forbidSaslMechanisms) {
-            if (forbidSaslMechanisms == null) {
-                throw new IllegalArgumentException("ForbidSaslMechanisms added to authentication-configuration must not be null");
-            }
-            if (this.forbidSaslMechanisms == null) {
-                this.forbidSaslMechanisms = new ArrayList<String>();
-            }
-            Collections.addAll(this.forbidSaslMechanisms, forbidSaslMechanisms);
             return this;
         }
 
@@ -225,9 +187,6 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         }
 
         public AddAuthenticationConfiguration build() {
-            if (allowAllMechanisms != null && (allowSaslMechanisms != null && !allowSaslMechanisms.isEmpty())) {
-                throw new IllegalArgumentException("Only one of allow-all-mechanisms and allow-sasl-mechanisms can be set.");
-            }
 
             int authCounter = 0;
             if (authenticationName != null) {

@@ -121,9 +121,6 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                 .protocol("someProtocol")
                 .port(12345)
                 .realm("someRealm")
-                .allowAllMechanisms(true)
-                // JBEAP-10698
-                // .addForbidSaslMechanisms("someSaslMechanism1", "someSaslMechanism2")
                 .build();
         client.apply(addAuthenticationConfiguration);
 
@@ -137,47 +134,9 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
         checkAttribute("protocol", "someProtocol");
         checkAttribute("port", "12345");
         checkAttribute("realm", "someRealm");
-        checkAttribute("allow-all-mechanisms", "true");
-//        checkAttribute("forbid-sasl-mechanisms[0]", "someSaslMechanism1");
-//        checkAttribute("forbid-sasl-mechanisms[1]", "someSaslMechanism2");
         checkAttribute("credential-reference.clear-text", "somePassword");
         checkAttribute("mechanism-properties.property1", "value1");
         checkAttribute("mechanism-properties.property2", "value2");
-    }
-
-    @Test
-    public void addAuthenticationConfiguration_allowSaslMechanisms() throws Exception {
-        AddAuthenticationConfiguration addAuthenticationConfiguration
-                = new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
-                .credentialReference(new CredentialRef.CredentialRefBuilder()
-                        .clearText("somePassword")
-                        .build())
-                .addAllowSaslMechanisms("someSaslMechanism1", "someSaslMechanism2")
-                .build();
-        client.apply(addAuthenticationConfiguration);
-
-        assertTrue("Authentication Configuration should be created",
-                ops.exists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS));
-
-        checkAttribute("allow-sasl-mechanisms[0]", "someSaslMechanism1");
-        checkAttribute("allow-sasl-mechanisms[1]", "someSaslMechanism2");
-    }
-
-    @Test
-    public void addAuthenticationConfiguration_saslMechanismSelector() throws Exception {
-        AddAuthenticationConfiguration addAuthenticationConfiguration
-                = new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
-                .credentialReference(new CredentialRef.CredentialRefBuilder()
-                        .clearText("somePassword")
-                        .build())
-                .saslMechanismSelector("#FAMILY(DIGEST)")
-                .build();
-        client.apply(addAuthenticationConfiguration);
-
-        assertTrue("Authentication Configuration should be created",
-                ops.exists(TEST_AUTHENTICATION_CONFIGURATION_ADDRESS));
-
-        checkAttribute("sasl-mechanism-selector", "#FAMILY(DIGEST)");
     }
 
     @Test
@@ -316,18 +275,6 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                         .build())
                 .build();
         fail("Creating command with empty name should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addAuthenticationConfiguration_allowAllMechanismsAndAllowSaslMechanisms() throws Exception {
-        new AddAuthenticationConfiguration.Builder(TEST_AUTHENTICATION_CONFIGURATION_NAME)
-                .credentialReference(new CredentialRef.CredentialRefBuilder()
-                        .clearText("somePassword")
-                        .build())
-                .addAllowSaslMechanisms("SomeMechanism")
-                .allowAllMechanisms(true)
-                .build();
-        fail("Creating command with both allowAllMechanisms and allowSaslMechanisms should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.authenticationclient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.jboss.dmr.ModelNode;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -47,7 +48,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
                 addOptional(matchRuleNode, "match-path", matchRule.matchPath);
                 addOptional(matchRuleNode, "match-port", matchRule.matchPort);
                 addOptional(matchRuleNode, "match-protocol", matchRule.matchProtocol);
-                addOptional(matchRuleNode, "match-purpose", matchRule.matchPurpose);
                 addOptional(matchRuleNode, "match-urn", matchRule.matchUrn);
                 addOptional(matchRuleNode, "match-user", matchRule.matchUser);
                 addOptional(matchRuleNode, "authentication-configuration", matchRule.authenticationConfiguration);
@@ -129,7 +129,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
         private final String matchPath;
         private final Integer matchPort;
         private final String matchProtocol;
-        private final String matchPurpose;
         private final String matchUrn;
         private final String matchUser;
         private final String authenticationConfiguration;
@@ -144,7 +143,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
             this.matchPath = builder.matchPath;
             this.matchPort = builder.matchPort;
             this.matchProtocol = builder.matchProtocol;
-            this.matchPurpose = builder.matchPurpose;
             this.matchUrn = builder.matchUrn;
             this.matchUser = builder.matchUser;
             this.authenticationConfiguration = builder.authenticationConfiguration;
@@ -183,10 +181,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
             return matchProtocol;
         }
 
-        public String getMatchPurpose() {
-            return matchPurpose;
-        }
-
         public String getMatchUrn() {
             return matchUrn;
         }
@@ -215,7 +209,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
         private String matchPath;
         private Integer matchPort;
         private String matchProtocol;
-        private String matchPurpose;
         private String matchUrn;
         private String matchUser;
         private String authenticationConfiguration;
@@ -258,11 +251,6 @@ public final class AddAuthenticationContext implements OnlineCommand {
 
         public MatchRuleBuilder matchProtocol(String matchProtocol) {
             this.matchProtocol = matchProtocol;
-            return this;
-        }
-
-        public MatchRuleBuilder matchPurpose(String matchPurpose) {
-            this.matchPurpose = matchPurpose;
             return this;
         }
 

@@ -168,6 +168,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
+                .modifiable(false)
                 .build();
 
         AddCredentialStore addCredentialStore2 = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME)
@@ -175,7 +176,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText(TEST_PASSWORD)
                         .build())
-                .location("/path/to/nowhere")
+                .modifiable(true)
                 .replaceExisting()
                 .build();
 
@@ -185,7 +186,7 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         assertTrue("Constant permission mapper should be created", ops.exists(TEST_CREDENTIAL_STORE_ADDRESS));
 
         // check whether it was really rewritten
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "location", "/path/to/nowhere");
+        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "modifiable", "true");
     }
 
     @Test(expected = IllegalArgumentException.class)

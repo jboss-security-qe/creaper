@@ -134,7 +134,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
                         .matchPath("somePath1")
                         .matchPort(12345)
                         .matchProtocol("someProtocol1")
-                        .matchPurpose("somePurpose1")
                         .matchUrn("someUrn1")
                         .build(),
                         new AddAuthenticationContext.MatchRuleBuilder()
@@ -147,7 +146,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
                         .matchPath("somePath2")
                         .matchPort(12346)
                         .matchProtocol("someProtocol2")
-                        .matchPurpose("somePurpose2")
                         .matchUrn("someUrn2")
                         .matchUser("someUser2")
                         .build())
@@ -167,7 +165,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
         checkAttribute("match-rules[0].match-path", "somePath1");
         checkAttribute("match-rules[0].match-port", "12345");
         checkAttribute("match-rules[0].match-protocol", "someProtocol1");
-        checkAttribute("match-rules[0].match-purpose", "somePurpose1");
         checkAttribute("match-rules[0].match-urn", "someUrn1");
         checkAttribute("match-rules[1].authentication-configuration", TEST_AUTHENTICATION_CONFIGURATION_NAME);
         checkAttribute("match-rules[1].ssl-context", TEST_SERVER_SSL_CONTEXT_NAME);
@@ -178,7 +175,6 @@ public class AddAuthenticationContextOnlineTest extends AbstractElytronOnlineTes
         checkAttribute("match-rules[1].match-path", "somePath2");
         checkAttribute("match-rules[1].match-port", "12346");
         checkAttribute("match-rules[1].match-protocol", "someProtocol2");
-        checkAttribute("match-rules[1].match-purpose", "somePurpose2");
         checkAttribute("match-rules[1].match-urn", "someUrn2");
         checkAttribute("match-rules[1].match-user", "someUser2");
     }
