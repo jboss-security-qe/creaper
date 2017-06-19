@@ -9,6 +9,10 @@ if (atrAuthenticationOptional != null) sslContextAttrs['authentication-optional'
 if (atrNeedClientAuth != null) sslContextAttrs['need-client-auth'] = atrNeedClientAuth
 if (atrWantClientAuth != null) sslContextAttrs['want-client-auth'] = atrWantClientAuth
 if (atrSecurityDomain != null) sslContextAttrs['security-domain'] = atrSecurityDomain
+if (atrRealmMapper != null) sslContextAttrs['realm-mapper'] = atrRealmMapper
+if (atrPreRealmPrincipalTransforemer != null) sslContextAttrs['pre-realm-principal-transforemer'] = atrPreRealmPrincipalTransforemer
+if (atrPostRealmPrincipalTransforemer != null) sslContextAttrs['post-realm-principal-transforemer'] = atrPostRealmPrincipalTransforemer
+if (atrFinalPrincipalTransforemer != null) sslContextAttrs['final-principal-transforemer'] = atrFinalPrincipalTransforemer
 if (atrProviders != null) sslContextAttrs['providers'] = atrProviders
 if (atrProviderName != null) sslContextAttrs['provider-name'] = atrProviderName
 

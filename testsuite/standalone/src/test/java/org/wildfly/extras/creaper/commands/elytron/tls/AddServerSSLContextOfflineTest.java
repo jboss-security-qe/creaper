@@ -3,8 +3,9 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 import static org.junit.Assert.fail;
 import static org.wildfly.extras.creaper.XmlAssert.assertXmlIdentical;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
 import java.io.File;
-
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Before;
 import org.junit.Rule;
@@ -14,9 +15,6 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineManagementClient;
 import org.wildfly.extras.creaper.core.offline.OfflineOptions;
-
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
 
 public class AddServerSSLContextOfflineTest {
 
@@ -101,7 +99,11 @@ public class AddServerSSLContextOfflineTest {
             + "                                        key-manager=\"keyManager\" trust-manager=\"trustManager\" "
             + "                                        protocols=\"TLSv1.2 TLSv1.1\" authentication-optional=\"true\" "
             + "                                        need-client-auth=\"false\" want-client-auth=\"true\" "
-            + "                                        security-domain=\"securityDomain\" provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
+            + "                                        security-domain=\"securityDomain\" realm-mapper=\"realmMapper\" "
+            + "                                        pre-realm-principal-transforemer=\"preRealmPrincipalTransformer\" "
+            + "                                        post-realm-principal-transforemer=\"postRealmPrincipalTransformer\" "
+            + "                                        final-principal-transforemer=\"finalPrincipalTransformer\" "
+            + "                                        provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -259,6 +261,10 @@ public class AddServerSSLContextOfflineTest {
                 .needClientAuth(false)
                 .wantClientAuth(true)
                 .securityDomain("securityDomain")
+                .realmMapper("realmMapper")
+                .preRealmPrincipalTransformer("preRealmPrincipalTransformer")
+                .postRealmPrincipalTransformer("postRealmPrincipalTransformer")
+                .finalPrincipalTransformer("finalPrincipalTransformer")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")
                 .build();

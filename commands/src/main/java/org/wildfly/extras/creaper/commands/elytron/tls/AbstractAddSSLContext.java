@@ -2,7 +2,6 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 
@@ -11,8 +10,6 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
     protected final String name;
     protected final String cipherSuiteFilter;
     protected final List<String> protocols;
-    protected final Integer maximumSessionCacheSize;
-    protected final Integer sessionTimeout;
     protected final String keyManager;
     protected final String trustManager;
     protected final String providers;
@@ -23,8 +20,6 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         this.name = builder.name;
         this.cipherSuiteFilter = builder.cipherSuiteFilter;
         this.protocols = builder.protocols;
-        this.maximumSessionCacheSize = builder.maximumSessionCacheSize;
-        this.sessionTimeout = builder.sessionTimeout;
         this.keyManager = builder.keyManager;
         this.trustManager = builder.trustManager;
         this.providers = builder.providers;
@@ -37,8 +32,6 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         protected final String name;
         protected String cipherSuiteFilter;
         protected List<String> protocols;
-        protected Integer maximumSessionCacheSize;
-        protected Integer sessionTimeout;
         protected String keyManager;
         protected String trustManager;
         private boolean replaceExisting;
@@ -64,16 +57,6 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
 
         public final THIS cipherSuiteFilter(String cipherSuiteFilter) {
             this.cipherSuiteFilter = cipherSuiteFilter;
-            return (THIS) this;
-        }
-
-        public final THIS maximumSessionCacheSize(Integer maximumSessionCacheSize) {
-            this.maximumSessionCacheSize = maximumSessionCacheSize;
-            return (THIS) this;
-        }
-
-        public final THIS sessionTimeout(Integer sessionTimeout) {
-            this.sessionTimeout = sessionTimeout;
             return (THIS) this;
         }
 

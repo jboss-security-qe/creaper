@@ -14,15 +14,26 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
     private final Boolean authenticationOptional;
     private final Boolean needClientAuth;
     private final Boolean wantClientAuth;
+    private final Integer maximumSessionCacheSize;
+    private final Integer sessionTimeout;
     private final String securityDomain;
+    private final String realmMapper;
+    private final String preRealmPrincipalTransformer;
+    private final String postRealmPrincipalTransformer;
+    private final String finalPrincipalTransformer;
 
     private AddServerSSLContext(Builder builder) {
         super(builder);
         this.authenticationOptional = builder.authenticationOptional;
         this.needClientAuth = builder.needClientAuth;
         this.wantClientAuth = builder.wantClientAuth;
+        this.maximumSessionCacheSize = builder.maximumSessionCacheSize;
+        this.sessionTimeout = builder.sessionTimeout;
         this.securityDomain = builder.securityDomain;
-
+        this.realmMapper = builder.realmMapper;
+        this.preRealmPrincipalTransformer = builder.preRealmPrincipalTransformer;
+        this.postRealmPrincipalTransformer = builder.postRealmPrincipalTransformer;
+        this.finalPrincipalTransformer = builder.finalPrincipalTransformer;
     }
 
     @Override
@@ -45,6 +56,10 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .andOptional("need-client-auth", needClientAuth)
                 .andOptional("want-client-auth", wantClientAuth)
                 .andOptional("security-domain", securityDomain)
+                .andOptional("realm-mapper", realmMapper)
+                .andOptional("pre-realm-principal-transforemer", preRealmPrincipalTransformer)
+                .andOptional("post-realm-principal-transforemer", postRealmPrincipalTransformer)
+                .andOptional("final-principal-transforemer", finalPrincipalTransformer)
                 .andOptional("providers", providers)
                 .andOptional("provider-name", providerName));
     }
@@ -64,6 +79,10 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .parameter("atrNeedClientAuth", needClientAuth)
                 .parameter("atrWantClientAuth", wantClientAuth)
                 .parameter("atrSecurityDomain", securityDomain)
+                .parameter("atrRealmMapper", realmMapper)
+                .parameter("atrPreRealmPrincipalTransforemer", preRealmPrincipalTransformer)
+                .parameter("atrPostRealmPrincipalTransforemer", postRealmPrincipalTransformer)
+                .parameter("atrFinalPrincipalTransforemer", finalPrincipalTransformer)
                 .parameter("atrProviders", providers)
                 .parameter("atrProviderName", providerName)
                 .parameter("atrReplaceExisting", replaceExisting)
@@ -75,7 +94,13 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
         private Boolean authenticationOptional;
         private Boolean needClientAuth;
         private Boolean wantClientAuth;
+        private Integer maximumSessionCacheSize;
+        private Integer sessionTimeout;
         private String securityDomain;
+        private String realmMapper;
+        private String preRealmPrincipalTransformer;
+        private String postRealmPrincipalTransformer;
+        private String finalPrincipalTransformer;
 
         public Builder(String name) {
             super(name);
@@ -96,8 +121,38 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
             return this;
         }
 
+        public Builder maximumSessionCacheSize(Integer maximumSessionCacheSize) {
+            this.maximumSessionCacheSize = maximumSessionCacheSize;
+            return this;
+        }
+
+        public Builder sessionTimeout(Integer sessionTimeout) {
+            this.sessionTimeout = sessionTimeout;
+            return this;
+        }
+
         public Builder securityDomain(String securityDomain) {
             this.securityDomain = securityDomain;
+            return this;
+        }
+
+        public Builder realmMapper(String realmMapper) {
+            this.realmMapper = realmMapper;
+            return this;
+        }
+
+        public Builder preRealmPrincipalTransformer(String preRealmPrincipalTransformer) {
+            this.preRealmPrincipalTransformer = preRealmPrincipalTransformer;
+            return this;
+        }
+
+        public Builder postRealmPrincipalTransformer(String postRealmPrincipalTransformer) {
+            this.postRealmPrincipalTransformer = postRealmPrincipalTransformer;
+            return this;
+        }
+
+        public Builder finalPrincipalTransformer(String finalPrincipalTransformer) {
+            this.finalPrincipalTransformer = finalPrincipalTransformer;
             return this;
         }
 
