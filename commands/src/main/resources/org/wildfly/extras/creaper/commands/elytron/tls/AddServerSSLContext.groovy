@@ -10,9 +10,9 @@ if (atrNeedClientAuth != null) sslContextAttrs['need-client-auth'] = atrNeedClie
 if (atrWantClientAuth != null) sslContextAttrs['want-client-auth'] = atrWantClientAuth
 if (atrSecurityDomain != null) sslContextAttrs['security-domain'] = atrSecurityDomain
 if (atrRealmMapper != null) sslContextAttrs['realm-mapper'] = atrRealmMapper
-if (atrPreRealmPrincipalTransforemer != null) sslContextAttrs['pre-realm-principal-transforemer'] = atrPreRealmPrincipalTransforemer
-if (atrPostRealmPrincipalTransforemer != null) sslContextAttrs['post-realm-principal-transforemer'] = atrPostRealmPrincipalTransforemer
-if (atrFinalPrincipalTransforemer != null) sslContextAttrs['final-principal-transforemer'] = atrFinalPrincipalTransforemer
+if (atrPreRealmPrincipalTransformer != null) sslContextAttrs['pre-realm-principal-transformer'] = atrPreRealmPrincipalTransformer
+if (atrPostRealmPrincipalTransformer != null) sslContextAttrs['post-realm-principal-transformer'] = atrPostRealmPrincipalTransformer
+if (atrFinalPrincipalTransformer != null) sslContextAttrs['final-principal-transformer'] = atrFinalPrincipalTransformer
 if (atrProviders != null) sslContextAttrs['providers'] = atrProviders
 if (atrProviderName != null) sslContextAttrs['provider-name'] = atrProviderName
 

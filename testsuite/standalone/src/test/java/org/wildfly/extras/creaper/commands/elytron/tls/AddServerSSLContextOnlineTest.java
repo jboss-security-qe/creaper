@@ -7,13 +7,19 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalTransformer;
+import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantRealmMapper;
 import org.wildfly.extras.creaper.core.CommandFailedException;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 @RunWith(Arquillian.class)
 public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTest {
@@ -21,10 +27,56 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     private static final String SERVER_SSL_CONTEXT_PROTOCOL = "TLSv1.2";
     private static final String SERVER_SSL_CONTEXT_NAME = "CreaperTestServerSSLContext";
     private static final String SERVER_SSL_CONTEXT_NAME2 = "CreaperTestServerSSLContext2";
+    private static final String PRE_REALM_PRINCIPAL_TRANSFORMER = "preRealmPrincipalTransformer";
+    private static final String POST_REALM_PRINCIPAL_TRANSFORMER = "postRealmPrincipalTransformer";
+    private static final String FINAL_PRINCIPAL_TRANSFORMER = "finalPrincipalTransformer";
+    private static final String REALM_MAPPER = "realmMapper";
     private static final Address SERVER_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS.and("server-ssl-context",
             SERVER_SSL_CONTEXT_NAME);
     private static final Address SERVER_SSL_CONTEXT_ADDRESS2 = SUBSYSTEM_ADDRESS.and("server-ssl-context",
             SERVER_SSL_CONTEXT_NAME2);
+    private static final Address REALM_MAPPER_ADDRESS = SUBSYSTEM_ADDRESS.and("constant-realm-mapper",
+            REALM_MAPPER);
+    private static final Address PRE_REALM_PRINCIPAL_TRANSFORMER_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("pre-realm-principal-transformer", PRE_REALM_PRINCIPAL_TRANSFORMER);
+    private static final Address POST_REALM_PRINCIPAL_TRANSFORMER_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", POST_REALM_PRINCIPAL_TRANSFORMER);
+    private static final Address FINAL_PRINCIPAL_TRANSFORMER_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("constant-principal-transformer", FINAL_PRINCIPAL_TRANSFORMER);
+
+    @BeforeClass
+    public static void addServerSslContextDependentResources() throws Exception {
+        try (OnlineManagementClient client = createManagementClient()) {
+            client.apply(new AddConstantPrincipalTransformer.Builder(PRE_REALM_PRINCIPAL_TRANSFORMER)
+                .constant(PRE_REALM_PRINCIPAL_TRANSFORMER)
+                .build());
+
+            client.apply(new AddConstantPrincipalTransformer.Builder(POST_REALM_PRINCIPAL_TRANSFORMER)
+                .constant(POST_REALM_PRINCIPAL_TRANSFORMER)
+                .build());
+
+            client.apply(new AddConstantPrincipalTransformer.Builder(FINAL_PRINCIPAL_TRANSFORMER)
+                .constant(FINAL_PRINCIPAL_TRANSFORMER)
+                .build());
+
+            client.apply(new AddConstantRealmMapper.Builder(REALM_MAPPER)
+                .realmName(REALM_MAPPER)
+                .build());
+        }
+    }
+
+    @AfterClass
+    public static void removeServerSslDependentResources() throws Exception {
+        try (OnlineManagementClient client = createManagementClient()) {
+            Operations ops = new Operations(client);
+            Administration administration = new Administration(client);
+            ops.removeIfExists(REALM_MAPPER_ADDRESS);
+            ops.removeIfExists(PRE_REALM_PRINCIPAL_TRANSFORMER_ADDRESS);
+            ops.removeIfExists(POST_REALM_PRINCIPAL_TRANSFORMER_ADDRESS);
+            ops.removeIfExists(FINAL_PRINCIPAL_TRANSFORMER_ADDRESS);
+            administration.reloadIfRequired();
+        }
+    }
 
     @After
     public void cleanup() throws Exception {
@@ -110,7 +162,11 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
                 .needClientAuth(true)
                 .wantClientAuth(true)
                 .authenticationOptional(true)
-//                .securityDomain("security-domain")
+                .securityDomain("ApplicationDomain")
+                .realmMapper(REALM_MAPPER)
+                .preRealmPrincipalTransformer(PRE_REALM_PRINCIPAL_TRANSFORMER)
+                .postRealmPrincipalTransformer(POST_REALM_PRINCIPAL_TRANSFORMER)
+                .finalPrincipalTransformer(FINAL_PRINCIPAL_TRANSFORMER)
                 .build();
         client.apply(addServerSSLContext);
         assertTrue("The server ssl context should be created", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
@@ -124,6 +180,11 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         checkAttribute("need-client-auth", "true");
         checkAttribute("want-client-auth", "true");
         checkAttribute("authentication-optional", "true");
+        checkAttribute("security-domain", "ApplicationDomain");
+        checkAttribute("realm-mapper", REALM_MAPPER);
+        checkAttribute("pre-realm-principal-transformer", PRE_REALM_PRINCIPAL_TRANSFORMER);
+        checkAttribute("post-realm-principal-transformer", POST_REALM_PRINCIPAL_TRANSFORMER);
+        checkAttribute("final-principal-transformer", FINAL_PRINCIPAL_TRANSFORMER);
     }
 
     @Test(expected = IllegalArgumentException.class)
