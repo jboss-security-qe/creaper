@@ -58,7 +58,6 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
                         .clearText(TEST_PASSWORD)
                         .build())
                 .addImplementationProperties("cryptoAlg", "MD5")
-                .caseSensitive(true)
                 .location("/path/to/nowhere")
                 .modifiable(true)
                 .build();
@@ -73,7 +72,6 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "provider-name", "WildFlyElytron");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "other-providers", "elytron");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "implementation-properties.cryptoAlg", "MD5");
-        checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "case-sensitive", "true");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "location", "/path/to/nowhere");
         checkAttribute(TEST_CREDENTIAL_STORE_ADDRESS, "modifiable", "true");
     }

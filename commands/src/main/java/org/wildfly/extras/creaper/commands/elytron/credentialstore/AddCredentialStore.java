@@ -2,6 +2,7 @@ package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -19,7 +20,6 @@ public final class AddCredentialStore implements OnlineCommand {
     private final String otherProviders;
     private final String relativeTo;
     private final CredentialRef credentialReference;
-    private final Boolean caseSensitive;
     private final Boolean create;
     private final Map<String, String> implementationProperties;
     private final String location;
@@ -34,7 +34,6 @@ public final class AddCredentialStore implements OnlineCommand {
         this.otherProviders = builder.otherProviders;
         this.relativeTo = builder.relativeTo;
         this.credentialReference = builder.credentialReference;
-        this.caseSensitive = builder.caseSensitive;
         this.create = builder.create;
         this.implementationProperties = builder.implementationProperties;
         this.location = builder.location;
@@ -58,7 +57,6 @@ public final class AddCredentialStore implements OnlineCommand {
                 .andOptional("providers", providers)
                 .andOptional("other-providers", otherProviders)
                 .andOptional("relative-to", relativeTo)
-                .andOptional("case-sensitive", caseSensitive)
                 .andOptional("create", create)
                 .andOptional("location", location)
                 .andOptional("modifiable", modifiable)
@@ -74,7 +72,6 @@ public final class AddCredentialStore implements OnlineCommand {
         private String otherProviders;
         private String relativeTo;
         private CredentialRef credentialReference;
-        private Boolean caseSensitive;
         private Boolean create;
         private final Map<String, String> implementationProperties = new HashMap<String, String>();
         private String location;
@@ -115,11 +112,6 @@ public final class AddCredentialStore implements OnlineCommand {
 
         public Builder credentialReference(CredentialRef credentialReference) {
             this.credentialReference = credentialReference;
-            return this;
-        }
-
-        public Builder caseSensitive(boolean caseSensitive) {
-            this.caseSensitive = caseSensitive;
             return this;
         }
 
