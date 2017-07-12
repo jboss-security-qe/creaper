@@ -1,8 +1,10 @@
 keyStoreAttrs = ['name': atrName]
-if (atrType != null) keyStoreAttrs['type'] = atrType
 if (atrAliasFilter != null) keyStoreAttrs['alias-filter'] = atrAliasFilter
-if (atrProviderName != null) keyStoreAttrs['provider-name'] = atrProviderName
-if (atrProviders != null) keyStoreAttrs['providers'] = atrProviders
+
+implementationAttrs = [:]
+if (atrType != null) implementationAttrs['type'] = atrType
+if (atrProviderName != null) implementationAttrs['provider-name'] = atrProviderName
+if (atrProviders != null) implementationAttrs['providers'] = atrProviders
 
 fileAttrs = [:]
 if (atrPath != null) fileAttrs['path'] = atrPath
@@ -17,10 +19,11 @@ if (atrCredentialRefClearText != null) credentialReferenceAttrs['clear-text'] = 
 
 def keyStoreDefinition = {
     'key-store'(keyStoreAttrs) {
-        if (atrPath || atrRelativeTo || atrRequired) {
+        'credential-reference'(credentialReferenceAttrs)
+        'implementation'(implementationAttrs)
+        if (!fileAttrs.isEmpty()) {
             'file'(fileAttrs)
         }
-        'credential-reference'(credentialReferenceAttrs)
     }
 }
 

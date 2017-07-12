@@ -1,25 +1,29 @@
-keyStoreAttrs = ['name': atrName, 'dir-context': atrDirContext, 'search-path': atrSearchPath]
-if (atrSearchRecursive != null) keyStoreAttrs['search-recursive'] = atrSearchRecursive
-if (atrSearchTimeLimit != null) keyStoreAttrs['search-time-limit'] = atrSearchTimeLimit
-if (atrFilterAlias != null) keyStoreAttrs['filter-alias'] = atrFilterAlias
-if (atrFilterCertificate != null) keyStoreAttrs['filter-certificate'] = atrFilterCertificate
-if (atrFilterIterate != null) keyStoreAttrs['filter-iterate'] = atrFilterIterate
-
-ldapMappingAttrs = [:]
-if (atrAliasAttribute != null) ldapMappingAttrs['alias-attribute'] = atrAliasAttribute
-if (atrCertificateAttribute != null) ldapMappingAttrs['certificate-attribute'] = atrCertificateAttribute
-if (atrCertificateType != null) ldapMappingAttrs['certificate-type'] = atrCertificateType
-if (atrCertificateChainAttribute != null) ldapMappingAttrs['certificate-chain-attribute'] = atrCertificateChainAttribute
-if (atrCertificateChainEncoding != null) ldapMappingAttrs['certificate-chain-encoding'] = atrCertificateChainEncoding
+keyStoreAttrs = ['name': atrName, 'dir-context': atrDirContext]
 
 newItemTemplateAttrs = [:]
 if (atrNewItemPath != null) newItemTemplateAttrs['new-item-path'] = atrNewItemPath
 if (atrNewItemRdn != null) newItemTemplateAttrs['new-item-rdn'] = atrNewItemRdn
 
+searchAttrs = [:]
+if (atrSearchPath != null) searchAttrs['path'] = atrSearchPath
+if (atrSearchRecursive != null) searchAttrs['recursive'] = atrSearchRecursive
+if (atrSearchTimeLimit != null) searchAttrs['time-limit'] = atrSearchTimeLimit
+if (atrFilterAlias != null) searchAttrs['filter-alias'] = atrFilterAlias
+if (atrFilterCertificate != null) searchAttrs['filter-certificate'] = atrFilterCertificate
+if (atrFilterIterate != null) searchAttrs['filter-iterate'] = atrFilterIterate
+
+attributeMappingAttrs = [:]
+if (atrAliasAttribute != null) attributeMappingAttrs['alias-attribute'] = atrAliasAttribute
+if (atrCertificateAttribute != null) attributeMappingAttrs['certificate-attribute'] = atrCertificateAttribute
+if (atrCertificateType != null) attributeMappingAttrs['certificate-type'] = atrCertificateType
+if (atrCertificateChainAttribute != null) attributeMappingAttrs['certificate-chain-attribute'] = atrCertificateChainAttribute
+if (atrCertificateChainEncoding != null) attributeMappingAttrs['certificate-chain-encoding'] = atrCertificateChainEncoding
+
 def keyStoreDefinition = {
     'ldap-key-store'(keyStoreAttrs) {
-        if (!ldapMappingAttrs.isEmpty()) {
-            'ldap-mapping'(ldapMappingAttrs)
+        'search'(searchAttrs)
+        if (!attributeMappingAttrs.isEmpty()) {
+            'attribute-mapping'(attributeMappingAttrs)
         }
         if (!newItemTemplateAttrs.isEmpty()) {
             'new-item-template'(newItemTemplateAttrs) {

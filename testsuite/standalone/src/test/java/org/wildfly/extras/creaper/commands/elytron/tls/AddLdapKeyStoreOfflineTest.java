@@ -2,6 +2,7 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import static org.junit.Assert.fail;
 import static org.wildfly.extras.creaper.XmlAssert.assertXmlIdentical;
+
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import java.io.File;
@@ -56,7 +57,9 @@ public class AddLdapKeyStoreOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-stores>\n"
-            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\" search-path=\"searchPath\"/>\n"
+            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\">\n"
+            + "                        <search path=\"searchPath\"/>\n"
+            + "                    </ldap-key-store>\n"
             + "                </key-stores>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -69,7 +72,9 @@ public class AddLdapKeyStoreOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-stores>\n"
-            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\" search-path=\"searchPath2\"/>\n"
+            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\">\n"
+            + "                        <search path=\"searchPath2\"/>\n"
+            + "                    </ldap-key-store>\n"
             + "                </key-stores>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -82,8 +87,12 @@ public class AddLdapKeyStoreOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-stores>\n"
-            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\" search-path=\"searchPath\"/>\n"
-            + "                    <ldap-key-store name=\"creaperKeyStore2\" dir-context=\"dirContext\" search-path=\"searchPath\"/>\n"
+            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\">\n"
+            + "                        <search path=\"searchPath\"/>\n"
+            + "                    </ldap-key-store>\n"
+            + "                    <ldap-key-store name=\"creaperKeyStore2\" dir-context=\"dirContext\">\n"
+            + "                        <search path=\"searchPath\"/>\n"
+            + "                    </ldap-key-store>\n"
             + "                </key-stores>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -96,10 +105,10 @@ public class AddLdapKeyStoreOfflineTest {
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-stores>\n"
-            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\" search-path=\"searchPath\" "
-            + "                                    search-recursive=\"true\" search-time-limit=\"30\" filter-alias=\"filterAlias\" "
-            + "                                    filter-certificate=\"filterCertificate\" filter-iterate=\"filterIterate\">\n"
-            + "                        <ldap-mapping alias-attribute=\"aliasAttribute\" certificate-attribute=\"certificateAttribute\" "
+            + "                    <ldap-key-store name=\"creaperKeyStore\" dir-context=\"dirContext\">\n"
+            + "                        <search path=\"searchPath\" recursive=\"true\" time-limit=\"30\" filter-alias=\"filterAlias\" "
+            + "                                filter-certificate=\"filterCertificate\" filter-iterate=\"filterIterate\"/>\n"
+            + "                        <attribute-mapping alias-attribute=\"aliasAttribute\" certificate-attribute=\"certificateAttribute\" "
             + "                                      certificate-type=\"certificateType\" "
             + "                                      certificate-chain-attribute=\"certificateChainAttribute\" "
             + "                                      certificate-chain-encoding=\"certificateChainEncoding\"/>\n"
