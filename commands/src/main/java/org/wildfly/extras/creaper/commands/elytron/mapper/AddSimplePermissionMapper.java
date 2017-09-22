@@ -37,6 +37,9 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
         List<ModelNode> permissionMappingsModelNodeList = new ArrayList<ModelNode>();
         for (PermissionMapping mapping : permissionMappings) {
             ModelNode configNode = new ModelNode();
+            if (mapping.getMatchAll() != null) {
+                configNode.add("match-all", mapping.getMatchAll());
+            }
             if (mapping.getRoles() != null && !mapping.getRoles().isEmpty()) {
                 ModelNode rolesList = new ModelNode().setEmptyList();
                 for (String role : mapping.getRoles()) {
@@ -126,14 +129,20 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
 
     public static final class PermissionMapping {
 
+        private final Boolean matchAll;
         private final List<String> roles;
         private final List<String> principals;
         private final List<Permission> permissions;
 
         private PermissionMapping(PermissionMappingBuilder builder) {
+            this.matchAll = builder.matchAll;
             this.roles = builder.roles;
             this.principals = builder.principals;
             this.permissions = builder.permissions;
+        }
+
+        public Boolean getMatchAll() {
+            return matchAll;
         }
 
         public List<String> getRoles() {
@@ -152,9 +161,15 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
 
     public static final class PermissionMappingBuilder {
 
+        private Boolean matchAll;
         private List<String> roles = new ArrayList<String>();
         private List<String> principals = new ArrayList<String>();
         private List<Permission> permissions = new ArrayList<Permission>();
+
+        public PermissionMappingBuilder matchAll(Boolean matchAll) {
+            this.matchAll = matchAll;
+            return this;
+        }
 
         public PermissionMappingBuilder addRoles(String... roles) {
             if (roles == null) {
@@ -181,6 +196,12 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
         }
 
         public PermissionMapping build() {
+            if (matchAll != null && !principals.isEmpty()) {
+                throw new IllegalArgumentException("Only one of principal and match-all can be used.");
+            }
+            if (matchAll != null && !roles.isEmpty()) {
+                throw new IllegalArgumentException("Only one of roles and match-all can be used.");
+            }
             return new PermissionMapping(this);
         }
 

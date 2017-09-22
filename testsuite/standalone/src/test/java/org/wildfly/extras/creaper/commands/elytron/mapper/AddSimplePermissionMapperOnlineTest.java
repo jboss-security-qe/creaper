@@ -136,6 +136,45 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
                 "changeRoleMapperPermissionName");
     }
 
+    @Test
+    public void addFullSimplePermissionMapper_matchAll() throws Exception {
+        AddSimplePermissionMapper addSimplePermissionMapper
+                = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
+                .mappingMode(AddSimplePermissionMapper.MappingMode.OR)
+                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
+                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
+                                .className("org.wildfly.security.auth.permission.LoginPermission")
+                                .build())
+                        .matchAll(true)
+                        .build(),
+                        new AddSimplePermissionMapper.PermissionMappingBuilder()
+                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
+                                .className("org.wildfly.security.auth.permission.ChangeRoleMapperPermission")
+                                .action("write")
+                                .targetName("changeRoleMapperPermissionName")
+                                .build())
+                        .matchAll(false)
+                        .build())
+                .build();
+
+        client.apply(addSimplePermissionMapper);
+
+        assertTrue("Simple permission mapper should be created", ops.exists(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS));
+
+        checkSimplePermissionMapperAttribute("mapping-mode", "or");
+
+        checkSimplePermissionMapperAttribute("permission-mappings[0].match-all", "true");
+        checkSimplePermissionMapperAttribute("permission-mappings[0].permissions[0].class-name",
+                "org.wildfly.security.auth.permission.LoginPermission");
+
+        checkSimplePermissionMapperAttributeIsUndefined("permission-mappings[1].match-all");
+        checkSimplePermissionMapperAttribute("permission-mappings[1].permissions[0].class-name",
+                "org.wildfly.security.auth.permission.ChangeRoleMapperPermission");
+        checkSimplePermissionMapperAttribute("permission-mappings[1].permissions[0].action", "write");
+        checkSimplePermissionMapperAttribute("permission-mappings[1].permissions[0].target-name",
+                "changeRoleMapperPermissionName");
+    }
+
     @Test(expected = CommandFailedException.class)
     public void addExistSimplePermissionMapperNotAllowed() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
@@ -265,11 +304,45 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
         fail("Creating command with empty class-name for permission should throw exception");
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void addSimplePermissionMapper_principalsMatchAll() throws Exception {
+        new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
+                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
+                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
+                                .className("org.wildfly.security.auth.permission.LoginPermission")
+                                .build())
+                        .addPrincipals("SomePrincipal1")
+                        .matchAll(true)
+                        .build())
+                .build();
+        fail("Creating command with both principals and match-all should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addSimplePermissionMapper_rolesMatchAll() throws Exception {
+        new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
+                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
+                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
+                                .className("org.wildfly.security.auth.permission.LoginPermission")
+                                .build())
+                        .addRoles("SomeRole1")
+                        .matchAll(true)
+                        .build())
+                .build();
+        fail("Creating command with both roles and match-all should throw exception");
+    }
+
     private void checkSimplePermissionMapperAttribute(String attribute, String expectedValue) throws IOException {
         ModelNodeResult readAttribute = ops.readAttribute(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS, attribute);
         readAttribute.assertSuccess("Read operation for " + attribute + " failed");
         assertEquals("Read operation for " + attribute + " return wrong value", expectedValue,
                 readAttribute.stringValue());
+    }
+
+    private void checkSimplePermissionMapperAttributeIsUndefined(String attribute) throws IOException {
+        ModelNodeResult readAttribute = ops.readAttribute(TEST_SIMPLE_PERMISSION_MAPPER_ADDRESS, attribute);
+        readAttribute.assertSuccess("Read operation for " + attribute + " failed");
+        readAttribute.assertNotDefinedValue("match-all should not have defined value");
     }
 
 }

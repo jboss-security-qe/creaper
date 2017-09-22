@@ -121,6 +121,7 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                 .protocol("someProtocol")
                 .port(12345)
                 .realm("someRealm")
+                .forwardingMode(AddAuthenticationConfiguration.ForwardingMode.AUTHORIZATION)
                 .build();
         client.apply(addAuthenticationConfiguration);
 
@@ -135,6 +136,7 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
         checkAttribute("port", "12345");
         checkAttribute("realm", "someRealm");
         checkAttribute("credential-reference.clear-text", "somePassword");
+        checkAttribute("forwarding-mode", "authorization");
         checkAttribute("mechanism-properties.property1", "value1");
         checkAttribute("mechanism-properties.property2", "value2");
     }

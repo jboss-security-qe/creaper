@@ -29,6 +29,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
     private final String securityDomain;
     private final String saslMechanismSelector;
     private final String kerberosSecurityFactory;
+    private final ForwardingMode forwardingMode;
     private final boolean replaceExisting;
 
     private AddAuthenticationConfiguration(Builder builder) {
@@ -46,6 +47,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         this.securityDomain = builder.securityDomain;
         this.saslMechanismSelector = builder.saslMechanismSelector;
         this.kerberosSecurityFactory = builder.kerberosSecurityFactory;
+        this.forwardingMode = builder.forwardingMode;
         this.replaceExisting = builder.replaceExisting;
     }
 
@@ -68,6 +70,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         }
 
         Values credentialReferenceValues = credentialReference != null ? credentialReference.toValues() : null;
+        String forwardingModeValue = forwardingMode == null ? null : forwardingMode.name().toLowerCase();
 
         ops.add(realmAddress, Values.empty()
                 .andOptional("extends", extend)
@@ -82,6 +85,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
                 .andOptional("mechanism-properties", mechanismPropertiesNode)
                 .andOptional("sasl-mechanism-selector", saslMechanismSelector)
                 .andOptional("kerberos-security-factory", kerberosSecurityFactory)
+                .andOptional("forwarding-mode", forwardingModeValue)
                 .andObjectOptional("credential-reference", credentialReferenceValues));
     }
 
@@ -101,6 +105,7 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
         private String securityDomain;
         private String saslMechanismSelector;
         private String kerberosSecurityFactory;
+        private ForwardingMode forwardingMode;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -181,6 +186,11 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
             return this;
         }
 
+        public Builder forwardingMode(ForwardingMode forwardingMode) {
+            this.forwardingMode = forwardingMode;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
@@ -227,5 +237,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
             return value;
         }
 
+    }
+
+    public static enum ForwardingMode {
+
+        AUTHENTICATION, AUTHORIZATION
     }
 }
