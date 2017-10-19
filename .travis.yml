@@ -12,4 +12,4 @@ script:
     - unzip -q artifacts.zip
     - export WILDFLY_DIST_ZIP=$(ls wildfly-*-SNAPSHOT.zip)
     - mvn install:install-file -DgroupId=org.wildfly -DartifactId=wildfly-dist -Dversion=11.0.0.elytron-SNAPSHOT -Dfile=$WILDFLY_DIST_ZIP -DgeneratePom=true -Dpackaging=zip
-    - mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true -Dtest=**.elytron.**.* -Dversion.wildfly10=11.0.0.elytron-SNAPSHOT
+    - mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true -Dtest=**.elytron.**.* -Dversion.wildfly11=11.0.0.elytron-SNAPSHOT

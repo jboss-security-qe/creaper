@@ -22,6 +22,7 @@
 
 package org.wildfly.extras.creaper.commands.elytron.realm;
 
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Map;
 
 import org.wildfly.extension.elytron.Configurable;
@@ -34,7 +35,8 @@ import org.wildfly.security.evidence.Evidence;
 public class AddCustomRealmImpl implements SecurityRealm, Configurable {
 
     @Override
-    public SupportLevel getCredentialAcquireSupport(Class<? extends Credential> credentialType, String algorithmName)
+    public SupportLevel getCredentialAcquireSupport(Class<? extends Credential> credentialType, String algorithmName,
+        AlgorithmParameterSpec parameterSpec)
             throws RealmUnavailableException {
         return null;
     }

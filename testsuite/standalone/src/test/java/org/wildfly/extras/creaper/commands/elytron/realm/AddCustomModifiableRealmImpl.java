@@ -22,12 +22,12 @@
 
 package org.wildfly.extras.creaper.commands.elytron.realm;
 
+import java.security.spec.AlgorithmParameterSpec;
 import java.util.Map;
 
 import org.wildfly.extension.elytron.Configurable;
 import org.wildfly.security.auth.SupportLevel;
-import org.wildfly.security.auth.server.CloseableIterator;
-import org.wildfly.security.auth.server.ModifiableRealmIdentity;
+import org.wildfly.security.auth.server.ModifiableRealmIdentityIterator;
 import org.wildfly.security.auth.server.ModifiableSecurityRealm;
 import org.wildfly.security.auth.server.RealmUnavailableException;
 import org.wildfly.security.credential.Credential;
@@ -36,7 +36,8 @@ import org.wildfly.security.evidence.Evidence;
 public class AddCustomModifiableRealmImpl implements ModifiableSecurityRealm, Configurable {
 
     @Override
-    public SupportLevel getCredentialAcquireSupport(Class<? extends Credential> credentialType, String algorithmName)
+    public SupportLevel getCredentialAcquireSupport(Class<? extends Credential> credentialType, String algorithmName,
+        AlgorithmParameterSpec parameterSpec)
             throws RealmUnavailableException {
         return null;
     }
@@ -48,7 +49,7 @@ public class AddCustomModifiableRealmImpl implements ModifiableSecurityRealm, Co
     }
 
     @Override
-    public CloseableIterator<ModifiableRealmIdentity> getRealmIdentityIterator() throws RealmUnavailableException {
+    public ModifiableRealmIdentityIterator getRealmIdentityIterator() throws RealmUnavailableException {
         return null;
     }
 

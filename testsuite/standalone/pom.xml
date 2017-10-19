@@ -14,8 +14,8 @@
     <description>Creaper: Test Suite: Standalone &amp; Offline</description>
     
     <properties>
-        <version.wildfly-elytron>1.1.0.Beta31</version.wildfly-elytron>
-        <version.org.wildfly.core>3.0.0.Beta9</version.org.wildfly.core>
+        <version.wildfly-elytron>1.1.5.Final</version.wildfly-elytron>
+        <version.org.wildfly.core>3.0.6.Final</version.org.wildfly.core>
     </properties>
 
     <dependencies>
@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>org.wildfly.core</groupId>
-            <artifactId>wildfly-elytron</artifactId>
+            <artifactId>wildfly-elytron-integration</artifactId>
             <version>${version.org.wildfly.core}</version>
         </dependency>
     </dependencies>

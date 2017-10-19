@@ -29,8 +29,8 @@
         <version.wildfly10.core>2.2.0.Final</version.wildfly10.core>
         <version.wildfly10.arquillian>1.1.0.Final</version.wildfly10.arquillian>
         <version.wildfly11>11.0.0.Alpha1</version.wildfly11>
-        <version.wildfly11.core>3.0.0.Beta11</version.wildfly11.core>
-        <version.wildfly11.arquillian>2.0.2.Final</version.wildfly11.arquillian>
+        <version.wildfly11.core>3.0.6.Final</version.wildfly11.core>
+        <version.wildfly11.arquillian>2.1.0.Final</version.wildfly11.arquillian>
 
         <managementPort.as7>9999</managementPort.as7>
         <managementPort.wildfly>9990</managementPort.wildfly>
@@ -399,7 +399,7 @@
         <profile>
             <id>wildfly10</id>
             <activation>
-                <activeByDefault>true</activeByDefault>
+                <activeByDefault>false</activeByDefault>
             </activation>
 
             <properties>
@@ -491,6 +491,11 @@
                 <dependency>
                     <groupId>org.wildfly.core</groupId>
                     <artifactId>wildfly-patching</artifactId>
+                    <version>${version.wildfly11.core}</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.wildfly.core</groupId>
+                    <artifactId>wildfly-elytron-integration</artifactId>
                     <version>${version.wildfly11.core}</version>
                 </dependency>
             </dependencies>
