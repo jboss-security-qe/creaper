@@ -36,11 +36,6 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     public void addSimplePermissionMapper() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
-                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
-                                .className("org.wildfly.security.auth.permission.LoginPermission")
-                                .build())
-                        .build())
                 .build();
 
         client.apply(addSimplePermissionMapper);
@@ -52,20 +47,10 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     public void addTwoSimplePermissionMappers() throws Exception {
         AddSimplePermissionMapper addSimplePermissionMapper
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
-                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
-                                .className("org.wildfly.security.auth.permission.LoginPermission")
-                                .build())
-                        .build())
                 .build();
 
         AddSimplePermissionMapper addSimplePermissionMapper2
                 = new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME2)
-                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
-                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
-                                .className("org.wildfly.security.auth.permission.LoginPermission")
-                                .build())
-                        .build())
                 .build();
 
         client.apply(addSimplePermissionMapper);
@@ -236,11 +221,6 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addSimplePermissionMapper_nullName() throws Exception {
         new AddSimplePermissionMapper.Builder(null)
-                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
-                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
-                                .className("org.wildfly.security.auth.permission.LoginPermission")
-                                .build())
-                        .build())
                 .build();
         fail("Creating command with null name should throw exception");
     }
@@ -248,36 +228,8 @@ public class AddSimplePermissionMapperOnlineTest extends AbstractElytronOnlineTe
     @Test(expected = IllegalArgumentException.class)
     public void addSimplePermissionMapper_emptyName() throws Exception {
         new AddSimplePermissionMapper.Builder("")
-                .addPermissionMappings(new AddSimplePermissionMapper.PermissionMappingBuilder()
-                        .addPermissions(new AddSimplePermissionMapper.PermissionBuilder()
-                                .className("org.wildfly.security.auth.permission.LoginPermission")
-                                .build())
-                        .build())
                 .build();
         fail("Creating command with empty name should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addSimplePermissionMapper_nullPermissionMapping() throws Exception {
-        new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .addPermissionMappings(null)
-                .build();
-        fail("Creating command with null permission mapping should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addSimplePermissionMapper_noPermissionMapping() throws Exception {
-        new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .build();
-        fail("Creating command with no permission mapping should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addSimplePermissionMapper_emptyPermissionMapping() throws Exception {
-        new AddSimplePermissionMapper.Builder(TEST_SIMPLE_PERMISSION_MAPPER_NAME)
-                .addPermissionMappings()
-                .build();
-        fail("Creating command with empty permission mapping should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

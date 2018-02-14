@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.jboss.dmr.ModelNode;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.Property;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -53,6 +55,10 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address realmAddress = Address.subsystem("elytron").and("authentication-configuration", name);
         if (replaceExisting) {
@@ -215,26 +221,6 @@ public final class AddAuthenticationConfiguration implements OnlineCommand {
                 throw new IllegalArgumentException("Only one of authentication-name, anonymous, security-domain and kerberos-security-factory can be set.");
             }
             return new AddAuthenticationConfiguration(this);
-        }
-
-    }
-
-    public static final class Property {
-
-        private final String key;
-        private final String value;
-
-        public Property(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
         }
 
     }

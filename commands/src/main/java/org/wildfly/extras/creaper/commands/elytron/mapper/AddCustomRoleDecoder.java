@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomRoleDecoder extends AbstractAddCustom {
 
-    protected AddCustomRoleDecoder(Builder builder) {
+    private AddCustomRoleDecoder(Builder builder) {
         super(builder);
     }
 

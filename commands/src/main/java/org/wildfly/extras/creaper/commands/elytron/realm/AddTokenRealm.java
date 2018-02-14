@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.realm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wildfly.extras.creaper.core.ServerVersion;
 
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -29,6 +30,10 @@ public final class AddTokenRealm implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address tokenRealmAddress = Address.subsystem("elytron")
                 .and("token-realm", name);
@@ -128,7 +133,7 @@ public final class AddTokenRealm implements OnlineCommand {
         private final String keyStore;
         private final String certificate;
 
-        public Jwt(JwtBuilder builder) {
+        private Jwt(JwtBuilder builder) {
             this.issuer = builder.issuer;
             this.audience = builder.audience;
             this.publicKey = builder.publicKey;
@@ -218,7 +223,7 @@ public final class AddTokenRealm implements OnlineCommand {
         private final String clientSslContext;
         private final String hostNameVerificationPolicy;
 
-        public Oauth2Introspection(Oauth2IntrospectionBuilder builder) {
+        private Oauth2Introspection(Oauth2IntrospectionBuilder builder) {
             this.clientId = builder.clientId;
             this.clientSecret = builder.clientSecret;
             this.introspectionUrl = builder.introspectionUrl;

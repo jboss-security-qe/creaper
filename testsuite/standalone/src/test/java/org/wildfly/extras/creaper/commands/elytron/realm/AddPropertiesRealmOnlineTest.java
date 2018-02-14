@@ -35,8 +35,14 @@ public class AddPropertiesRealmOnlineTest extends AbstractElytronOnlineTest {
     @BeforeClass
     public static void createUsersProperties() throws Exception {
         usersProperties = tmp.newFile();
-        try (FileWriter fw = new FileWriter(usersProperties)) {
+        FileWriter fw = null;
+        try {
+            fw = new FileWriter(usersProperties);
             fw.write("#$REALM_NAME=" + TEST_PROPERTIES_REALM_NAME + "$");
+        } finally {
+            if (fw != null) {
+                fw.close();
+            }
         }
     }
 

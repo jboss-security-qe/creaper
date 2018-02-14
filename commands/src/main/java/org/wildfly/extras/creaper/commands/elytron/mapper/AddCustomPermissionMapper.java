@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomPermissionMapper extends AbstractAddCustom {
 
-    protected AddCustomPermissionMapper(Builder builder) {
+    private AddCustomPermissionMapper(Builder builder) {
         super(builder);
     }
 

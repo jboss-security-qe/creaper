@@ -41,9 +41,15 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractCredentialStoreOn
 
     @BeforeClass
     public static void createTmpPath() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddTmpDirectoryToPath addTargetToPath = new AddTmpDirectoryToPath();
             client.apply(addTargetToPath);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -62,17 +68,21 @@ public class AddCredentialStoreAliasOnlineTest extends AbstractCredentialStoreOn
 
     @After
     public void cleanup() throws Exception {
-        // ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS);
-        // ops.removeIfExists(TEST_CREDENTIAL_STORE_ALIAS_ADDRESS2);
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         administration.reloadIfRequired();
     }
 
     @AfterClass
     public static void removeTmpPath() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations operations = new Operations(client);
             operations.removeIfExists(TEST_PATH_TMP_ADDRESS);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

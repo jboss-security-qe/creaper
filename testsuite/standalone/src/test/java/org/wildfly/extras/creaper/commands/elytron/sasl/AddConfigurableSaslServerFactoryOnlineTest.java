@@ -8,12 +8,10 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.Property;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-/**
- * TODO: update this command when https://issues.jboss.org/browse/JBEAP-6277 will be fixed.
- */
 @RunWith(Arquillian.class)
 public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronOnlineTest {
 
@@ -85,16 +83,14 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
                 .protocol("someProtocol")
                 .serverName("someServerName")
                 .addFilters(new AddConfigurableSaslServerFactory.FilterBuilder()
-                        // comment out due to https://issues.jboss.org/browse/JBEAP-6277
-                        //.patternFilter("somePattern")
                         .predefinedFilter("BINDING")
                         .enabling(false)
                         .build(),
                         new AddConfigurableSaslServerFactory.FilterBuilder()
-                        .patternFilter("somePattern2")
+                        .patternFilter("somePattern")
                         .build())
-                .addProperties(new AddConfigurableSaslServerFactory.Property("a", "b"),
-                        new AddConfigurableSaslServerFactory.Property("c", "d"))
+                .addProperties(new Property("a", "b"),
+                        new Property("c", "d"))
                 .build();
 
         client.apply(addConfigurableSaslServerFactory);
@@ -104,10 +100,9 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "sasl-server-factory", TEST_PROVIDER_SERVER_FACTORY_NAME);
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "protocol", "someProtocol");
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "server-name", "someServerName");
-        //checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "filters[0].pattern-filter", "somePattern");
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "filters[0].predefined-filter", "BINDING");
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "filters[0].enabling", "false");
-        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "filters[1].pattern-filter", "somePattern2");
+        checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "filters[1].pattern-filter", "somePattern");
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "properties.a", "b");
         checkAttribute(TEST_SERVER_FACTORY_ADDRESS, "properties.c", "d");
     }
@@ -119,13 +114,13 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory
                 = new AddConfigurableSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .saslServerFactory(TEST_PROVIDER_SERVER_FACTORY_NAME)
-                .addProperties(new AddConfigurableSaslServerFactory.Property("a", "b"))
+                .addProperties(new Property("a", "b"))
                 .build();
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory2
                 = new AddConfigurableSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .saslServerFactory(TEST_PROVIDER_SERVER_FACTORY_NAME)
-                .addProperties(new AddConfigurableSaslServerFactory.Property("c", "d"))
+                .addProperties(new Property("c", "d"))
                 .build();
 
         client.apply(addConfigurableSaslServerFactory);
@@ -141,13 +136,13 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory
                 = new AddConfigurableSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .saslServerFactory(TEST_PROVIDER_SERVER_FACTORY_NAME)
-                .addProperties(new AddConfigurableSaslServerFactory.Property("a", "b"))
+                .addProperties(new Property("a", "b"))
                 .build();
 
         AddConfigurableSaslServerFactory addConfigurableSaslServerFactory2
                 = new AddConfigurableSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
                 .saslServerFactory(TEST_PROVIDER_SERVER_FACTORY_NAME)
-                .addProperties(new AddConfigurableSaslServerFactory.Property("c", "d"))
+                .addProperties(new Property("c", "d"))
                 .replaceExisting()
                 .build();
 
@@ -243,6 +238,18 @@ public class AddConfigurableSaslServerFactoryOnlineTest extends AbstractElytronO
                 .addProperties(null)
                 .build();
         fail("Creating command with null properties should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addConfigurableSaslServerFactory_bothPredefinedFilterAndPatternFilter() throws Exception {
+        new AddConfigurableSaslServerFactory.Builder(TEST_SERVER_FACTORY_NAME)
+                .saslServerFactory(TEST_PROVIDER_SERVER_FACTORY_NAME)
+                .addFilters(new AddConfigurableSaslServerFactory.FilterBuilder()
+                        .patternFilter("somePattern")
+                        .predefinedFilter("BINDING")
+                        .build())
+                .build();
+        fail("Creating command both predefined-filter a pattern-filter should throw exception");
     }
 
 }

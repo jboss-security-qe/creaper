@@ -26,7 +26,6 @@ public class AddClientSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
     private static final Address CLIENT_SSL_CONTEXT_ADDRESS2 = SUBSYSTEM_ADDRESS.and("client-ssl-context",
             CLIENT_SSL_CONTEXT_NAME2);
 
-
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(CLIENT_SSL_CONTEXT_ADDRESS);

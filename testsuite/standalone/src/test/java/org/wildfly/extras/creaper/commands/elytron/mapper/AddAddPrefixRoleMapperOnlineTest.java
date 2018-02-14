@@ -11,7 +11,6 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-
 @RunWith(Arquillian.class)
 public class AddAddPrefixRoleMapperOnlineTest extends AbstractElytronOnlineTest {
 

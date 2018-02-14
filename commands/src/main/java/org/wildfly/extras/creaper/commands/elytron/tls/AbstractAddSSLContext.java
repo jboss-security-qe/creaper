@@ -1,6 +1,7 @@
 package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -25,6 +26,18 @@ abstract class AbstractAddSSLContext implements OnlineCommand, OfflineCommand {
         this.providers = builder.providers;
         this.providerName = builder.providerName;
         this.replaceExisting = builder.replaceExisting;
+    }
+
+    protected String joinList(List<String> list) {
+        if (list.isEmpty()) {
+            return "";
+        }
+        Iterator<String> iterator = list.iterator();
+        StringBuilder sb = new StringBuilder(iterator.next());
+        while (iterator.hasNext()) {
+            sb.append(" ").append(iterator.next());
+        }
+        return sb.toString();
     }
 
     abstract static class Builder<THIS extends Builder> {

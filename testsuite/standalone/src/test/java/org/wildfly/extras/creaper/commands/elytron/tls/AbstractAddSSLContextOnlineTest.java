@@ -37,7 +37,9 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
 
     @BeforeClass
     public static void addDependentResources() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                     .type(TEST_KEY_STORE_TYPE)
                     .credentialReference(new CredentialRef.CredentialRefBuilder()
@@ -82,12 +84,18 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
             client.apply(addTrustManager);
             client.apply(addTrustManager2);
 
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeDependentResources() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(TRUST_MNGR_ADDRESS);
@@ -97,6 +105,10 @@ public abstract class AbstractAddSSLContextOnlineTest extends AbstractElytronOnl
             ops.removeIfExists(TEST_KEY_STORE_ADDRESS);
             ops.removeIfExists(TEST_KEY_STORE_ADDRESS2);
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

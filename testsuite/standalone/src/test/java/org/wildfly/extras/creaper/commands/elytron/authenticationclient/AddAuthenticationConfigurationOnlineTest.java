@@ -7,11 +7,11 @@ import java.io.IOException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.Property;
 import org.wildfly.extras.creaper.commands.elytron.credfactory.AddKerberosSecurityFactory;
 import org.wildfly.extras.creaper.commands.elytron.domain.AddSecurityDomain;
 import org.wildfly.extras.creaper.commands.elytron.realm.AddFilesystemRealm;
@@ -112,8 +112,8 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
                 .credentialReference(new CredentialRef.CredentialRefBuilder()
                         .clearText("somePassword")
                         .build())
-                .addMechanismProperties(new AddAuthenticationConfiguration.Property("property1", "value1"),
-                        new AddAuthenticationConfiguration.Property("property2", "value2"))
+                .addMechanismProperties(new Property("property1", "value1"),
+                        new Property("property2", "value2"))
                 .extend(TEST_AUTHENTICATION_CONFIGURATION_NAME2)
                 .authenticationName("someAuthenticationName")
                 .authorizationName("someAuthorizationName")
@@ -185,7 +185,6 @@ public class AddAuthenticationConfigurationOnlineTest extends AbstractElytronOnl
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addAuthenticationConfiguration_kerberosSecurityFactory() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addKerberosSecurityFactory);

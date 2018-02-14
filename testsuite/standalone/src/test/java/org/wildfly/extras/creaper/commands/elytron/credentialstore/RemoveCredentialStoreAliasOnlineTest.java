@@ -10,7 +10,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
@@ -41,9 +40,15 @@ public class RemoveCredentialStoreAliasOnlineTest extends AbstractCredentialStor
 
     @BeforeClass
     public static void createTmpPath() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddTmpDirectoryToPath addTargetToPath = new AddTmpDirectoryToPath();
             client.apply(addTargetToPath);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -68,9 +73,15 @@ public class RemoveCredentialStoreAliasOnlineTest extends AbstractCredentialStor
 
     @AfterClass
     public static void removeTmpPath() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations operations = new Operations(client);
             operations.removeIfExists(TEST_PATH_TMP_ADDRESS);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -94,7 +105,6 @@ public class RemoveCredentialStoreAliasOnlineTest extends AbstractCredentialStor
     }
 
     @Test(expected = CommandFailedException.class)
-    @Ignore("https://issues.jboss.org/browse/JBEAP-11189")
     public void removeNonExistingCredentialStore() throws Exception {
         RemoveCredentialStoreAlias removeCredentialStoreAlias
                 = new RemoveCredentialStoreAlias(TEST_CREDENTIAL_STORE_NAME, TEST_CREDENTIAL_STORE_ALIAS_NAME);

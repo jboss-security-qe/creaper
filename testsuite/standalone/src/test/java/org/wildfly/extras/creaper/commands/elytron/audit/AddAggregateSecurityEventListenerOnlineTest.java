@@ -37,7 +37,9 @@ public class AddAggregateSecurityEventListenerOnlineTest extends AbstractElytron
 
     @BeforeClass
     public static void createElytronAuditLogs() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddFileAuditLog addFileAuditLog = new AddFileAuditLog.Builder(TEST_FILE_AUDIT_LOG_NAME)
                     .path("audit.log")
                     .build();
@@ -53,16 +55,26 @@ public class AddAggregateSecurityEventListenerOnlineTest extends AbstractElytron
                     .hostName("Elytron-audit")
                     .build();
             client.apply(addSyslogAuditLog);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeElytronAuditLogs() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             ops.removeIfExists(TEST_FILE_AUDIT_LOG_ADDRESS);
             ops.removeIfExists(TEST_FILE_AUDIT_LOG_ADDRESS2);
             ops.removeIfExists(TEST_SYSLOG_AUDIT_LOG_ADDRESS);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

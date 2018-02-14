@@ -16,7 +16,6 @@ import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
@@ -244,8 +243,8 @@ public class AddProviderLoaderOnlineTest extends AbstractElytronOnlineTest {
         fail("Creating command with null configuration should throw exception");
     }
 
-    private static void removeModuleQuietly() throws IOException {
-        try (OnlineManagementClient client = createManagementClient()) {
+    private void removeModuleQuietly() throws IOException {
+        try {
             RemoveModule removeModule = new RemoveModule(TEST_MODULE_NAME);
             client.apply(removeModule);
         } catch (CommandFailedException ignore) {

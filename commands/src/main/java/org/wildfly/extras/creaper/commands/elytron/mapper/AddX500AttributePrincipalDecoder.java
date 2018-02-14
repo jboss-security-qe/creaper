@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.mapper;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.wildfly.extras.creaper.core.ServerVersion;
 
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
@@ -20,6 +21,7 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
     private final Integer startSegment;
     private final Integer maximumSegments;
     private final Boolean reverse;
+    private final Boolean convert;
     private final List<String> requiredOids;
     private final List<String> requiredAttributes;
     private final boolean replaceExisting;
@@ -32,6 +34,7 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
         this.startSegment = builder.startSegment;
         this.maximumSegments = builder.maximumSegments;
         this.reverse = builder.reverse;
+        this.convert = builder.convert;
         this.requiredOids = builder.requiredOids;
         this.requiredAttributes = builder.requiredAttributes;
         this.replaceExisting = builder.replaceExisting;
@@ -39,6 +42,10 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address x500AttributePrincipalDecoderAddress = Address.subsystem("elytron")
                 .and("x500-attribute-principal-decoder", name);
@@ -54,6 +61,7 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
                 .andOptional("start-segment", startSegment)
                 .andOptional("maximum-segments", maximumSegments)
                 .andOptional("reverse", reverse)
+                .andOptional("convert", convert)
                 .andListOptional(String.class, "required-oids", requiredOids)
                 .andListOptional(String.class, "required-attributes", requiredAttributes));
 
@@ -68,6 +76,7 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
         private Integer startSegment;
         private Integer maximumSegments;
         private Boolean reverse;
+        private Boolean convert;
         private List<String> requiredOids;
         private List<String> requiredAttributes;
         private boolean replaceExisting;
@@ -109,6 +118,11 @@ public final class AddX500AttributePrincipalDecoder implements OnlineCommand {
 
         public Builder reverse(boolean reverse) {
             this.reverse = reverse;
+            return this;
+        }
+
+        public Builder convert(boolean convert) {
+            this.convert = convert;
             return this;
         }
 

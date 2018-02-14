@@ -1,5 +1,6 @@
 package org.wildfly.extras.creaper.commands.elytron.mapper;
 
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -23,6 +24,10 @@ public final class AddRegexValidatingPrincipalTransformer implements OnlineComma
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address regexPrincipalTransformerAddress = Address.subsystem("elytron").and("regex-validating-principal-transformer",
                 name);
@@ -33,7 +38,7 @@ public final class AddRegexValidatingPrincipalTransformer implements OnlineComma
 
         ops.add(regexPrincipalTransformerAddress, Values.empty()
                 .and("pattern", pattern)
-                .and("match", match)
+                .andOptional("match", match)
                 .andOptional("replace-all", match));
     }
 
@@ -72,9 +77,6 @@ public final class AddRegexValidatingPrincipalTransformer implements OnlineComma
         public AddRegexValidatingPrincipalTransformer build() {
             if (pattern == null || pattern.isEmpty()) {
                 throw new IllegalArgumentException("Pattern must not be null and must have a minimum length of 1 character");
-            }
-            if (match == null) {
-                throw new IllegalArgumentException("Match must not be null");
             }
             return new AddRegexValidatingPrincipalTransformer(this);
         }

@@ -17,6 +17,7 @@ import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.wildfly.extras.creaper.core.ManagementClient;
@@ -40,8 +41,16 @@ public abstract class AbstractElytronOnlineTest {
     protected static final Address SUBSYSTEM_ADDRESS = Address.subsystem("elytron");
 
     @BeforeClass
-    public static void addSubsystem() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+    public static void checkServerVersionIsSupportedAndAddSubsystemWhenDoesNotExist() throws Exception {
+        // check version is supported
+        ServerVersion serverVersion
+                = ManagementClient.online(OnlineOptions.standalone().localDefault().build()).version();
+        Assume.assumeTrue("Elytron is available since WildFly 11.",
+                serverVersion.greaterThanOrEqualTo(ServerVersion.VERSION_5_0_0));
+        // add subsystem when does not exist
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             if (!ops.exists(SUBSYSTEM_ADDRESS)) {
                 AddExtensionAndSubsystem addExtensionAndSubsystem = new AddExtensionAndSubsystem();
@@ -49,21 +58,28 @@ public abstract class AbstractElytronOnlineTest {
                 removeSubsystemAtTheEnd = true;
             }
             assertTrue("The Elytron subsystem must exist.", ops.exists(SUBSYSTEM_ADDRESS));
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeSubsystem() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
-            Administration administration = new Administration(client);
             if (removeSubsystemAtTheEnd && ops.exists(SUBSYSTEM_ADDRESS)) {
                 RemoveExtensionAndSubsystem removeExtensionAndSubsystem = new RemoveExtensionAndSubsystem();
                 client.apply(removeExtensionAndSubsystem);
-                //TODO This is a workaround for JBEAP-5955; Remove this line once the issue is fixed
-                administration.reload();
                 assertFalse("The Elytron subsystem should not be present anymore.",
                         ops.exists(SUBSYSTEM_ADDRESS));
+            }
+        } finally {
+            if (client != null) {
+                client.close();
             }
         }
     }
@@ -80,7 +96,9 @@ public abstract class AbstractElytronOnlineTest {
 
     @After
     public void tearDownCreaperForTest() throws IOException {
-        client.close();
+        if (client != null) {
+            client.close();
+        }
     }
 
     protected static OnlineManagementClient createManagementClient() throws IOException {

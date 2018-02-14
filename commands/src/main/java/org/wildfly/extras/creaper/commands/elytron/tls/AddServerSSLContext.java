@@ -2,6 +2,7 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -21,6 +22,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
     private final String preRealmPrincipalTransformer;
     private final String postRealmPrincipalTransformer;
     private final String finalPrincipalTransformer;
+    private final Boolean useCipherSuitesOrder;
+    private final Boolean wrap;
 
     private AddServerSSLContext(Builder builder) {
         super(builder);
@@ -34,10 +37,16 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
         this.preRealmPrincipalTransformer = builder.preRealmPrincipalTransformer;
         this.postRealmPrincipalTransformer = builder.postRealmPrincipalTransformer;
         this.finalPrincipalTransformer = builder.finalPrincipalTransformer;
+        this.useCipherSuitesOrder = builder.useCipherSuitesOrder;
+        this.wrap = builder.wrap;
     }
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address serverSSLContextAddress = Address.subsystem("elytron").and("server-ssl-context", name);
         if (replaceExisting) {
@@ -46,10 +55,10 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
         }
 
         ops.add(serverSSLContextAddress, Values.empty()
+                .and("key-manager", keyManager)
                 .andOptional("cipher-suite-filter", cipherSuiteFilter)
                 .andOptional("maximum-session-cache-size", maximumSessionCacheSize)
                 .andOptional("session-timeout", sessionTimeout)
-                .andOptional("key-manager", keyManager)
                 .andOptional("trust-manager", trustManager)
                 .andListOptional(String.class, "protocols", protocols)
                 .andOptional("authentication-optional", authenticationOptional)
@@ -60,12 +69,18 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .andOptional("pre-realm-principal-transformer", preRealmPrincipalTransformer)
                 .andOptional("post-realm-principal-transformer", postRealmPrincipalTransformer)
                 .andOptional("final-principal-transformer", finalPrincipalTransformer)
+                .andOptional("use-cipher-suites-order", useCipherSuitesOrder)
+                .andOptional("wrap", wrap)
                 .andOptional("providers", providers)
                 .andOptional("provider-name", providerName));
     }
 
     @Override
     public void apply(OfflineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         ctx.client.apply(GroovyXmlTransform.of(AddServerSSLContext.class)
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
@@ -74,7 +89,7 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .parameter("atrSessionTimeout", sessionTimeout)
                 .parameter("atrKeyManager", keyManager)
                 .parameter("atrTrustManager", trustManager)
-                .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
+                .parameter("atrProtocols", protocols != null ? joinList(protocols) : null)
                 .parameter("atrAuthenticationOptional", authenticationOptional)
                 .parameter("atrNeedClientAuth", needClientAuth)
                 .parameter("atrWantClientAuth", wantClientAuth)
@@ -83,6 +98,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
                 .parameter("atrPreRealmPrincipalTransformer", preRealmPrincipalTransformer)
                 .parameter("atrPostRealmPrincipalTransformer", postRealmPrincipalTransformer)
                 .parameter("atrFinalPrincipalTransformer", finalPrincipalTransformer)
+                .parameter("atrUseCipherSuitesOrder", useCipherSuitesOrder)
+                .parameter("atrWrap", wrap)
                 .parameter("atrProviders", providers)
                 .parameter("atrProviderName", providerName)
                 .parameter("atrReplaceExisting", replaceExisting)
@@ -101,6 +118,8 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
         private String preRealmPrincipalTransformer;
         private String postRealmPrincipalTransformer;
         private String finalPrincipalTransformer;
+        private Boolean useCipherSuitesOrder;
+        private Boolean wrap;
 
         public Builder(String name) {
             super(name);
@@ -153,6 +172,16 @@ public final class AddServerSSLContext extends AbstractAddSSLContext {
 
         public Builder finalPrincipalTransformer(String finalPrincipalTransformer) {
             this.finalPrincipalTransformer = finalPrincipalTransformer;
+            return this;
+        }
+
+        public Builder useCipherSuitesOrder(Boolean useCipherSuitesOrder) {
+            this.useCipherSuitesOrder = useCipherSuitesOrder;
+            return this;
+        }
+
+        public Builder wrap(Boolean wrap) {
+            this.wrap = wrap;
             return this;
         }
 

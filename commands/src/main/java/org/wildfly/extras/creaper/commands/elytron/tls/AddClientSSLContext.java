@@ -2,6 +2,7 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -17,6 +18,10 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address clientSSLContextAddress = Address.subsystem("elytron").and("client-ssl-context", name);
         if (replaceExisting) {
@@ -33,13 +38,17 @@ public final class AddClientSSLContext extends AbstractAddSSLContext {
 
     @Override
     public void apply(OfflineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         ctx.client.apply(GroovyXmlTransform.of(AddClientSSLContext.class)
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
                 .parameter("atrCipherSuiteFilter", cipherSuiteFilter)
                 .parameter("atrKeyManager", keyManager)
                 .parameter("atrTrustManager", trustManager)
-                .parameter("atrProtocols", protocols != null ? String.join(" ", protocols) : null)
+                .parameter("atrProtocols", protocols != null ? joinList(protocols) : null)
                 .parameter("atrProviders", providers)
                 .parameter("atrProviderName", providerName)
                 .parameter("atrReplaceExisting", replaceExisting)

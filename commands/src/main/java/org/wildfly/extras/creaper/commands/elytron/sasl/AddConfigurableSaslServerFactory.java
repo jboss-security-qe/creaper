@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.commands.elytron.Property;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -11,9 +13,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-/**
- * TODO: update this command when https://issues.jboss.org/browse/JBEAP-6277 will be fixed.
- */
 public final class AddConfigurableSaslServerFactory implements OnlineCommand {
 
     private final String name;
@@ -36,6 +35,10 @@ public final class AddConfigurableSaslServerFactory implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address factoryAddress = Address.subsystem("elytron")
                 .and("configurable-sasl-server-factory", name);
@@ -198,27 +201,10 @@ public final class AddConfigurableSaslServerFactory implements OnlineCommand {
                     && (predefinedFilter == null || predefinedFilter.isEmpty())) {
                 throw new IllegalArgumentException("pattern-filter or predefined-filter must not be null or empty");
             }
+            if (patternFilter != null && predefinedFilter != null) {
+                throw new IllegalArgumentException("both pattern-filter and predefined-filter cannot be used");
+            }
             return new Filter(this);
-        }
-
-    }
-
-    public static final class Property {
-
-        private final String key;
-        private final String value;
-
-        public Property(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
         }
 
     }

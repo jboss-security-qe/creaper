@@ -13,6 +13,8 @@ if (atrRealmMapper != null) sslContextAttrs['realm-mapper'] = atrRealmMapper
 if (atrPreRealmPrincipalTransformer != null) sslContextAttrs['pre-realm-principal-transformer'] = atrPreRealmPrincipalTransformer
 if (atrPostRealmPrincipalTransformer != null) sslContextAttrs['post-realm-principal-transformer'] = atrPostRealmPrincipalTransformer
 if (atrFinalPrincipalTransformer != null) sslContextAttrs['final-principal-transformer'] = atrFinalPrincipalTransformer
+if (atrUseCipherSuitesOrder != null) sslContextAttrs['use-cipher-suites-order'] = atrUseCipherSuitesOrder
+if (atrWrap != null) sslContextAttrs['wrap'] = atrWrap
 if (atrProviders != null) sslContextAttrs['providers'] = atrProviders
 if (atrProviderName != null) sslContextAttrs['provider-name'] = atrProviderName
 

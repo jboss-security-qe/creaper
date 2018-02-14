@@ -1,5 +1,8 @@
 package org.wildfly.extras.creaper.commands.elytron.audit;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
 import org.junit.Test;
@@ -7,9 +10,10 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyManager;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddKeyStore;
+import org.wildfly.extras.creaper.commands.elytron.tls.AddServerSSLContext;
 
 @RunWith(Arquillian.class)
 public class AddSyslogAuditLogOnlineTest extends AbstractElytronOnlineTest {
@@ -21,10 +25,23 @@ public class AddSyslogAuditLogOnlineTest extends AbstractElytronOnlineTest {
     private static final Address TEST_SYSLOG_AUDIT_LOG_ADDRESS2 = SUBSYSTEM_ADDRESS
             .and("syslog-audit-log", TEST_SYSLOG_AUDIT_LOG_NAME2);
 
+    private static final String TEST_SERVER_SSL_CONTEXT_NAME = "CreaperTestSslContext";
+    private static final Address TEST_SERVER_SSL_CONTEXT_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("server-ssl-context", TEST_SERVER_SSL_CONTEXT_NAME);
+    private static final String TEST_KEY_STORE_NAME = "CreaperTestKeyStore";
+    private static final Address TEST_KEY_STORE_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-store", TEST_KEY_STORE_NAME);
+    private static final String TEST_KEY_MNGR_NAME = "CreaperTestKeyManager";
+    private static final Address TEST_KEY_MNGR_NAME_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("key-manager", TEST_KEY_MNGR_NAME);
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_SYSLOG_AUDIT_LOG_ADDRESS);
         ops.removeIfExists(TEST_SYSLOG_AUDIT_LOG_ADDRESS2);
+        ops.removeIfExists(TEST_SERVER_SSL_CONTEXT_ADDRESS);
+        ops.removeIfExists(TEST_KEY_MNGR_NAME_ADDRESS);
+        ops.removeIfExists(TEST_KEY_STORE_NAME_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -63,12 +80,32 @@ public class AddSyslogAuditLogOnlineTest extends AbstractElytronOnlineTest {
 
     @Test
     public void addFullSyslogAuditLog() throws Exception {
+        AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
+                .type("JKS")
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("password")
+                        .build())
+                .build();
+        client.apply(addKeyStore);
+        AddKeyManager addKeyManager = new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText("password")
+                        .build())
+                .build();
+        client.apply(addKeyManager);
+        AddServerSSLContext addServerSSLContext = new AddServerSSLContext.Builder(TEST_SERVER_SSL_CONTEXT_NAME)
+                .keyManager(TEST_KEY_MNGR_NAME)
+                .build();
+        client.apply(addServerSSLContext);
+
         AddSyslogAuditLog addSyslogAuditLog = new AddSyslogAuditLog.Builder(TEST_SYSLOG_AUDIT_LOG_NAME)
                 .serverAddress("localhost")
                 .port(9898)
                 .hostName("Elytron-audit")
                 .format(AuditFormat.JSON)
                 .transport(AddSyslogAuditLog.TransportProtocolType.UDP)
+                .sslContext(TEST_SERVER_SSL_CONTEXT_NAME)
                 .build();
 
         client.apply(addSyslogAuditLog);
@@ -79,6 +116,7 @@ public class AddSyslogAuditLogOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_SYSLOG_AUDIT_LOG_ADDRESS, "host-name", "Elytron-audit");
         checkAttribute(TEST_SYSLOG_AUDIT_LOG_ADDRESS, "format", "JSON");
         checkAttribute(TEST_SYSLOG_AUDIT_LOG_ADDRESS, "transport", "UDP");
+        checkAttribute(TEST_SYSLOG_AUDIT_LOG_ADDRESS, "ssl-context", TEST_SERVER_SSL_CONTEXT_NAME);
     }
 
     @Test(expected = CommandFailedException.class)

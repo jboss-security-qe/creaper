@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -185,7 +184,6 @@ public class AddHttpAuthenticationFactoryOnlineTest extends AbstractElytronOnlin
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addFullHttpAuthenticationFactory() throws Exception {
         client.apply(addFilesystemRealm);
         client.apply(addFilesystemRealm2);

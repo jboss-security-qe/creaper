@@ -166,9 +166,6 @@ public class CreateServerSSLContext implements OnlineCommand {
             ctx.client.apply(addTrustManager);
         }
         ctx.client.apply(sslServerContextBuilder.build());
-
-        return;
-
     }
 
     /**
@@ -270,9 +267,6 @@ public class CreateServerSSLContext implements OnlineCommand {
         private String trustManagerProviders;
         // Multiple usage
         private String algorithm;  // keystore manager, truststore manager
-
-//        TODO
-//        private boolean replaceExisting;
 
         public Builder(String name) {
             if (name == null) {
@@ -437,15 +431,6 @@ public class CreateServerSSLContext implements OnlineCommand {
             this.providers = providersAll;
             return this;
         }
-
-// TODO
-//        /**
-//         * <b>This can cause server reload!</b>
-//         */
-//        public Builder replaceExisting() {
-//            this.replaceExisting = true;
-//            return this;
-//        }
 
         public CreateServerSSLContext build() {
             if (keyStorePassword == null || keyStorePassword.isEmpty()) {

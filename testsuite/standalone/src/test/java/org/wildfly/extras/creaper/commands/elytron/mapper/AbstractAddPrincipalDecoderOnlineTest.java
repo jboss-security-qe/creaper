@@ -30,7 +30,9 @@ public class AbstractAddPrincipalDecoderOnlineTest extends AbstractElytronOnline
 
     @BeforeClass
     public static void addPrincipalDecoders() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddConstantPrincipalDecoder addConstantPrincipalDecoder
                     = new AddConstantPrincipalDecoder.Builder(TEST_CONSTANT_PRINCIPAL_DECODER_NAME)
                     .constant("role1")
@@ -46,17 +48,27 @@ public class AbstractAddPrincipalDecoderOnlineTest extends AbstractElytronOnline
             client.apply(addConstantPrincipalDecoder);
             client.apply(addConstantPrincipalDecoder2);
             client.apply(addConstantPrincipalDecoder3);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removePrincipalDecoders() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS);
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_DECODER_ADDRESS2);
             ops.removeIfExists(TEST_DIFFERENT_PRINCIPAL_DECODER_ADDRESS);
             new Administration(client).reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 }

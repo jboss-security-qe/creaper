@@ -322,6 +322,170 @@ public final class AddLdapRealmOnlineTest extends AbstractElytronOnlineTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_nullFrom_userPasswordMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
+                                .from(null)
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with null identity-mapping.user-password-mapper.from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_emptyFrom_userPasswordMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .userPasswordMapper(new AddLdapRealm.UserPasswordMapperBuilder()
+                                .from("")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with empty identity-mapping.user-password-mapper.from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_nullAlgorithmFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom(null)
+                                .hashFrom("hashFrom")
+                                .seedFrom("seedFrom")
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with null identity-mapping.otp-credential-mapper.algorithm-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_emptyAlgorithmFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("")
+                                .hashFrom("hashFrom")
+                                .seedFrom("seedFrom")
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with empty identity-mapping.otp-credential-mapper.algorithm-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_nullHashFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom(null)
+                                .seedFrom("seedFrom")
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with null identity-mapping.otp-credential-mapper.hash-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_emptyHashFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom("")
+                                .seedFrom("seedFrom")
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with empty identity-mapping.otp-credential-mapper.hash-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_nullSeedFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom("hashFrom")
+                                .seedFrom(null)
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with null identity-mapping.otp-credential-mapper.seed-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_emptySeedFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom("hashFrom")
+                                .seedFrom("")
+                                .sequenceFrom("sequenceFrom")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with empty identity-mapping.otp-credential-mapper.seed-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_nullSequenceFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom("hashFrom")
+                                .seedFrom("seedFrom")
+                                .sequenceFrom(null)
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with null identity-mapping.otp-credential-mapper.sequence-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addLdapRealm_emptySequenceFrom_otpCredentialMapper() throws Exception {
+        new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
+                .dirContext(TEST_DIR_CONTEXT_NAME)
+                .identityMapping(new AddLdapRealm.IdentityMappingBuilder()
+                        .rdnIdentifier("someId")
+                        .otpCredentialMapper(new AddLdapRealm.OtpCredentialMapperBuilder()
+                                .algorithmFrom("algFrom")
+                                .hashFrom("hashFrom")
+                                .seedFrom("seedFrom")
+                                .sequenceFrom("")
+                                .build())
+                        .build())
+                .build();
+        fail("Creating command with empty identity-mapping.otp-credential-mapper.sequence-from should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
     public void addLdapRealm_nullValue_newIdentityAttributesBuilder() throws Exception {
         new AddLdapRealm.Builder(TEST_LDAP_REALM_NAME)
                 .dirContext(TEST_DIR_CONTEXT_NAME)

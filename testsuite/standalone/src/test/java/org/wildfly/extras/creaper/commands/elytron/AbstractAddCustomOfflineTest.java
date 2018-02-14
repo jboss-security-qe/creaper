@@ -27,7 +27,7 @@ public abstract class AbstractAddCustomOfflineTest {
     protected static final String MODULE_NAME = "MODULE_NAME";
 
     private static final String SUBSYSTEM_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "        </subsystem>\n"
@@ -35,7 +35,7 @@ public abstract class AbstractAddCustomOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_MAPPERS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <" + PARENT_TYPE + ">\n"
@@ -45,7 +45,7 @@ public abstract class AbstractAddCustomOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SIMPLE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <" + PARENT_TYPE + ">\n"
@@ -61,7 +61,7 @@ public abstract class AbstractAddCustomOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_EXPECTED_REPLACE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <" + PARENT_TYPE + ">\n"
@@ -76,7 +76,7 @@ public abstract class AbstractAddCustomOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SECOND_CUSTOM_REALM_MAPPER = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <" + PARENT_TYPE + ">\n"
@@ -97,7 +97,7 @@ public abstract class AbstractAddCustomOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_FULL = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <" + PARENT_TYPE + ">\n"
@@ -218,8 +218,6 @@ public abstract class AbstractAddCustomOfflineTest {
 
         assertXmlIdentical(convertSubsystem(SUBSYSTEM_SIMPLE), Files.toString(cfg, Charsets.UTF_8));
         client.apply(addCustom);
-        System.out.println("Hynek1_" + Files.toString(cfg, Charsets.UTF_8));
-        System.out.println("Hynek2_" + convertSubsystem(SUBSYSTEM_SECOND_CUSTOM_REALM_MAPPER));
         assertXmlIdentical(convertSubsystem(SUBSYSTEM_SECOND_CUSTOM_REALM_MAPPER), Files.toString(cfg, Charsets.UTF_8));
     }
 
@@ -239,8 +237,6 @@ public abstract class AbstractAddCustomOfflineTest {
 
         assertXmlIdentical(convertSubsystem(SUBSYSTEM_SIMPLE), Files.toString(cfg, Charsets.UTF_8));
         client.apply(addCustom);
-        System.out.println("Hynek1_" + Files.toString(cfg, Charsets.UTF_8));
-        System.out.println("Hynek2_" + convertSubsystem(SUBSYSTEM_SECOND_CUSTOM_REALM_MAPPER));
         assertXmlIdentical(convertSubsystem(SUBSYSTEM_SECOND_CUSTOM_REALM_MAPPER), Files.toString(cfg, Charsets.UTF_8));
     }
 

@@ -7,7 +7,6 @@ import java.security.PublicKey;
 import org.bouncycastle.util.encoders.Base64;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -149,7 +148,6 @@ public class AddTokenRealmOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_TOKEN_REALM_ADDRESS, "principal-claim", "somePrincipalClaim");
     }
 
-    @Ignore("https://issues.jboss.org/browse/JBQA-13300")
     @Test
     public void addFullTokenRealmWithOauth() throws Exception {
         AddClientSSLContext addClientSSLContext = new AddClientSSLContext.Builder(TEST_CLIENT_SSL_CONTEXT)

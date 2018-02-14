@@ -36,28 +36,16 @@ public class AddX500AttributePrincipalDecoderOnlineTest extends AbstractElytronO
     }
 
     @Test
-    public void addX500AttributePrincipalDecoder() throws Exception {
+    public void addSimpleX500AttributePrincipalDecoder() throws Exception {
         AddX500AttributePrincipalDecoder addX500AttributePricipalDecoder
                 = new AddX500AttributePrincipalDecoder.Builder(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_NAME)
                 .oid(OID1)
-                .joiner(":")
-                .startSegment(2)
-                .maximumSegments(20)
-                .reverse(false)
-                .addRequiredOids(OID1, OID2)
                 .build();
 
         client.apply(addX500AttributePricipalDecoder);
 
         assertTrue("x500-attribute-principal-decoder should be created",
                 ops.exists(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_ADDRESS));
-        checkX500AttributePrincipalDecoderAttribute("oid", OID1);
-        checkX500AttributePrincipalDecoderAttribute("joiner", ":");
-        checkX500AttributePrincipalDecoderAttribute("start-segment", "2");
-        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
-        checkX500AttributePrincipalDecoderAttribute("reverse", "false");
-        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
-        checkX500AttributePrincipalDecoderAttribute("required-oids", Arrays.asList(new String[] {OID1, OID2}));
     }
 
     @Test
@@ -79,6 +67,58 @@ public class AddX500AttributePrincipalDecoderOnlineTest extends AbstractElytronO
                 ops.exists(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_ADDRESS));
         assertTrue("x500-attribute-principal-decoder should be created",
                 ops.exists(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_ADDRESS2));
+    }
+
+    @Test
+    public void addFullX500AttributePrincipalDecoder_oid() throws Exception {
+        AddX500AttributePrincipalDecoder addX500AttributePricipalDecoder
+                = new AddX500AttributePrincipalDecoder.Builder(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_NAME)
+                .oid(OID1)
+                .joiner(":")
+                .startSegment(2)
+                .maximumSegments(20)
+                .reverse(false)
+                .convert(true)
+                .addRequiredOids(OID1, OID2)
+                .build();
+
+        client.apply(addX500AttributePricipalDecoder);
+
+        assertTrue("x500-attribute-principal-decoder should be created",
+                ops.exists(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_ADDRESS));
+        checkX500AttributePrincipalDecoderAttribute("oid", OID1);
+        checkX500AttributePrincipalDecoderAttribute("joiner", ":");
+        checkX500AttributePrincipalDecoderAttribute("start-segment", "2");
+        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
+        checkX500AttributePrincipalDecoderAttribute("reverse", "false");
+        checkX500AttributePrincipalDecoderAttribute("convert", "true");
+        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
+        checkX500AttributePrincipalDecoderAttribute("required-oids", Arrays.asList(new String[]{OID1, OID2}));
+    }
+
+    @Test
+    public void addFullX500AttributePrincipalDecoder_attributeName() throws Exception {
+        AddX500AttributePrincipalDecoder addX500AttributePricipalDecoder
+                = new AddX500AttributePrincipalDecoder.Builder(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_NAME)
+                .attributeName("cn")
+                .joiner(":")
+                .startSegment(2)
+                .maximumSegments(20)
+                .reverse(false)
+                .convert(true)
+                .build();
+
+        client.apply(addX500AttributePricipalDecoder);
+
+        assertTrue("x500-attribute-principal-decoder should be created",
+                ops.exists(TEST_X500_ATTRIBUTE_PRINCIPAL_DECODER_ADDRESS));
+        checkX500AttributePrincipalDecoderAttribute("attribute-name", "cn");
+        checkX500AttributePrincipalDecoderAttribute("joiner", ":");
+        checkX500AttributePrincipalDecoderAttribute("start-segment", "2");
+        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
+        checkX500AttributePrincipalDecoderAttribute("reverse", "false");
+        checkX500AttributePrincipalDecoderAttribute("convert", "true");
+        checkX500AttributePrincipalDecoderAttribute("maximum-segments", "20");
     }
 
     @Test(expected = CommandFailedException.class)

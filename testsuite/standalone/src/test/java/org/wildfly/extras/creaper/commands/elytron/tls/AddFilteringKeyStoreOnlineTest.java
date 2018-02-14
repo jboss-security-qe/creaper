@@ -37,7 +37,9 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
 
     @BeforeClass
     public static void addKeyStores() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddKeyStore addKeyStore = new AddKeyStore.Builder(KEY_STORE_NAME)
                     .type(KEY_STORE_TYPE)
                     .credentialReference(new CredentialRef.CredentialRefBuilder()
@@ -45,16 +47,26 @@ public class AddFilteringKeyStoreOnlineTest extends AbstractElytronOnlineTest {
                             .build())
                     .build();
             client.apply(addKeyStore);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeKeyStores() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(KEY_STORE_ADDRESS);
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

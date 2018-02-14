@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.wildfly.extras.creaper.commands.elytron.tls.AddLdapKeyStore.LdapMappingBuilder;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddLdapKeyStore.NewItemAttributeBuilder;
 import org.wildfly.extras.creaper.commands.elytron.tls.AddLdapKeyStore.NewItemTemplateBuilder;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -22,7 +21,7 @@ import org.wildfly.extras.creaper.core.offline.OfflineOptions;
 public class AddLdapKeyStoreOfflineTest {
 
     private static final String SUBSYSTEM_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "        </subsystem>\n"
@@ -30,7 +29,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_TLS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -40,7 +39,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_KEY_STORES_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -52,7 +51,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SIMPLE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -67,7 +66,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_EXPECTED_REPLACE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -82,7 +81,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SECOND_KEY_STORE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -100,7 +99,7 @@ public class AddLdapKeyStoreOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_FULL = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -111,7 +110,9 @@ public class AddLdapKeyStoreOfflineTest {
             + "                        <attribute-mapping alias-attribute=\"aliasAttribute\" certificate-attribute=\"certificateAttribute\" "
             + "                                      certificate-type=\"certificateType\" "
             + "                                      certificate-chain-attribute=\"certificateChainAttribute\" "
-            + "                                      certificate-chain-encoding=\"certificateChainEncoding\"/>\n"
+            + "                                      certificate-chain-encoding=\"certificateChainEncoding\" "
+            + "                                      key-attribute=\"someKeyAttribute\" "
+            + "                                      key-type=\"someKeyType\" />\n"
             + "                        <new-item-template new-item-path=\"newItemPath\" new-item-rdn=\"newItemRdn\">\n"
             + "                            <attribute name=\"attrA\" value=\"valueA\"/>\n"
             + "                            <attribute name=\"attrB\" value=\"valueB1 valueB2\"/>\n"
@@ -276,13 +277,13 @@ public class AddLdapKeyStoreOfflineTest {
                 .filterAlias("filterAlias")
                 .filterCertificate("filterCertificate")
                 .filterIterate("filterIterate")
-                .ldapMapping(new LdapMappingBuilder()
-                        .aliasAttribute("aliasAttribute")
-                        .certificateAttribute("certificateAttribute")
-                        .certificateType("certificateType")
-                        .certificateChainAttribute("certificateChainAttribute")
-                        .certificateChainEncoding("certificateChainEncoding")
-                        .build())
+                .aliasAttribute("aliasAttribute")
+                .certificateAttribute("certificateAttribute")
+                .certificateType("certificateType")
+                .certificateChainAttribute("certificateChainAttribute")
+                .certificateChainEncoding("certificateChainEncoding")
+                .keyAttribute("someKeyAttribute")
+                .keyType("someKeyType")
                 .newItemTemplate(new NewItemTemplateBuilder()
                         .addNewItemAttributes(
                                 new NewItemAttributeBuilder().name("attrA").addValues("valueA").build(),

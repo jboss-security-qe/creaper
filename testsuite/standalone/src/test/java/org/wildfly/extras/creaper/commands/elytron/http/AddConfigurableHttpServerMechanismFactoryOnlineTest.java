@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.Property;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -91,8 +92,8 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
                         new AddConfigurableHttpServerMechanismFactory.FilterBuilder()
                         .patternFilter("somePattern2")
                         .build())
-                .addProperties(new AddConfigurableHttpServerMechanismFactory.Property("a", "b"),
-                        new AddConfigurableHttpServerMechanismFactory.Property("c", "d"))
+                .addProperties(new Property("a", "b"),
+                        new Property("c", "d"))
                 .build();
 
         client.apply(addConfigurableHttpServerMechanismFactory);
@@ -116,13 +117,13 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory
                 = new AddConfigurableHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .httpServerMechanismFactory(TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME)
-                .addProperties(new AddConfigurableHttpServerMechanismFactory.Property("a", "b"))
+                .addProperties(new Property("a", "b"))
                 .build();
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory2
                 = new AddConfigurableHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .httpServerMechanismFactory(TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME)
-                .addProperties(new AddConfigurableHttpServerMechanismFactory.Property("c", "d"))
+                .addProperties(new Property("c", "d"))
                 .build();
 
         client.apply(addConfigurableHttpServerMechanismFactory);
@@ -139,13 +140,13 @@ public class AddConfigurableHttpServerMechanismFactoryOnlineTest extends Abstrac
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory
                 = new AddConfigurableHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .httpServerMechanismFactory(TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME)
-                .addProperties(new AddConfigurableHttpServerMechanismFactory.Property("a", "b"))
+                .addProperties(new Property("a", "b"))
                 .build();
 
         AddConfigurableHttpServerMechanismFactory addConfigurableHttpServerMechanismFactory2
                 = new AddConfigurableHttpServerMechanismFactory.Builder(TEST_SERVER_MECHANISM_FACTORY_NAME)
                 .httpServerMechanismFactory(TEST_PROVIDER_SERVER_MECHANISM_FACTORY_NAME)
-                .addProperties(new AddConfigurableHttpServerMechanismFactory.Property("c", "d"))
+                .addProperties(new Property("c", "d"))
                 .replaceExisting()
                 .build();
 

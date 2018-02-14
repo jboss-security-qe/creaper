@@ -18,8 +18,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.ElytronCustomResourceUtils;
 import org.wildfly.extras.creaper.commands.modules.AddModule;
-import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -38,23 +38,34 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException, InterruptedException, TimeoutException {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             File testJar1 = createJar("testJar", AddCustomRealmImpl.class);
             AddModule addModule = new AddModule.Builder(CUSTOM_REALM_MODULE_NAME)
                     .resource(testJar1)
                     .resourceDelimiter(":")
-                .dependency("org.wildfly.security.elytron")
-                .dependency("org.wildfly.extension.elytron")
+                    .dependency("org.wildfly.security.elytron")
+                    .dependency("org.wildfly.extension.elytron")
                     .build();
             client.apply(addModule);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void afterClass() throws IOException, CommandFailedException, InterruptedException, TimeoutException {
-        try (OnlineManagementClient client = createManagementClient()) {
-            RemoveModule removeModule = new RemoveModule(CUSTOM_REALM_MODULE_NAME);
-            client.apply(removeModule);
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
+            ElytronCustomResourceUtils.removeCustomModuleIfExists(client, CUSTOM_REALM_MODULE_NAME);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -141,7 +152,7 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
         assertTrue("Add operation should be successful", ops.exists(TEST_ADD_CUSTOM_REALM_ADDRESS));
 
         // check whether it was really rewritten
-        List<Property> expectedValues = new ArrayList<>();
+        List<Property> expectedValues = new ArrayList<Property>();
         expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
         checkAttributeProperties(TEST_ADD_CUSTOM_REALM_ADDRESS, "configuration", expectedValues);
     }
@@ -219,7 +230,7 @@ public class AddCustomRealmOnlineTest extends AbstractElytronOnlineTest {
 
         client.apply(addAddCustomRealm);
 
-        List<Property> expectedValues = new ArrayList<>();
+        List<Property> expectedValues = new ArrayList<Property>();
         expectedValues.add(new Property("configParam1", new ModelNode("configParameterValue")));
         expectedValues.add(new Property("configParam2", new ModelNode("configParameterValue2")));
         checkAttributeProperties(TEST_ADD_CUSTOM_REALM_ADDRESS2, "configuration", expectedValues);

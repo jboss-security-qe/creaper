@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -31,6 +32,10 @@ public final class AddLdapRealm implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address realmAddress = Address.subsystem("elytron").and("ldap-realm", name);
         if (replaceExisting) {
@@ -69,18 +74,17 @@ public final class AddLdapRealm implements OnlineCommand {
         }
         if (identityMapping.getUserPasswordMapper() != null) {
             ModelNode node = new ModelNode();
-            addOptionalToModelNode(node, "from", identityMapping.getUserPasswordMapper().getFrom());
+            node.add("from", identityMapping.getUserPasswordMapper().getFrom());
             addOptionalToModelNode(node, "writable", identityMapping.getUserPasswordMapper().getWritable());
             addOptionalToModelNode(node, "verifiable", identityMapping.getUserPasswordMapper().getVerifiable());
             identityMappingModelNode.add("user-password-mapper", node.asObject());
         }
         if (identityMapping.getOtpCredentialMapper() != null) {
             ModelNode node = new ModelNode();
-            addOptionalToModelNode(node, "algorithm-from",
-                    identityMapping.getOtpCredentialMapper().getAlgorithmFrom());
-            addOptionalToModelNode(node, "hash-from", identityMapping.getOtpCredentialMapper().getHashFrom());
-            addOptionalToModelNode(node, "seed-from", identityMapping.getOtpCredentialMapper().getSeedFrom());
-            addOptionalToModelNode(node, "sequence-from", identityMapping.getOtpCredentialMapper().getSequenceFrom());
+            node.add("algorithm-from", identityMapping.getOtpCredentialMapper().getAlgorithmFrom());
+            node.add("hash-from", identityMapping.getOtpCredentialMapper().getHashFrom());
+            node.add("seed-from", identityMapping.getOtpCredentialMapper().getSeedFrom());
+            node.add("sequence-from", identityMapping.getOtpCredentialMapper().getSequenceFrom());
             identityMappingModelNode.add("otp-credential-mapper", node.asObject());
         }
         if (identityMapping.getX509CredentialMapper() != null) {
@@ -529,6 +533,9 @@ public final class AddLdapRealm implements OnlineCommand {
         }
 
         public UserPasswordMapper build() {
+            if (from == null || from.isEmpty()) {
+                throw new IllegalArgumentException("identity-mapping.user-password-mapper.from must not be null and must have a minimum length of 1 characters");
+            }
             return new UserPasswordMapper(this);
         }
     }
@@ -593,6 +600,18 @@ public final class AddLdapRealm implements OnlineCommand {
         }
 
         public OtpCredentialMapper build() {
+            if (algorithmFrom == null || algorithmFrom.isEmpty()) {
+                throw new IllegalArgumentException("identity-mapping.otp-credential-mapper.algorithm-from must not be null and must have a minimum length of 1 characters");
+            }
+            if (hashFrom == null || hashFrom.isEmpty()) {
+                throw new IllegalArgumentException("identity-mapping.otp-credential-mapper.hash-from must not be null and must have a minimum length of 1 characters");
+            }
+            if (seedFrom == null || seedFrom.isEmpty()) {
+                throw new IllegalArgumentException("identity-mapping.otp-credential-mapper.seed-from must not be null and must have a minimum length of 1 characters");
+            }
+            if (sequenceFrom == null || sequenceFrom.isEmpty()) {
+                throw new IllegalArgumentException("identity-mapping.otp-credential-mapper.sequence-from must not be null and must have a minimum length of 1 characters");
+            }
             return new OtpCredentialMapper(this);
         }
     }

@@ -22,7 +22,7 @@ import com.google.common.io.Files;
 public class AddKeyManagerOfflineTest {
 
     private static final String SUBSYSTEM_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "        </subsystem>\n"
@@ -30,7 +30,7 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_TLS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -40,7 +40,7 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_KEY_MANAGERS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -52,12 +52,12 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SIMPLE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-managers>\n"
-            + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\">\n"
+            + "                    <key-manager name=\"creaperKeyManager\" key-store=\"someKeyStore\">\n"
             + "                        <credential-reference clear-text=\"secret\"/>\n"
             + "                    </key-manager>\n"
             + "                </key-managers>\n"
@@ -67,12 +67,12 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_EXPECTED_REPLACE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-managers>\n"
-            + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\">\n"
+            + "                    <key-manager name=\"creaperKeyManager\" key-store=\"someKeyStore\">\n"
             + "                        <credential-reference clear-text=\"secret2\"/>\n"
             + "                    </key-manager>\n"
             + "                </key-managers>\n"
@@ -82,15 +82,15 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SECOND_KEY_MANAGER = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-managers>\n"
-            + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\">\n"
+            + "                    <key-manager name=\"creaperKeyManager\" key-store=\"someKeyStore\">\n"
             + "                        <credential-reference clear-text=\"secret\"/>\n"
             + "                    </key-manager>\n"
-            + "                    <key-manager name=\"creaperKeyManager2\" algorithm=\"SunX509\">\n"
+            + "                    <key-manager name=\"creaperKeyManager2\" key-store=\"someKeyStore\">\n"
             + "                        <credential-reference clear-text=\"secret\"/>\n"
             + "                    </key-manager>\n"
             + "                </key-managers>\n"
@@ -100,12 +100,12 @@ public class AddKeyManagerOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_FULL = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
             + "                <key-managers>\n"
-            + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\" key-store=\"creaperKeyStore\" "
+            + "                    <key-manager name=\"creaperKeyManager\" algorithm=\"SunX509\" key-store=\"someKeyStore\" "
             + "                                provider-name=\"ksProvider\" providers=\"ksProviderLoader\" alias-filter=\"aliasInFilter\">\n"
             + "                        <credential-reference alias=\"crAlias\" type=\"crType\" store=\"crStore\" clear-text=\"secret\" />\n"
             + "                    </key-manager>\n"
@@ -132,7 +132,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .build();
 
@@ -150,7 +150,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .build();
 
@@ -168,7 +168,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .build();
 
@@ -186,7 +186,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .build();
 
@@ -205,7 +205,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret2").build())
                 .replaceExisting()
                 .build();
@@ -224,7 +224,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager2")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .replaceExisting()
                 .build();
@@ -243,7 +243,7 @@ public class AddKeyManagerOfflineTest {
                 OfflineOptions.standalone().configurationFile(cfg).build());
 
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager2")
-                .algorithm("SunX509")
+                .keyStore("someKeyStore")
                 .credentialReference(new CredentialRefBuilder().clearText("secret").build())
                 .build();
 
@@ -263,7 +263,7 @@ public class AddKeyManagerOfflineTest {
         AddKeyManager addKeyManager = new AddKeyManager.Builder("creaperKeyManager")
                 .algorithm("SunX509")
                 .aliasFilter("aliasInFilter")
-                .keyStore("creaperKeyStore")
+                .keyStore("someKeyStore")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")
                 .credentialReference(new CredentialRefBuilder()

@@ -3,8 +3,12 @@ package org.wildfly.extras.creaper.commands.elytron.credentialstore;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -29,6 +33,12 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS2);
         ops.removeIfExists(TEST_CREDENTIAL_STORE_ADDRESS);
         administration.reloadIfRequired();
+    }
+
+    @AfterClass
+    public static void removeCreatedCredentialStoreFiles() throws IOException {
+        Files.deleteIfExists(new File(TEST_CREDENTIAL_STORE_NAME).toPath());
+        Files.deleteIfExists(new File(TEST_CREDENTIAL_STORE_NAME2).toPath());
     }
 
     @Test
@@ -95,8 +105,6 @@ public class AddCredentialStoreOnlineTest extends AbstractElytronOnlineTest {
 
         addCredentialStore = new AddCredentialStore.Builder(TEST_CREDENTIAL_STORE_NAME2)
                 .create(true)
-                //                .provider("someProvider") TODO once AddProviderLoader is available
-                //                .providerLoader("someLoader") TODO once AddProviderLoader is available
                 .relativeTo("jboss.server.data.dir")
                 .type("KeyStoreCredentialStore")
                 .credentialReference(new CredentialRef.CredentialRefBuilder()

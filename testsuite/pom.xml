@@ -449,7 +449,7 @@
             <!-- Wildfly 11 doesn't exist yet; update when there's a public release of WildFly 11 -->
             <id>wildfly11</id>
             <activation>
-                <activeByDefault>false</activeByDefault>
+                <activeByDefault>true</activeByDefault>
             </activation>
 
             <properties>

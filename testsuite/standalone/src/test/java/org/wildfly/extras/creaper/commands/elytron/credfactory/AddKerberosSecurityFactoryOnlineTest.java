@@ -8,7 +8,6 @@ import java.util.Arrays;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.After;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
@@ -35,7 +34,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addSimpleKerberosSecurityFactory() throws Exception {
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
@@ -47,7 +45,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addTwoSimpleKerberosSecurityFactory() throws Exception {
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
@@ -87,7 +84,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addDuplicateKerberosSecurityFactoryAllowed() throws Exception {
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
@@ -109,7 +105,6 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
     }
 
     @Test
-    @Ignore("JBEAP-10653")
     public void addFullKerberosSecurityFactory() throws Exception {
         AddKerberosSecurityFactory addKerberosSecurityFactory = new AddKerberosSecurityFactory.Builder(KRB_NAME)
                 .principal(KRB_PRINCIPAL)
@@ -123,6 +118,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
                 .server(false)
                 .obtainKerberosTicket(true)
                 .wrapGssCredential(true)
+                .required(false)
                 .addOption("a", "b")
                 .addOption("debug", "false")
                 .build();
@@ -140,6 +136,7 @@ public class AddKerberosSecurityFactoryOnlineTest extends AbstractElytronOnlineT
         checkAttribute(KRB_ADDRESS, "server", "false");
         checkAttribute(KRB_ADDRESS, "obtain-kerberos-ticket", "true");
         checkAttribute(KRB_ADDRESS, "wrap-gss-credential", "true");
+        checkAttribute(KRB_ADDRESS, "required", "false");
         checkAttributeObject(KRB_ADDRESS, "options", "debug", "false");
     }
 

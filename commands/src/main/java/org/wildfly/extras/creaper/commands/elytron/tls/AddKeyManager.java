@@ -3,6 +3,7 @@ package org.wildfly.extras.creaper.commands.elytron.tls;
 import org.wildfly.extras.creaper.commands.elytron.CredentialRef;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTransform;
 import org.wildfly.extras.creaper.commands.foundation.offline.xml.Subtree;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.offline.OfflineCommand;
 import org.wildfly.extras.creaper.core.offline.OfflineCommandContext;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
@@ -12,9 +13,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-/**
- * credential-reference is mandatory! https://issues.jboss.org/browse/JBEAP-6757
- */
 public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
     private final String name;
@@ -40,6 +38,10 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address keyManagerAddress = Address.subsystem("elytron").and("key-manager", name);
         if (replaceExisting) {
@@ -48,7 +50,6 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
         }
 
         ops.add(keyManagerAddress, Values.empty()
-                .and("name", name)
                 .and("key-store", keyStore)
                 .andObject("credential-reference", credentialReference.toValues())
                 .andOptional("algorithm", algorithm)
@@ -59,6 +60,10 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
 
     @Override
     public void apply(OfflineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         ctx.client.apply(GroovyXmlTransform.of(AddKeyManager.class)
                 .subtree("elytronSubsystem", Subtree.subsystem("elytron"))
                 .parameter("atrName", name)
@@ -126,6 +131,9 @@ public final class AddKeyManager implements OnlineCommand, OfflineCommand {
         }
 
         public AddKeyManager build() {
+            if (keyStore == null || keyStore.isEmpty()) {
+                throw new IllegalArgumentException("key-store must not be null and must include at least one entry");
+            }
             if (credentialReference == null) {
                 throw new IllegalArgumentException("Credential reference of the key-manager must be specified");
             }

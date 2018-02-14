@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -26,6 +27,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
     private final Boolean debug;
     private final Boolean obtainKerberosTicket;
     private final Boolean wrapGssCredential;
+    private final Boolean required;
     private final Map<String, String> options;
     private final boolean replaceExisting;
 
@@ -42,6 +44,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         this.debug = builder.debug;
         this.obtainKerberosTicket = builder.obtainKerberosTicket;
         this.wrapGssCredential = builder.wrapGssCredential;
+        this.required = builder.required;
         this.options = builder.options;
         // Replace existing
         this.replaceExisting = builder.replaceExisting;
@@ -49,6 +52,10 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address kerberosSecurityFactoryAddress = Address.subsystem("elytron").and("kerberos-security-factory", name);
         if (replaceExisting) {
@@ -57,19 +64,20 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         }
 
         ops.add(kerberosSecurityFactoryAddress, Values.empty()
-            .and("name", name)
-            .and("principal", principal)
-            .and("path", path)
-            .andListOptional(String.class, "mechanism-oids", mechanismOIDs)
-            .andListOptional(String.class, "mechanism-names", mechanismNames)
-            .andOptional("relative-to", relativeTo)
-            .andOptional("minimum-remaining-lifetime", minimumRemainingLifetime)
-            .andOptional("request-lifetime", requestLifetime)
-            .andOptional("server", server)
-            .andOptional("debug", debug)
-            .andOptional("obtain-kerberos-ticket", obtainKerberosTicket)
-            .andOptional("wrap-gss-credential", wrapGssCredential)
-            .andObjectOptional("options", Values.fromMap(options)));
+                .and("name", name)
+                .and("principal", principal)
+                .and("path", path)
+                .andListOptional(String.class, "mechanism-oids", mechanismOIDs)
+                .andListOptional(String.class, "mechanism-names", mechanismNames)
+                .andOptional("relative-to", relativeTo)
+                .andOptional("minimum-remaining-lifetime", minimumRemainingLifetime)
+                .andOptional("request-lifetime", requestLifetime)
+                .andOptional("server", server)
+                .andOptional("debug", debug)
+                .andOptional("obtain-kerberos-ticket", obtainKerberosTicket)
+                .andOptional("wrap-gss-credential", wrapGssCredential)
+                .andOptional("required", required)
+                .andObjectOptional("options", Values.fromMap(options)));
     }
 
     public static final class Builder {
@@ -86,6 +94,7 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
         private Boolean debug;
         private Boolean obtainKerberosTicket;
         private Boolean wrapGssCredential;
+        private Boolean required;
         private Map<String, String> options = new HashMap<String, String>();
         private boolean replaceExisting;
 
@@ -152,6 +161,11 @@ public final class AddKerberosSecurityFactory implements OnlineCommand {
 
         public Builder wrapGssCredential(Boolean wrapGssCredential) {
             this.wrapGssCredential = wrapGssCredential;
+            return this;
+        }
+
+        public Builder required(Boolean required) {
+            this.required = required;
             return this;
         }
 

@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomPrincipalTransformer extends AbstractAddCustom {
 
-    protected AddCustomPrincipalTransformer(Builder builder) {
+    private AddCustomPrincipalTransformer(Builder builder) {
         super(builder);
     }
 

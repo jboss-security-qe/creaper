@@ -5,7 +5,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomRoleMapper extends AbstractAddCustom {
 
-    protected AddCustomRoleMapper(Builder builder) {
+    private AddCustomRoleMapper(Builder builder) {
         super(builder);
     }
 

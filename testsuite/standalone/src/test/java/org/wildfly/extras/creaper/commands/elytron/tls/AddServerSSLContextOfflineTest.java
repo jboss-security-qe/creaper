@@ -19,7 +19,7 @@ import org.wildfly.extras.creaper.core.offline.OfflineOptions;
 public class AddServerSSLContextOfflineTest {
 
     private static final String SUBSYSTEM_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "        </subsystem>\n"
@@ -27,7 +27,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_TLS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -37,7 +37,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SERVER_SSL_CONTEXTS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -49,7 +49,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SIMPLE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -62,7 +62,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_EXPECTED_REPLACE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -75,7 +75,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SECOND_SERVER_SSL_CONTEXT = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -89,7 +89,7 @@ public class AddServerSSLContextOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_FULL = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <tls>\n"
@@ -103,7 +103,8 @@ public class AddServerSSLContextOfflineTest {
             + "                                        pre-realm-principal-transformer=\"preRealmPrincipalTransformer\" "
             + "                                        post-realm-principal-transformer=\"postRealmPrincipalTransformer\" "
             + "                                        final-principal-transformer=\"finalPrincipalTransformer\" "
-            + "                                        provider-name=\"ksProvider\" providers=\"ksProviderLoader\"/>\n"
+            + "                                        provider-name=\"ksProvider\" providers=\"ksProviderLoader\" "
+            + "                                        use-cipher-suites-order=\"false\" wrap=\"true\"/>\n"
             + "                </server-ssl-contexts>\n"
             + "            </tls>\n"
             + "        </subsystem>\n"
@@ -267,6 +268,8 @@ public class AddServerSSLContextOfflineTest {
                 .finalPrincipalTransformer("finalPrincipalTransformer")
                 .providerName("ksProvider")
                 .providers("ksProviderLoader")
+                .useCipherSuitesOrder(false)
+                .wrap(true)
                 .build();
 
         assertXmlIdentical(SUBSYSTEM_EMPTY, Files.toString(cfg, Charsets.UTF_8));

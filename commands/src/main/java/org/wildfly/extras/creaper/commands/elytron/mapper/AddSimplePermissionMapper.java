@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -27,6 +28,10 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address mapperAddress = Address.subsystem("elytron").and("simple-permission-mapper", name);
         if (replaceExisting) {
@@ -34,52 +39,55 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        List<ModelNode> permissionMappingsModelNodeList = new ArrayList<ModelNode>();
-        for (PermissionMapping mapping : permissionMappings) {
-            ModelNode configNode = new ModelNode();
-            if (mapping.getMatchAll() != null) {
-                configNode.add("match-all", mapping.getMatchAll());
+        List<ModelNode> permissionMappingsModelNodeList = null;
+        if (permissionMappings != null && !permissionMappings.isEmpty()) {
+            permissionMappingsModelNodeList = new ArrayList<ModelNode>();
+            for (PermissionMapping mapping : permissionMappings) {
+                ModelNode configNode = new ModelNode();
+                if (mapping.getMatchAll() != null) {
+                    configNode.add("match-all", mapping.getMatchAll());
+                }
+                if (mapping.getRoles() != null && !mapping.getRoles().isEmpty()) {
+                    ModelNode rolesList = new ModelNode().setEmptyList();
+                    for (String role : mapping.getRoles()) {
+                        rolesList.add(role);
+                    }
+                    configNode.add("roles", rolesList);
+                }
+                if (mapping.getPrincipals() != null && !mapping.getPrincipals().isEmpty()) {
+                    ModelNode principalsList = new ModelNode().setEmptyList();
+                    for (String principal : mapping.getPrincipals()) {
+                        principalsList.add(principal);
+                    }
+                    configNode.add("principals", principalsList);
+                }
+                ModelNode permissionsModelNodeList = new ModelNode().setEmptyList();
+                for (Permission permission : mapping.getPermissions()) {
+                    ModelNode permissionNode = new ModelNode()
+                            .add("class-name", permission.getClassName());
+                    if (permission.getAction() != null && !permission.getAction().isEmpty()) {
+                        permissionNode.add("action", permission.getAction());
+                    }
+                    if (permission.getModule() != null && !permission.getModule().isEmpty()) {
+                        permissionNode.add("module", permission.getModule());
+                    }
+                    if (permission.getTargetName() != null && !permission.getTargetName().isEmpty()) {
+                        permissionNode.add("target-name", permission.getTargetName());
+                    }
+                    permissionNode = permissionNode.asObject();
+                    permissionsModelNodeList.add(permissionNode);
+                }
+                configNode.add("permissions", permissionsModelNodeList);
+                configNode = configNode.asObject();
+                permissionMappingsModelNodeList.add(configNode);
             }
-            if (mapping.getRoles() != null && !mapping.getRoles().isEmpty()) {
-                ModelNode rolesList = new ModelNode().setEmptyList();
-                for (String role : mapping.getRoles()) {
-                    rolesList.add(role);
-                }
-                configNode.add("roles", rolesList);
-            }
-            if (mapping.getPrincipals() != null && !mapping.getPrincipals().isEmpty()) {
-                ModelNode principalsList = new ModelNode().setEmptyList();
-                for (String principal : mapping.getPrincipals()) {
-                    principalsList.add(principal);
-                }
-                configNode.add("principals", principalsList);
-            }
-            ModelNode permissionsModelNodeList = new ModelNode().setEmptyList();
-            for (Permission permission : mapping.getPermissions()) {
-                ModelNode permissionNode = new ModelNode()
-                        .add("class-name", permission.getClassName());
-                if (permission.getAction() != null && !permission.getAction().isEmpty()) {
-                    permissionNode.add("action", permission.getAction());
-                }
-                if (permission.getModule() != null && !permission.getModule().isEmpty()) {
-                    permissionNode.add("module", permission.getModule());
-                }
-                if (permission.getTargetName() != null && !permission.getTargetName().isEmpty()) {
-                    permissionNode.add("target-name", permission.getTargetName());
-                }
-                permissionNode = permissionNode.asObject();
-                permissionsModelNodeList.add(permissionNode);
-            }
-            configNode.add("permissions", permissionsModelNodeList);
-            configNode = configNode.asObject();
-            permissionMappingsModelNodeList.add(configNode);
         }
 
         String mappingModeValue = mappingMode == null ? null : mappingMode.name();
 
         ops.add(mapperAddress, Values.empty()
                 .andOptional("mapping-mode", mappingModeValue)
-                .andList(ModelNode.class, "permission-mappings", permissionMappingsModelNodeList));
+                .andListOptional(ModelNode.class, "permission-mappings", permissionMappingsModelNodeList));
     }
 
 
@@ -119,9 +127,6 @@ public final class AddSimplePermissionMapper implements OnlineCommand {
         }
 
         public AddSimplePermissionMapper build() {
-            if (permissionMappings == null || permissionMappings.isEmpty()) {
-                throw new IllegalArgumentException("permission-mapping must not be null and must include at least one entry");
-            }
             return new AddSimplePermissionMapper(this);
         }
 

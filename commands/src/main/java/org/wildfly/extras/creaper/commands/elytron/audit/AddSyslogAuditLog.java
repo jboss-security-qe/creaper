@@ -1,5 +1,6 @@
 package org.wildfly.extras.creaper.commands.elytron.audit;
 
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -15,6 +16,7 @@ public final class AddSyslogAuditLog implements OnlineCommand {
     private final TransportProtocolType transport;
     private final AuditFormat format;
     private final String hostName;
+    private final String sslContext;
     private final boolean replaceExisting;
 
     private AddSyslogAuditLog(Builder builder) {
@@ -25,10 +27,15 @@ public final class AddSyslogAuditLog implements OnlineCommand {
         this.format = builder.format;
         this.hostName = builder.hostName;
         this.replaceExisting = builder.replaceExisting;
+        this.sslContext = builder.sslContext;
     }
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address syslogAuditAddress = Address.subsystem("elytron").and("syslog-audit-log", name);
         if (replaceExisting) {
@@ -40,8 +47,9 @@ public final class AddSyslogAuditLog implements OnlineCommand {
                 .and("server-address", serverAddress)
                 .and("port", port)
                 .and("host-name", hostName)
-                .andOptional("transport", transport == null ? null : transport.value())
-                .andOptional("format", format == null ? null : format.value()));
+                .andOptional("ssl-context", sslContext)
+                .andOptional("transport", transport == null ? null : transport.name())
+                .andOptional("format", format == null ? null : format.name()));
     }
 
     public static final class Builder {
@@ -52,6 +60,7 @@ public final class AddSyslogAuditLog implements OnlineCommand {
         private TransportProtocolType transport;
         private String hostName;
         private AuditFormat format;
+        private String sslContext;
         private boolean replaceExisting;
 
         public Builder(String name) {
@@ -89,6 +98,11 @@ public final class AddSyslogAuditLog implements OnlineCommand {
             return this;
         }
 
+        public Builder sslContext(String sslContext) {
+            this.sslContext = sslContext;
+            return this;
+        }
+
         public Builder replaceExisting() {
             this.replaceExisting = true;
             return this;
@@ -112,17 +126,6 @@ public final class AddSyslogAuditLog implements OnlineCommand {
 
     public static enum TransportProtocolType {
 
-        UDP("UDP"),
-        TCP("TCP");
-
-        private final String value;
-
-        TransportProtocolType(String value) {
-            this.value = value;
-        }
-
-        String value() {
-            return value;
-        }
+        UDP, TCP;
     }
 }

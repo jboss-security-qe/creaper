@@ -8,6 +8,7 @@ import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.elytron.AbstractElytronOnlineTest;
+import org.wildfly.extras.creaper.commands.elytron.audit.AddFileAuditLog;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalTransformer;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantPrincipalDecoder;
 import org.wildfly.extras.creaper.commands.elytron.mapper.AddConstantRoleMapper;
@@ -136,6 +137,13 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                     .build())
             .build();
 
+    private static final String TEST_FILE_AUDIT_LOG_NAME = "CreaperTestFileAuditLog";
+    private static final Address TEST_FILE_AUDIT_LOG_ADDRESS = SUBSYSTEM_ADDRESS
+            .and("file-audit-log", TEST_FILE_AUDIT_LOG_NAME);
+    AddFileAuditLog addFileAuditLog = new AddFileAuditLog.Builder(TEST_FILE_AUDIT_LOG_NAME)
+            .path("audit.log")
+            .build();
+
     @After
     public void cleanup() throws Exception {
         ops.removeIfExists(TEST_SECURITY_DOMAIN_ADDRESS);
@@ -153,6 +161,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         ops.removeIfExists(TEST_CONSTANT_ROLE_MAPPER_ADDRESS2);
         ops.removeIfExists(TEST_SIMPLE_ROLE_DECODER_ADDRESS);
         ops.removeIfExists(TEST_SIMPLE_ROLE_DECODER_ADDRESS2);
+        ops.removeIfExists(TEST_FILE_AUDIT_LOG_ADDRESS);
         administration.reloadIfRequired();
     }
 
@@ -206,6 +215,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         client.apply(addConstantRoleMapper2);
         client.apply(addSimpleRoleDecoder);
         client.apply(addSimpleRoleDecoder2);
+        client.apply(addFileAuditLog);
         client.apply(addSecurityDomain3);
         client.apply(addSecurityDomain4);
         AddSecurityDomain addSecurityDomain2 = new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME2)
@@ -226,6 +236,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                 .trustedSecurityDomains(TEST_SECURITY_DOMAIN_NAME2, TEST_SECURITY_DOMAIN_NAME3)
                 .outflowAnonymous(true)
                 .outflowSecurityDomains(TEST_SECURITY_DOMAIN_NAME3, TEST_SECURITY_DOMAIN_NAME4)
+                .securityEventListener(TEST_FILE_AUDIT_LOG_NAME)
                 .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
                         .principalTransformer(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                         .roleDecoder(TEST_SIMPLE_ROLE_DECODER_NAME)
@@ -255,6 +266,7 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-anonymous", "true");
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-security-domains[0]", TEST_SECURITY_DOMAIN_NAME3);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "outflow-security-domains[1]", TEST_SECURITY_DOMAIN_NAME4);
+        checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "security-event-listener", TEST_FILE_AUDIT_LOG_NAME);
 
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].realm", TEST_FILESYSTEM_REALM_NAME);
         checkAttribute(TEST_SECURITY_DOMAIN_ADDRESS, "realms[0].principal-transformer",
@@ -336,26 +348,6 @@ public class AddSecurityDomainOnlineTest extends AbstractElytronOnlineTest {
                         .build())
                 .build();
         fail("Creating command with empty name should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addSecurityDomain_nullDefaultRealm() throws Exception {
-        new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
-                .defaultRealm(null)
-                .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
-                        .build())
-                .build();
-        fail("Creating command with null default-realm should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addSecurityDomain_emptyDefaultRealm() throws Exception {
-        new AddSecurityDomain.Builder(TEST_SECURITY_DOMAIN_NAME)
-                .defaultRealm("")
-                .realms(new AddSecurityDomain.RealmBuilder(TEST_FILESYSTEM_REALM_NAME)
-                        .build())
-                .build();
-        fail("Creating command with empty default-realm should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

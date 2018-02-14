@@ -18,6 +18,8 @@ if (atrCertificateAttribute != null) attributeMappingAttrs['certificate-attribut
 if (atrCertificateType != null) attributeMappingAttrs['certificate-type'] = atrCertificateType
 if (atrCertificateChainAttribute != null) attributeMappingAttrs['certificate-chain-attribute'] = atrCertificateChainAttribute
 if (atrCertificateChainEncoding != null) attributeMappingAttrs['certificate-chain-encoding'] = atrCertificateChainEncoding
+if (atrKeyAttribute != null) attributeMappingAttrs['key-attribute'] = atrKeyAttribute
+if (atrKeyType != null) attributeMappingAttrs['key-type'] = atrKeyType
 
 def keyStoreDefinition = {
     'ldap-key-store'(keyStoreAttrs) {

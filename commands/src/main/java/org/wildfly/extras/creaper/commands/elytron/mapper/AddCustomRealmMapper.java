@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomRealmMapper extends AbstractAddCustom {
 
-    protected AddCustomRealmMapper(Builder builder) {
+    private AddCustomRealmMapper(Builder builder) {
         super(builder);
     }
 

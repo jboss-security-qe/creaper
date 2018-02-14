@@ -30,7 +30,40 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
     }
 
     @Test
-    public void addRegexValidatingPrincipalTransformer() throws Exception {
+    public void addSimpleRegexValidatingPrincipalTransformer() throws Exception {
+        AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
+                = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
+                .pattern("test-pattern")
+                .build();
+
+        client.apply(addRegexValidatingPrincipalTransformer);
+
+        assertTrue("Regex validating principal transformer should be created",
+                ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS));
+    }
+
+    @Test
+    public void addTwoRegexValidatingPrincipalTransformers() throws Exception {
+        AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
+                = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
+                .pattern("test-pattern")
+                .build();
+        AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer2
+                = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME2)
+                .pattern("test-pattern2")
+                .build();
+
+        client.apply(addRegexValidatingPrincipalTransformer);
+        client.apply(addRegexValidatingPrincipalTransformer2);
+
+        assertTrue("Regex validating principal transformer should be created",
+                ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS));
+        assertTrue("Regex validating principal transformer should be created",
+                ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS2));
+    }
+
+    @Test
+    public void addFullRegexValidatingPrincipalTransformer() throws Exception {
         AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
                 = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("test-pattern")
@@ -45,39 +78,15 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
         checkRegexValidatingPrincipalTransformerAttribute("match", "true");
     }
 
-    @Test
-    public void addTwoRegexValidatingPrincipalTransformers() throws Exception {
-        AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
-                = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
-                .pattern("test-pattern")
-                .match(true)
-                .build();
-        AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer2
-                = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME2)
-                .pattern("test-pattern2")
-                .match(false)
-                .build();
-
-        client.apply(addRegexValidatingPrincipalTransformer);
-        client.apply(addRegexValidatingPrincipalTransformer2);
-
-        assertTrue("Regex validating principal transformer should be created",
-                ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS));
-        assertTrue("Regex validating principal transformer should be created",
-                ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS2));
-    }
-
     @Test(expected = CommandFailedException.class)
     public void addExistRegexValidatingPrincipalTransformerNotAllowed() throws Exception {
         AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
                 = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("test-pattern")
-                .match(true)
                 .build();
         AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer2
                 = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("test-pattern2")
-                .match(false)
                 .build();
 
         client.apply(addRegexValidatingPrincipalTransformer);
@@ -93,12 +102,10 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
         AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer
                 = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("test-pattern")
-                .match(true)
                 .build();
         AddRegexValidatingPrincipalTransformer addRegexValidatingPrincipalTransformer2
                 = new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("test-pattern2")
-                .match(false)
                 .replaceExisting()
                 .build();
 
@@ -110,14 +117,12 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
         assertTrue("Regex validating principal transformer should be created",
                 ops.exists(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ADDRESS));
         checkRegexValidatingPrincipalTransformerAttribute("pattern", "test-pattern2");
-        checkRegexValidatingPrincipalTransformerAttribute("match", "false");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addRegexValidatingPrincipalTransformer_nullName() throws Exception {
         new AddRegexValidatingPrincipalTransformer.Builder(null)
                 .pattern("test-pattern")
-                .match(true)
                 .build();
         fail("Creating command with null name should throw exception");
     }
@@ -126,7 +131,6 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
     public void addRegexValidatingPrincipalTransformer_emptyName() throws Exception {
         new AddRegexValidatingPrincipalTransformer.Builder("")
                 .pattern("test-pattern")
-                .match(true)
                 .build();
         fail("Creating command with empty name should throw exception");
     }
@@ -135,7 +139,6 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
     public void addRegexValidatingPrincipalTransformer_nullPattern() throws Exception {
         new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern(null)
-                .match(true)
                 .build();
         fail("Creating command with null pattern should throw exception");
     }
@@ -144,17 +147,8 @@ public class AddRegexValidatingPrincipalTransformerOnlineTest extends AbstractEl
     public void addRegexValidatingPrincipalTransformer_emptyPattern() throws Exception {
         new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
                 .pattern("")
-                .match(true)
                 .build();
         fail("Creating command with empty pattern should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addRegexValidatingPrincipalTransformer_matchUnspecified() throws Exception {
-        new AddRegexValidatingPrincipalTransformer.Builder(TEST_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_NAME)
-                .pattern("test-pattern")
-                .build();
-        fail("Creating command without defined match should throw exception");
     }
 
     private void checkRegexValidatingPrincipalTransformerAttribute(String attr, String expected) throws IOException {

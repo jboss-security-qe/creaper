@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomPrincipalDecoder extends AbstractAddCustom {
 
-    protected AddCustomPrincipalDecoder(Builder builder) {
+    private AddCustomPrincipalDecoder(Builder builder) {
         super(builder);
     }
 

@@ -27,7 +27,7 @@ import org.wildfly.extras.creaper.commands.foundation.offline.xml.GroovyXmlTrans
 
 public final class AddCustomCredentialSecurityFactory extends AbstractAddCustom {
 
-    protected AddCustomCredentialSecurityFactory(Builder builder) {
+    private AddCustomCredentialSecurityFactory(Builder builder) {
         super(builder);
     }
 

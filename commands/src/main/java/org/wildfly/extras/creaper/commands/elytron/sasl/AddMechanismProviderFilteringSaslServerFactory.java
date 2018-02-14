@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -29,6 +30,9 @@ public final class AddMechanismProviderFilteringSaslServerFactory implements Onl
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
         Operations ops = new Operations(ctx.client);
         Address factoryAddress = Address.subsystem("elytron")
                 .and("mechanism-provider-filtering-sasl-server-factory", name);
@@ -37,28 +41,31 @@ public final class AddMechanismProviderFilteringSaslServerFactory implements Onl
             new Administration(ctx.client).reloadIfRequired();
         }
 
-        List<ModelNode> filtersNodeList = new ArrayList<ModelNode>();
-        for (Filter filter : filters) {
-            ModelNode filterModelNode = new ModelNode();
-            filterModelNode.add("provider-name", filter.getProviderName());
-            if (filter.getMechanismName() != null && !filter.getMechanismName().isEmpty()) {
-                filterModelNode.add("mechanism-name", filter.getMechanismName());
+        List<ModelNode> filtersNodeList = null;
+        if (filters != null && !filters.isEmpty()) {
+            filtersNodeList = new ArrayList<ModelNode>();
+            for (Filter filter : filters) {
+                ModelNode filterModelNode = new ModelNode();
+                filterModelNode.add("provider-name", filter.getProviderName());
+                if (filter.getMechanismName() != null && !filter.getMechanismName().isEmpty()) {
+                    filterModelNode.add("mechanism-name", filter.getMechanismName());
+                }
+                if (filter.getProviderVersion() != null) {
+                    filterModelNode.add("provider-version", filter.getProviderVersion());
+                }
+                if (filter.getVersionComparison() != null) {
+                    filterModelNode.add("version-comparison",
+                            filter.getVersionComparison().getVersionComparisonName());
+                }
+                filterModelNode = filterModelNode.asObject();
+                filtersNodeList.add(filterModelNode);
             }
-            if (filter.getProviderVersion() != null) {
-                filterModelNode.add("provider-version", filter.getProviderVersion());
-            }
-            if (filter.getVersionComparison() != null) {
-                filterModelNode.add("version-comparison",
-                        filter.getVersionComparison().getVersionComparisonName());
-            }
-            filterModelNode = filterModelNode.asObject();
-            filtersNodeList.add(filterModelNode);
         }
 
         ops.add(factoryAddress, Values.empty()
                 .and("sasl-server-factory", saslServerFactory)
                 .andOptional("enabling", enabling)
-                .andList(ModelNode.class, "filters", filtersNodeList));
+                .andListOptional(ModelNode.class, "filters", filtersNodeList));
     }
 
     public static final class Builder {
@@ -105,9 +112,6 @@ public final class AddMechanismProviderFilteringSaslServerFactory implements Onl
         public AddMechanismProviderFilteringSaslServerFactory build() {
             if (saslServerFactory == null || saslServerFactory.isEmpty()) {
                 throw new IllegalArgumentException("sasl-server-factory must not be null and must include at least one entry");
-            }
-            if (filters == null || filters.isEmpty()) {
-                throw new IllegalArgumentException("filters must not be null and must include at least one entry");
             }
             return new AddMechanismProviderFilteringSaslServerFactory(this);
         }

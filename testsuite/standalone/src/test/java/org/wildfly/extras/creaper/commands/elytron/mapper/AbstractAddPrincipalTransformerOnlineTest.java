@@ -29,7 +29,9 @@ public class AbstractAddPrincipalTransformerOnlineTest extends AbstractElytronOn
 
     @BeforeClass
     public static void addPrincipalTransformers() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddConstantPrincipalTransformer addConstantPrincipalTransformer
                     = new AddConstantPrincipalTransformer.Builder(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_NAME)
                     .constant("name1")
@@ -45,18 +47,28 @@ public class AbstractAddPrincipalTransformerOnlineTest extends AbstractElytronOn
             client.apply(addConstantPrincipalTransformer);
             client.apply(addConstantPrincipalTransformer2);
             client.apply(addConstantPrincipalTransformer3);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removePrincipalTransformers() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS);
             ops.removeIfExists(TEST_CONSTANT_PRINCIPAL_TRANSFORMER_ADDRESS2);
             ops.removeIfExists(TEST_DIFFERENT_PRINCIPAL_TRANSFORMER_ADDRESS);
             Administration administration = new Administration(client);
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 }

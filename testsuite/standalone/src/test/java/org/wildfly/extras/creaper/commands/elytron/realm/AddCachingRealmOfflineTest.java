@@ -18,7 +18,7 @@ import org.wildfly.extras.creaper.core.offline.OfflineOptions;
 public class AddCachingRealmOfflineTest {
 
     private static final String SUBSYSTEM_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "        </subsystem>\n"
@@ -26,7 +26,7 @@ public class AddCachingRealmOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_REALMS_EMPTY = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <security-realms>\n"
@@ -36,7 +36,7 @@ public class AddCachingRealmOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SIMPLE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <security-realms>\n"
@@ -47,7 +47,7 @@ public class AddCachingRealmOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_EXPECTED_REPLACE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <security-realms>\n"
@@ -58,7 +58,7 @@ public class AddCachingRealmOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_SECOND_KEY_STORE = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <security-realms>\n"
@@ -70,7 +70,7 @@ public class AddCachingRealmOfflineTest {
             + "</server>";
 
     private static final String SUBSYSTEM_FULL = ""
-            + "<server xmlns=\"urn:jboss:domain:1.7\">\n"
+            + "<server xmlns=\"urn:jboss:domain:5.0\">\n"
             + "    <profile>\n"
             + "        <subsystem xmlns=\"urn:wildfly:elytron:1.0\">\n"
             + "            <security-realms>\n"

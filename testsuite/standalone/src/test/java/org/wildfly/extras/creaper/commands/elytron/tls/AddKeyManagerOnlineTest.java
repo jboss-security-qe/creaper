@@ -41,7 +41,9 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
     @BeforeClass
     public static void addKeyStores() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             AddKeyStore addKeyStore = new AddKeyStore.Builder(TEST_KEY_STORE_NAME)
                     .type(TEST_KEY_STORE_TYPE)
                     .credentialReference(new CredentialRef.CredentialRefBuilder()
@@ -57,17 +59,27 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
 
             client.apply(addKeyStore);
             client.apply(addKeyStore2);
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeKeyStores() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(TEST_KEY_STORE_ADDRESS);
             ops.removeIfExists(TEST_KEY_STORE_ADDRESS2);
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -186,28 +198,53 @@ public class AddKeyManagerOnlineTest extends AbstractElytronOnlineTest {
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullName() throws Exception {
         new AddKeyManager.Builder(null)
-            .credentialReference(new CredentialRef.CredentialRefBuilder()
-                    .clearText(TEST_KEY_PASSWORD)
-                    .build())
-            .build();
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
         fail("Creating command with null key manager name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_emptyName() throws Exception {
         new AddKeyManager.Builder("")
-            .credentialReference(new CredentialRef.CredentialRefBuilder()
-                    .clearText(TEST_KEY_PASSWORD)
-                    .build())
-            .build();
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
         fail("Creating command with empty key manager name should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void addKeyManager_nullKeyPassword() throws Exception {
         new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
-            .credentialReference(null)
-            .build();
+                .keyStore(TEST_KEY_STORE_NAME)
+                .credentialReference(null)
+                .build();
+        fail("Creating command with null key password name should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addKeyManager_nullKeyStore() throws Exception {
+        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .keyStore(null)
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
+        fail("Creating command with null key password name should throw exception");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void addKeyManager_emptyKeyStore() throws Exception {
+        new AddKeyManager.Builder(TEST_KEY_MNGR_NAME)
+                .keyStore("")
+                .credentialReference(new CredentialRef.CredentialRefBuilder()
+                        .clearText(TEST_KEY_PASSWORD)
+                        .build())
+                .build();
         fail("Creating command with null key password name should throw exception");
     }
 

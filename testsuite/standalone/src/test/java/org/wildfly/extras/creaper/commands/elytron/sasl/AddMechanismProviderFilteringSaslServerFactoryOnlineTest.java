@@ -45,9 +45,6 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory
                 = new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME)
                 .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .addFilters(new AddMechanismProviderFilteringSaslServerFactory.FilterBuilder()
-                        .providerName("someProviderName")
-                        .build())
                 .build();
 
         client.apply(addMechanismProviderFilteringSaslServerFactory);
@@ -63,16 +60,10 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory
                 = new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME)
                 .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .addFilters(new AddMechanismProviderFilteringSaslServerFactory.FilterBuilder()
-                        .providerName("someProviderName")
-                        .build())
                 .build();
         AddMechanismProviderFilteringSaslServerFactory addMechanismProviderFilteringSaslServerFactory2
                 = new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME2)
                 .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .addFilters(new AddMechanismProviderFilteringSaslServerFactory.FilterBuilder()
-                        .providerName("someProviderName")
-                        .build())
                 .build();
 
         client.apply(addMechanismProviderFilteringSaslServerFactory);
@@ -225,32 +216,6 @@ public class AddMechanismProviderFilteringSaslServerFactoryOnlineTest extends Ab
                         .build())
                 .build();
         fail("Creating command with empty sasl-server-factory should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addMechanismProviderFilteringSaslServerFactory_nullFilters() throws Exception {
-        new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME)
-                .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .addFilters(null)
-                .build();
-        fail("Creating command with null filters should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addMechanismProviderFilteringSaslServerFactory_noFilters() throws Exception {
-        new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME)
-                .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .build();
-        fail("Creating command with no filters should throw exception");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void addMechanismProviderFilteringSaslServerFactory_emptyFilters() throws Exception {
-        new AddMechanismProviderFilteringSaslServerFactory.Builder(TEST_FACTORY_NAME)
-                .saslServerFactory(TEST_SERVER_FACTORY_NAME)
-                .addFilters()
-                .build();
-        fail("Creating command with empty filters should throw exception");
     }
 
     @Test(expected = IllegalArgumentException.class)

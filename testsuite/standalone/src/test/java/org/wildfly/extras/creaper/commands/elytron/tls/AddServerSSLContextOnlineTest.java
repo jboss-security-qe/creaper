@@ -46,7 +46,9 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
 
     @BeforeClass
     public static void addServerSslContextDependentResources() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             client.apply(new AddConstantPrincipalTransformer.Builder(PRE_REALM_PRINCIPAL_TRANSFORMER)
                 .constant(PRE_REALM_PRINCIPAL_TRANSFORMER)
                 .build());
@@ -62,12 +64,18 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
             client.apply(new AddConstantRealmMapper.Builder(REALM_MAPPER)
                 .realmName(REALM_MAPPER)
                 .build());
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeServerSslDependentResources() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(REALM_MAPPER_ADDRESS);
@@ -75,6 +83,10 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
             ops.removeIfExists(POST_REALM_PRINCIPAL_TRANSFORMER_ADDRESS);
             ops.removeIfExists(FINAL_PRINCIPAL_TRANSFORMER_ADDRESS);
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
@@ -167,6 +179,8 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
                 .preRealmPrincipalTransformer(PRE_REALM_PRINCIPAL_TRANSFORMER)
                 .postRealmPrincipalTransformer(POST_REALM_PRINCIPAL_TRANSFORMER)
                 .finalPrincipalTransformer(FINAL_PRINCIPAL_TRANSFORMER)
+                .useCipherSuitesOrder(false)
+                .wrap(true)
                 .build();
         client.apply(addServerSSLContext);
         assertTrue("The server ssl context should be created", ops.exists(SERVER_SSL_CONTEXT_ADDRESS));
@@ -185,6 +199,8 @@ public class AddServerSSLContextOnlineTest extends AbstractAddSSLContextOnlineTe
         checkAttribute("pre-realm-principal-transformer", PRE_REALM_PRINCIPAL_TRANSFORMER);
         checkAttribute("post-realm-principal-transformer", POST_REALM_PRINCIPAL_TRANSFORMER);
         checkAttribute("final-principal-transformer", FINAL_PRINCIPAL_TRANSFORMER);
+        checkAttribute("use-cipher-suites-order", "false");
+        checkAttribute("wrap", "true");
     }
 
     @Test(expected = IllegalArgumentException.class)

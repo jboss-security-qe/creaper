@@ -40,7 +40,9 @@ public class AddApplicationSecurityDomainOnlineTest extends AbstractElytronOnlin
 
     @BeforeClass
     public static void addRequiredCapabilities() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             client.apply(new AddIdentityRealm.Builder(IDENTITY_REALM_NAME)
                     .identity("identity")
                     .build());
@@ -54,18 +56,28 @@ public class AddApplicationSecurityDomainOnlineTest extends AbstractElytronOnlin
                     .securityDomain(SECURITY_DOMAIN_NAME)
                     .httpServerMechanismFactory(PROVIDER_HTTP_SERVER_MECH_FACTORY)
                     .build());
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 
     @AfterClass
     public static void removeAddedCapabilities() throws Exception {
-        try (OnlineManagementClient client = createManagementClient()) {
+        OnlineManagementClient client = null;
+        try {
+            client = createManagementClient();
             Operations ops = new Operations(client);
             Administration administration = new Administration(client);
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("http-authentication-factory", TEST_HTTP_AUTH_FACTORY));
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("security-domain", SECURITY_DOMAIN_NAME));
             ops.removeIfExists(SUBSYSTEM_ADDRESS.and("identity-realm", IDENTITY_REALM_NAME));
             administration.reloadIfRequired();
+        } finally {
+            if (client != null) {
+                client.close();
+            }
         }
     }
 

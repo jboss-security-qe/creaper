@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -47,6 +48,10 @@ public final class AddSecurityDomain implements OnlineCommand {
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address securityDomainAddress = Address.subsystem("elytron").and("security-domain", name);
         if (replaceExisting) {
@@ -72,7 +77,7 @@ public final class AddSecurityDomain implements OnlineCommand {
         }
 
         ops.add(securityDomainAddress, Values.empty()
-                .and("default-realm", defaultRealm)
+                .andOptional("default-realm", defaultRealm)
                 .andList(ModelNode.class, "realms", realmsModelNodeList)
                 .andOptional("pre-realm-principal-transformer", preRealmPrincipalTransformer)
                 .andOptional("post-realm-principal-transformer", postRealmPrincipalTransformer)
@@ -82,6 +87,7 @@ public final class AddSecurityDomain implements OnlineCommand {
                 .andOptional("permission-mapper", permissionMapper)
                 .andListOptional(String.class, "trusted-security-domains", trustedSecurityDomains)
                 .andOptional("outflow-anonymous", outflowAnonymous)
+                .andOptional("security-event-listener", securityEventListener)
                 .andListOptional(String.class, "outflow-security-domains", outflowSecurityDomains));
     }
 
@@ -196,9 +202,6 @@ public final class AddSecurityDomain implements OnlineCommand {
         }
 
         public AddSecurityDomain build() {
-            if (defaultRealm == null || defaultRealm.isEmpty()) {
-                throw new IllegalArgumentException("default-realm must not be null or empty");
-            }
             if (realms == null || realms.isEmpty()) {
                 throw new IllegalArgumentException("realms must not be null and must include at least one entry");
             }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jboss.dmr.ModelNode;
+import org.wildfly.extras.creaper.commands.elytron.Property;
+import org.wildfly.extras.creaper.core.ServerVersion;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -29,6 +31,10 @@ public final class AddConfigurableHttpServerMechanismFactory implements OnlineCo
 
     @Override
     public void apply(OnlineCommandContext ctx) throws Exception {
+        if (ctx.version.lessThan(ServerVersion.VERSION_5_0_0)) {
+            throw new AssertionError("Elytron is available since WildFly 11.");
+        }
+
         Operations ops = new Operations(ctx.client);
         Address factoryAddress = Address.subsystem("elytron")
                 .and("configurable-http-server-mechanism-factory", name);
@@ -164,23 +170,4 @@ public final class AddConfigurableHttpServerMechanismFactory implements OnlineCo
 
     }
 
-    public static final class Property {
-
-        private final String key;
-        private final String value;
-
-        public Property(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-    }
 }
