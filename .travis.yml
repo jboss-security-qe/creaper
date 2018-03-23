@@ -7,9 +7,13 @@ jdk:
 
 install: echo LOL
 
+env:
+  - RUN_TESTS=**.elytron.**.*
+  - RUN_TESTS=\!**.elytron.**.*
+
 script:
     - wget --user=guest --password=guest https://ci.wildfly.org/httpAuth/repository/downloadAll/WF_Nightly/.lastSuccessful/artifacts.zip
     - unzip -q artifacts.zip
     - export WILDFLY_DIST_ZIP=$(ls wildfly-*-SNAPSHOT.zip)
     - mvn install:install-file -DgroupId=org.wildfly -DartifactId=wildfly-dist -Dversion=11.0.0.elytron-SNAPSHOT -Dfile=$WILDFLY_DIST_ZIP -DgeneratePom=true -Dpackaging=zip
-    - mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true -Dtest=**.elytron.**.* -Dversion.wildfly11=11.0.0.elytron-SNAPSHOT
+    - mvn verify -s settings.xml -B -fae -Dmaven.test.redirectTestOutputToFile=true -Dtest=$RUN_TESTS -Dversion.wildfly11=11.0.0.elytron-SNAPSHOT
